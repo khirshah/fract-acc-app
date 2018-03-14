@@ -1,23 +1,46 @@
 //-------------------------------- init ----------------------------------------------
-import dataBase from './dataBase.js';
-import changeRecord from './eventHandler.js';
-//import Data from './data.json';
+
+import DataBase from './dataBase.js';
+import RecordUpdate from './eventHandler.js';
+
+//-------------------------------- data -----------------------------------------------
+
+
 var Datastore = require('nedb');
 var db = new Datastore({ filename: 'db.db', autoload: true });
 
-var dataB = new dataBase(db);
-dataB.DisplayData();
+var dataB = new DataBase(db);
+
+
+//import Data from './data.json';
+//dataB.clearDb();
+//dataB.add(Data);
 
 //-------------------------------- functions -----------------------------------------
 
+function addEvLis(){
 
-
-//-------------------------- commands ----------------------------------------------
-
-document.addEventListener('click', function(e) {
+  document.addEventListener('click', function(e) {
     e = e || window.event;
     var target = e.target || e.srcElement,
         text = target.textContent || text.innerText;   
-    var change = new changeRecord(db,target);
-    change.main();
-}, false);
+    var upd = new RecordUpdate(db,target);
+    upd.main();
+  }, false);
+
+};
+
+
+function createTable(){
+
+  var table=document.getElementById('table');
+  table.setAttribute("contenteditable", "true");
+
+};
+//-------------------------- commands ----------------------------------------------
+
+createTable();
+
+dataB.findData();
+
+addEvLis();
