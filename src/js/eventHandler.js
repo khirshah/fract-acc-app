@@ -7,17 +7,18 @@ class RecordUpdate {
 
   };
 
-  main(){
-    var text = this.target.textContent || text.innerText;
+  main(text){
+    //var text = this.target.textContent || text.innerText;
     
     let ID = this.target.id.split("-");
-    //console.log(this.target.id.split("-"));
-    this.overwriteDbData(ID[0],ID[1]);
+    //console.log(this.target);
+    this.overwriteDbData(ID[0],ID[1], text);
+    this.updateTable(text);
   };
 
-  overwriteDbData(ID,key){
+  overwriteDbData(ID,key, text){
 
-    var value=this.target.textContent;
+    var value=text;
     var k=key;
     var toUpdate={}
     toUpdate[k]=value;
@@ -25,11 +26,17 @@ class RecordUpdate {
     this.data.update({_id : ID},{ $set: toUpdate},{}, function (err, numReplaced) { 
     
       if (err) throw err;
-      console.log(numReplaced) 
+      console.log("replaced: ", numReplaced); 
+
+    //console.log(this.target);
 
     });
+
+
+
+
     
-    console.log(this.target);
+    //console.log(this.target);
 
     /*//find USD in 2nd row of entries and ommit USD and desc from results
     this.data.find({"entries.1.USD": {$regex : /.*\/}},{'entries.1.USD':0, 'entries.1.DESCRIPTION':0} ,function(err,docs){
@@ -43,6 +50,13 @@ class RecordUpdate {
       console.log(docs[0].entries[0]);
     })*/
     
+  };
+
+  updateTable(text){
+    this.target.innerText=text;
+    this.target.removeAttribute("data-toggle");
+    this.target.removeAttribute("data-target");
+
   };
 
 };

@@ -1,3 +1,6 @@
-import './index.scss';
+window.$ = window.jQuery = require('jquery') // required for bootstrap
+window.Popper = require('popper.js') // required for tooltip, popup...
+require('bootstrap')
 
+import './index.scss';
 import './js/dataBaseHandler.js';
