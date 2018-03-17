@@ -1,3 +1,4 @@
+const webpack = require('webpack')
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
@@ -16,6 +17,11 @@ module.exports = {
       title: 'Fractalometry',
       filename: 'index.html',
       template: './src/index.html'
+    }),
+    new webpack.ProvidePlugin({
+      $: "jquery", // Used for Bootstrap JavaScript components
+      jQuery: "jquery", // Used for Bootstrap JavaScript components
+      Popper: ['popper.js', 'default'] // Used for Bootstrap dropdown, popup and tooltip JavaScript components
     })
   ],
   output: {
