@@ -31,41 +31,7 @@ function createTable(){
 
 };
 
-/*function addEvLis(){
-
-  table.addEventListener('click', function(e) {
-    e = e || window.event;
-    var target = e.target || e.srcElement;
-    //target.setAttribute("id","active");
-    target.setAttribute("data-toggle","modal");
-    target.setAttribute("data-target","#myModal");
-
-    //buildModal();
-
-    //var upd = new RecordUpdate(db,target);
-    //upd.main();
-  }, false);
-
-};
-
-function buildModal(){
-
-
-
-    ///$("#myModal").modal("show");
-    return 0;
-
-};*/
-
-/*$('#myModal').on('shown.bs.modal', function (e) {
-  // do something...
-  var button = $(event.relatedTarget) // Button that triggered the modal
-  var recipient = button.data('whatever') // Extract info from data-* attributes
-  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-  var modal = $(this)
-  console.log(modal);
-})*/
+//-------------------------- JQuery -------------------------------------------------
 
 $(document).ready(function(a){
 
@@ -106,5 +72,3 @@ $(document).ready(function(a){
 createTable();
 
 dataB.findData();
-
-//addEvLis();
