@@ -1,23 +1,24 @@
 
 class RecordUpdate {
-  constructor(data,target){
+  constructor(data,target, text){
 
   this.target = target;
   this.data = data;
+  this.text=text;
 
   };
 
-  main(text){
+  main(){
     
     let ID = this.target.id.split("-");
 
-    this.overwriteDbData(ID[0],ID[1], text);
-    this.updateTable(text);
+    this.overwriteDbData(ID[0],ID[1], this.text);
+    this.updateTable();
   };
 
-  overwriteDbData(ID,key, text){
+  overwriteDbData(ID,key){
 
-    var value=text;
+    var value=this.text;
     var k=key;
     var toUpdate={}
     toUpdate[k]=value;
@@ -34,7 +35,7 @@ class RecordUpdate {
   };
 
   updateTable(text){
-    this.target.innerText=text;
+    this.target.innerText=this.text;
     this.target.removeAttribute("data-toggle");
     this.target.removeAttribute("data-target");
 
