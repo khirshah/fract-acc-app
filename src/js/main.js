@@ -1,10 +1,10 @@
 //-------------------------------- init ----------------------------------------------
 
-import DataBase from './dataBase.js';
+import DataBase from './DataBase.js';
 import modalContent from './modal.js';
 import populateTable from './tableHandler.js';
 import eventListener from './eventListener.js';
-import RecordUpdate from './eventHandler.js';
+import RecordUpdate from './RecordUpdate.js';
 
 
 //-------------------------------- data -----------------------------------------------
@@ -22,7 +22,6 @@ var dataB = new DataBase(db);
 
 //-------------------------------- functions -----------------------------------------
 
-
 function createModal(){
 
   var m=modalContent();
@@ -30,14 +29,27 @@ function createModal(){
 
 };
 
+
+function updateTable(values) {
+  
+  dataB.createDStruct(values);
+  //populateTable.insertTableRow();
+
+};
+
+
 function rUpdate(targ, text){
   console.log(targ, text)
     var upd = new RecordUpdate(db,targ, text);
     upd.main();
-}
+};
 
 
-$(document).ready(eventListener(jQuery, rUpdate));
+var callBackFunctions = {}
+callBackFunctions.rUpdate = rUpdate
+callBackFunctions.updateTable = updateTable
+
+$(document).ready(eventListener(jQuery, callBackFunctions ));
 
 //-------------------------- commands ----------------------------------------------
 

@@ -1,7 +1,7 @@
 //-------------------------- JQuery -------------------------------------------------
 import populateTable from './tableHandler.js';
 
-export default function eventListener(a, q) {
+export default function eventListener(a, callbacks) {
   return function(a){
 
     var t=a || window.event;
@@ -10,7 +10,7 @@ export default function eventListener(a, q) {
     $("#table").on("click",function(t) {
 
       var target = t.target || e.srcElement;
-      console.log(target);
+      
       if (target.tagName=="DIV"){
       target.setAttribute("data-toggle","modal");
       target.setAttribute("data-target","#myModal");
@@ -36,22 +36,23 @@ export default function eventListener(a, q) {
      
       let text = $("#input").val();
 
-      let rUpdate=q
+      let rUpdate=callbacks.rUpdate;
       rUpdate(targ,text);
 
     });
 
-
+    //if user hits enter, prevent default close modal and refresh site event
+    //rather act like the Save button
     $('.modal-content').keypress(function(e) {
       if(e.which == 13) {
-      //dosomething
+
       event.preventDefault()
       
       let targ=$("[data-target='#myModal']")[0];
      
       let text = $("#input").val();
 
-      let rUpdate=q
+      let rUpdate=callbacks.rUpdate;
       rUpdate(targ,text);
 
       $("#myModal").modal("hide");
@@ -69,19 +70,28 @@ export default function eventListener(a, q) {
 
 
     $("#plusButton").click(function() {
-      
+      let values=[];
       var empty = false;
       $('textarea').each(function() {
+
         if ($(this).val() == '') {
             empty = true;
-            }
+        } else {
+            values.push($(this).val());
+          }
+        
         });
 
         if (empty) {
             alert("at least one field is empty")
         } else {
-            console.log("all are filled")
-            populateTable.addRow();
+            console.log("all are filled",values)
+            
+            let updateTable = callbacks.updateTable;
+
+            updateTable(values);
+
+
         }    
 
     });
