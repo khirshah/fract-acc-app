@@ -1,35 +1,49 @@
 //-------------------------- JQuery -------------------------------------------------
-import populateTable from './tableHandler.js';
 
 export default function eventListener(a, callbacks) {
   return function(a){
 
     var t=a || window.event;
 
-    
+    //-------------------- table clicked ---------------------------------------
+
     $("#table").on("click",function(t) {
 
       var target = t.target || e.srcElement;
+
+      if (target.tagName=="DIV" && target.id.split("-")[1]!="ID"){
+        
+        target.setAttribute("data-toggle","modal");
+        target.setAttribute("data-target","#myModal");
       
-      if (target.tagName=="DIV"){
-      target.setAttribute("data-toggle","modal");
-      target.setAttribute("data-target","#myModal");
-      
-      $("#myModal").modal("show",{
-        keyboard: true
-      });
-      
-      $("#input")[0].value=target.textContent;
+        $("#myModal").modal("show",{
+          keyboard: true
+        });
+
+        if (target.id.split("-")[1]=="DATE") {
+
+        $("#input").attr("type","date");
+        
+        }
+
+        else{
+        $("#input").attr("type","text");
+        $("#input")[0].value=target.textContent;
+        
+        }
+
       }
     });
 
+    //-------------- modal comes active -----------------------------------------
 
     $("#myModal").on("shown.bs.modal",function() {
 
       $("#input")[0].focus();
     });
 
-    
+    //-------------------- save button on modal clicked -------------------------
+
     $("#saveB").click(function() {
 
       let targ=$("[data-target='#myModal']")[0];
@@ -41,8 +55,10 @@ export default function eventListener(a, callbacks) {
 
     });
 
-    //if user hits enter, prevent default close modal and refresh site event
+    //----------------------- user hits enter on modal -------------------------
+    //prevent the default "close modal and refresh site" event
     //rather act like the Save button
+
     $('.modal-content').keypress(function(e) {
       if(e.which == 13) {
 
@@ -59,6 +75,7 @@ export default function eventListener(a, callbacks) {
       }
     });
 
+    //--------------------- dismis button on modal clicked ---------------------
 
     $("#dismisB").click(function() {
       
@@ -68,28 +85,50 @@ export default function eventListener(a, callbacks) {
 
     });
 
+    //--------------------- Save row button clicked ----------------------------
 
     $("#plusButton").click(function() {
-      let values=[];
+      
+      let values={};
       var empty = false;
+
+      //Check textareas and collect their data
       $('textarea').each(function() {
 
         if ($(this).val() == '') {
+            //if any one of them is empty, change the bool to true
             empty = true;
-        } else {
-            values.push($(this).val());
-          }
+        } 
+
+        else {
+
+          let id=$(this).attr('id').split('-')[1]
+          values[id]=$(this).val();
         
-        });
+        }
 
+      });
+
+        //if bool is true, not all the fields are filled ->can't save
         if (empty) {
-            alert("at least one field is empty")
-        } else {
-            console.log("all are filled",values)
-            
-            let updateTable = callbacks.updateTable;
 
-            updateTable(values);
+          alert("at least one field is empty")
+
+        } 
+
+        //if everíthing is filled, we call the saveRow function
+        else {
+
+          let saveRow = callbacks.saveRow;
+          
+          saveRow(values);
+
+          //then clean up: increase row ID of input row and empty the textareas
+          table.lastChild.firstChild.innerHTML=parseInt(table.lastChild.firstChild.innerHTML)+1;
+          
+          $('textarea').each(function() {
+            $(this).val('')
+          })
 
 
         }    

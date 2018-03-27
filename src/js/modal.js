@@ -16,11 +16,8 @@ return(`<!-- Modal HTML -->
 
             <div class="modal-body">
 
-              <form>
 
                 <input id="input" type="text" class="form-control">
-
-              </form>
 
 
             </div>
