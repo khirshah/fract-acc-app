@@ -22,7 +22,9 @@ export default function eventListener(a, callbacks) {
 
         if (target.id.split("-")[1]=="DATE") {
 
-        $("#input").attr("type","date");
+          $("#input").attr("type","date");
+          let date = new Date(target.getAttribute("timestamp"));
+          $("#input")[0].value=date.toISOString().split("T")[0];
         
         }
 
@@ -45,10 +47,16 @@ export default function eventListener(a, callbacks) {
     //-------------------- save button on modal clicked -------------------------
 
     $("#saveB").click(function() {
+      let targ=$("[data-target='#myModal']")[0];      
+      
+      if (targ.id.split("-")[1]!="DATE") {
 
-      let targ=$("[data-target='#myModal']")[0];
-     
-      let text = $("#input").val();
+        var text = $("#input").val();
+      }
+      else {
+        var text = $("#input").val();
+        console.log("saveB: "+text)
+      }
 
       let rUpdate=callbacks.rUpdate;
       rUpdate(targ,text);
@@ -120,7 +128,7 @@ export default function eventListener(a, callbacks) {
         else {
 
           let saveRow = callbacks.saveRow;
-          
+
           saveRow(values);
 
           //then clean up: increase row ID of input row and empty the textareas

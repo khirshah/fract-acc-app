@@ -1,4 +1,6 @@
-import ColHeads from './metaData.json';
+import ColHeads from '../data/metaData.json';
+
+function zPad(n) {return n < 10 ? "0"+n : n;}
 
 export function drawTable(cont) {
 
@@ -17,9 +19,20 @@ export function drawTable(cont) {
         var col = document.createElement('div');
         col.setAttribute("id", cont[i]._id+"-"+ColHeads[j].name);
         col.classList.add('col-sm');
-        
-        //then we copy the data from the database to the html
-        col.innerHTML = cont[i][ColHeads[j].name];
+
+         //then we copy the data from the database to the html
+        if (ColHeads[j].name=="DATE"){
+
+          let date=new Date(cont[i][ColHeads[j].name]);
+          col.setAttribute("timestamp",date);
+          col.innerHTML = date.toLocaleDateString();
+        }
+
+        else{
+    
+          col.innerHTML = cont[i][ColHeads[j].name];
+        }
+
         //at the end we insert the current cell to the row
         r.appendChild(col);
 
@@ -55,16 +68,17 @@ export function  addRow() {
       col.setAttribute("id",'newRow-'+ColHeads[i].name);
 
       if (ColHeads[i].name=="ID") {
-
-        let ID=parseInt(table.lastChild.firstChild.innerHTML)+1
-
+        
+        const now = new Date();
+        let ID=now.getTime();
         col.innerHTML=ID;
+      
       }
 
       //and fill them up with something if they are not the ID field
       else {
         
-        col.innerHTML="something";  
+        col.innerHTML="sg";  
       
       }
       
@@ -76,8 +90,15 @@ export function  addRow() {
     //otherwise if field is editable
     else {
       //create textarea input fields
-      let inp = document.createElement('textarea');
-      inp.setAttribute("type","text")
+      let inp = document.createElement('input');
+      
+      if (ColHeads[i].name=="DATE") {
+        inp.setAttribute("type","date")
+      }
+      else {
+        inp.setAttribute("type","text")
+      }
+
       inp.setAttribute("placeholder",'edit');
       inp.setAttribute("class",'col-sm');
       inp.setAttribute("id",'newRow-'+ColHeads[i].name);
@@ -124,33 +145,60 @@ export function insertTableRow(content) {
 
 export function updateTableCell(target,text) {
 
-  target.innerText=text;
   target.removeAttribute("data-toggle");
   target.removeAttribute("data-target");
 
+
+  if (target.id.split("-")[1]!="DATE"){
+
+    target.innerText=text;
+  }
+  else {
+
+    let date=new Date(text);
+    target.setAttribute("timestamp",date);
+    target.innerText=date.toLocaleDateString();
+
+  }
 };
 
 
 export function createDStruct(values) {
 
     let obj = {};
+    const now = new Date();
     for (var i in ColHeads) {
-      
-      let key=ColHeads[i].name
-      if (key in values) {
 
-        obj[key]=values[key];
-      }
-      else {
-        if (key=="ID"){
-
-          obj[key]=table.lastChild.firstChild.innerHTML
-        }
-        else if (key!="_id") {
-          obj[key]="something"
-        }
+      if (ColHeads[i].visible) {
         
-      } 
+        let key=ColHeads[i].name
+        if (key in values) {
+
+          obj[key]=values[key];
+        
+        }
+        //column value is not coming from textarea
+        else {
+          if (key=="ID"){
+
+            obj[key]=now.getTime();
+          
+          }
+           else if (key=="DATE"){
+
+            obj[key]=now.getTime();
+          
+          }
+          else {
+        
+            obj[key]="sg"
+        
+          }
+          
+        } 
+
+      }
+
     };
 
     return obj;

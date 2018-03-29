@@ -20,7 +20,7 @@
   },
   {"name":"DATE",
   "visible" : true,
-  "editable":false
+  "editable":true
   },
   {"name" : "INV",
   "visible" : true,

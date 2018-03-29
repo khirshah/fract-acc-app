@@ -4,7 +4,7 @@ import DataBase from './DataBase.js';
 import modalContent from './modal.js';
 import {drawTable, addRow, insertTableRow, createDStruct, updateTableCell} from './tableHandler.js';
 import eventListener from './eventListener.js';
-
+import getLocaleDateString from './dateFormatChecker.js'
 
 
 //-------------------------------- DATA -----------------------------------------------
@@ -22,7 +22,6 @@ var dataB = new DataBase(db);
 //import Data from './data.json';
 //dataB.clearDb();
 //dataB.insertContent(Data);
-
 
 
 //-------------------------------- FUNCTIONS -----------------------------------------
@@ -84,3 +83,6 @@ $(document).ready(eventListener(jQuery, callBackFunctions ));
 //------------ read data from database, then populate html table-----------
 
 dataB.fetchData(callBs);
+
+//let format= getLocaleDateString();
+//console.log(format)
