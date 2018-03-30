@@ -101,11 +101,12 @@ export default function eventListener(a, callbacks) {
       var empty = false;
 
       //Check textareas and collect their data
-      $('textarea').each(function() {
+      $('input').each(function() {
 
-        if ($(this).val() == '') {
+        if ($(this).val() == '' && $(this).inneHTML == '') {
             //if any one of them is empty, change the bool to true
             empty = true;
+            console.log($(this))
         } 
 
         else {
@@ -116,6 +117,7 @@ export default function eventListener(a, callbacks) {
         }
 
       });
+
 
         //if bool is true, not all the fields are filled ->can't save
         if (empty) {
@@ -134,8 +136,9 @@ export default function eventListener(a, callbacks) {
           //then clean up: increase row ID of input row and empty the textareas
           table.lastChild.firstChild.innerHTML=parseInt(table.lastChild.firstChild.innerHTML)+1;
           
-          $('textarea').each(function() {
-            $(this).val('')
+          $('input').each(function() {
+            if ($(this).attr("type")!="date")
+              $(this).val('')
           })
 
 

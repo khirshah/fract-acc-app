@@ -1,0 +1,102 @@
+{
+  "columns": {
+    "ID": {
+      "name": "Transaction Id",
+      "visible": false,
+      "editable": false,
+      "dataType": "integer",
+      "inputType": "ASSIGNED"
+    },
+   
+    "USD": {
+      "name": "USD",
+      "visible": true,
+      "editable": true,
+      "dataType": "FLOAT",
+      "inputType": "USER_INPUT"
+    },
+    
+    "GBP_PROJ": {
+      "name": "GBP projection",
+      "visible": true,
+      "editable": false,
+      "dataType": "FLOAT",
+      "inputType": "CALCULATED",
+      "calculation": [
+        "*",
+        "[USD]",
+        "[XCH_USD_GBP]"
+      ]
+    },
+    
+    "GBP": {
+      "name": "GBP",
+      "visible": true,
+      "editable": true,
+      "dataType": "FLOAT",
+      "inputType": "USER_INPUT"
+    },
+    
+    "TRANS_TYPE": {
+      "name": "Transaction type",
+      "visible": true,
+      "editable": false,
+      "dataType": "CHARACTER",
+      "inputType": "DROPDOWN",
+      "values": [
+          "IC",
+          "XC",
+          "XF",
+          "PA"
+        ]
+    },
+
+    "TRANS_DATE": {
+      "name":"Date",
+      "visible": true,
+      "editable": true,
+      "dataType": "DATE",
+      "inputType": "USER_INPUT || ASSIGNED"
+    },
+    "TRANS_REF": {
+      "name": "Transaction reference",
+      "visible": true,
+      "editable": false,
+      "dataType": "CHARACTER",
+      "inputType": "USER_INPUT || CALCULATED"
+    },
+    "TRANS_DESC": {
+      "name": "Description",
+      "visible": true,
+      "editable": true,
+      "dataType": "CHARACTER",
+      "inputType": "USER_INPUT"
+    },
+    "XCH_USD_GBP": {
+      "name": "USD/GBP rate",
+      "visible": true,
+      "editable": true,
+      "dataType": "FLOAT",
+      "inputType": "CALCULATED || USER_INPUT",
+      "calculation": [
+        "/",
+        1,
+        "XCH_GBP_USD"
+      ]
+    },
+
+    "XCH_GBP_USD": {
+      "name": "GBP/USD rate",
+      "visible": true,
+      "editable": true,
+      "dataType": "FLOAT",
+      "inputType": "CALCULATED || USER_INPUT",
+      "calculation": [
+        "/",
+        1,
+        "XCH_USD_GBP"
+      ]
+
+    }
+  }
+}

@@ -19,7 +19,7 @@ var db = new Datastore({ filename: 'db.db', autoload: true });
 var dataB = new DataBase(db);
 
 //reset database original values from JSON
-//import Data from './data.json';
+//import Data from '../data/data.json';
 //dataB.clearDb();
 //dataB.insertContent(Data);
 

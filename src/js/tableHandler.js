@@ -1,8 +1,35 @@
 import ColHeads from '../data/metaData.json';
+import CH from '../data/metaData3.json';
+
+var array=Object.keys(CH.columns)
 
 function zPad(n) {return n < 10 ? "0"+n : n;}
 
+function createTableHeader() {
+  let tableHeader=document.createElement('thead');
+  tableHeader.setAttribute("class","thead");  
+  var headerRow = document.createElement('tr');
+  headerRow.classList.add('row');
+
+  for (var j in array){
+    let variable=CH.columns[array[j]]
+    if (variable.visible) {
+
+      var col = document.createElement('th');
+      col.classList.add('col-sm');        
+      col.innerHTML = array[j]
+
+      headerRow.appendChild(col); 
+    }
+
+  }
+  tableHeader.appendChild(headerRow);
+  table.appendChild(tableHeader);
+}
+
 export function drawTable(cont) {
+
+  createTableHeader();
 
   //iterate through the content rows
   for (var i in cont){
@@ -11,26 +38,28 @@ export function drawTable(cont) {
       var r = document.createElement('div');
       r.classList.add('row');
 
-    for (var j in ColHeads){
+    for (var j in array){
+      let variable=CH.columns[array[j]]
 
       //same with the columns if they are visible
-      if (ColHeads[j].visible){
+      if (variable.visible){
 
         var col = document.createElement('div');
-        col.setAttribute("id", cont[i]._id+"-"+ColHeads[j].name);
+        col.setAttribute("id", cont[i]._id+"-"+array[j]);
         col.classList.add('col-sm');
 
          //then we copy the data from the database to the html
-        if (ColHeads[j].name=="DATE"){
-
-          let date=new Date(cont[i][ColHeads[j].name]);
+        if (array[j]=="TRANS_DATE"){
+          //we convert the format to browser locale value
+          let date=new Date(cont[i][array[j]]);
+          //and save the actual timestamp as an attribute of this field
           col.setAttribute("timestamp",date);
           col.innerHTML = date.toLocaleDateString();
         }
 
         else{
     
-          col.innerHTML = cont[i][ColHeads[j].name];
+          col.innerHTML = cont[i][array[j]];
         }
 
         //at the end we insert the current cell to the row
@@ -57,57 +86,54 @@ export function  addRow() {
   let row = document.createElement("div")
   row.setAttribute("class","row")
 
-  for (var i in ColHeads){
+  for (var j in array){
+    let variable=CH.columns[array[j]]
     
+    if (variable.visible){
     //if content is not editable
-    if (ColHeads[i].editable==false) {
-      
-      //create divs
-      let col = document.createElement('div');
-      col.setAttribute("class",'col-sm');
-      col.setAttribute("id",'newRow-'+ColHeads[i].name);
-
-      if (ColHeads[i].name=="ID") {
+      if (variable.editable==false) {
         
-        const now = new Date();
-        let ID=now.getTime();
-        col.innerHTML=ID;
-      
-      }
-
-      //and fill them up with something if they are not the ID field
-      else {
-        
+        //create divs
+        var col = document.createElement('div');
+        col.setAttribute("class",'col-sm');
+        col.setAttribute("id",'newRow-'+array[j]);
+        //and fill them up with something
         col.innerHTML="sg";  
-      
-      }
-      
-    //upon completion append col to row
-    row.appendChild(col);
+        
+        
+      //upon completion append col to row
+      row.appendChild(col);
 
-    }
-
-    //otherwise if field is editable
-    else {
-      //create textarea input fields
-      let inp = document.createElement('input');
-      
-      if (ColHeads[i].name=="DATE") {
-        inp.setAttribute("type","date")
       }
+
+      //otherwise if field is editable
       else {
-        inp.setAttribute("type","text")
-      }
+        //create textarea input fields
+        var inp = document.createElement('input');
+        
+        if (array[j]=="TRANS_DATE") {
 
-      inp.setAttribute("placeholder",'edit');
-      inp.setAttribute("class",'col-sm');
-      inp.setAttribute("id",'newRow-'+ColHeads[i].name);
-      //upon completion append textarea to row
-      row.appendChild(inp);
+          inp.setAttribute("type","date")
+          //we create a new date
+          let date= new Date()
+          inp.value=date.toISOString().split("T")[0]
+
+        }
+        else {
+          inp.setAttribute("type","text")
+          inp.setAttribute("placeholder",'edit');
+        }
+
+
+        inp.setAttribute("class",'col-sm');
+        inp.setAttribute("id",'newRow-'+array[j]);
+        //upon completion append textarea to row
+        row.appendChild(inp);
+      };
 
     };
 
-  }
+  };
 
   //upon completion append row to table
   table.appendChild(row);
@@ -121,18 +147,17 @@ export function insertTableRow(content) {
   var r = document.createElement('div');
   r.classList.add('row');
 
-  for (var j in ColHeads){
+  for (var j in array){
+    let variable=CH.columns[array[j]]
 
-    if (ColHeads[j].name!="_id") {
+    if (variable.visible) {
       
       var col = document.createElement('div');
-      col.setAttribute("id", content[0]._id+"-"+ColHeads[j].name);
+      col.setAttribute("id", content[0]._id+"-"+array[j]);
       col.classList.add('col-sm');
-
-      let key=ColHeads[j].name
       
       //we copy the data from the database to the html
-      col.innerHTML = content[0][key];
+      col.innerHTML = content[0][array[j]];
       //at the end we insert the current cell to the row
       r.appendChild(col);
     };
@@ -149,13 +174,14 @@ export function updateTableCell(target,text) {
   target.removeAttribute("data-target");
 
 
-  if (target.id.split("-")[1]!="DATE"){
+  if (target.id.split("-")[1]!="TRANS_DATE"){
 
     target.innerText=text;
   }
   else {
-
+    //we format the date to user locale value
     let date=new Date(text);
+    //and save the actual timestamp as an attribute this field
     target.setAttribute("timestamp",date);
     target.innerText=date.toLocaleDateString();
 
@@ -167,39 +193,40 @@ export function createDStruct(values) {
 
     let obj = {};
     const now = new Date();
-    for (var i in ColHeads) {
+    for (var j in array) {
 
-      if (ColHeads[i].visible) {
+      let variable=CH.columns[array[j]]
         
-        let key=ColHeads[i].name
-        if (key in values) {
+      let key=array[j]
+      //if value is user supported
+      if (key in values) {
 
-          obj[key]=values[key];
+        obj[key]=values[key];
+      
+      }
+      //column value is not coming from textarea
+      else {
+        if (key=="ID"){
+
+          obj[key]=now.getTime();
         
         }
-        //column value is not coming from textarea
+         else if (key=="TRANS_DATE"){
+
+          obj[key]=now.getTime();
+        
+        }
         else {
-          if (key=="ID"){
-
-            obj[key]=now.getTime();
-          
-          }
-           else if (key=="DATE"){
-
-            obj[key]=now.getTime();
-          
-          }
-          else {
+      
+          obj[key]="sg"
+      
+        }
         
-            obj[key]="sg"
-        
-          }
-          
-        } 
+      } 
 
-      }
 
     };
 
     return obj;
+
   }
