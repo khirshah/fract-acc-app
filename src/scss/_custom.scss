@@ -1,4 +1,4 @@
-.col-sm {
+tbody {
   background-color: yellowgreen;
 }
 
@@ -6,8 +6,21 @@
   background-color: yellowgreen;
 }
 
-textarea {
-    width: 80px;
+input {
+    width: 100px;
     height: 40px;
-    background-color: yellowgreen;
+    
+}
+
+thead {
+  background-color: green;
+}
+
+.inp {
+  background-color: yellowgreen;
+}
+
+.date {
+    width: 150px;
+    height: 40px;
 }

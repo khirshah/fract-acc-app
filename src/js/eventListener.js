@@ -1,3 +1,5 @@
+import dropDown from './dropdown.js'
+
 //-------------------------- JQuery -------------------------------------------------
 
 export default function eventListener(a, callbacks) {
@@ -10,8 +12,8 @@ export default function eventListener(a, callbacks) {
     $("#table").on("click",function(t) {
 
       var target = t.target || e.srcElement;
-
-      if (target.tagName=="DIV" && target.id.split("-")[1]!="ID"){
+      //if field is not in the input row and is editable, open modal window
+      if (target.id.split("-")[0]!="newRow" && target.getAttribute("editable")=="true"){
         
         target.setAttribute("data-toggle","modal");
         target.setAttribute("data-target","#myModal");
@@ -20,22 +22,31 @@ export default function eventListener(a, callbacks) {
           keyboard: true
         });
 
-        if (target.id.split("-")[1]=="DATE") {
+        if (target.id.split("-")[1]=="TRANS_DATE") {
 
           $("#input").attr("type","date");
           let date = new Date(target.getAttribute("timestamp"));
           $("#input")[0].value=date.toISOString().split("T")[0];
-        
         }
+        //any other field than date
+        else {
 
-        else{
         $("#input").attr("type","text");
         $("#input")[0].value=target.textContent;
-        
         }
 
       }
+
     });
+
+    /*$("table").on("change", function() {
+      console.log("I'm called")
+      if (target.id.split("-")[0]=="newRow"){
+
+        let valueCalc=callbacks.valueCalc;
+        valueCalc();
+      }
+    })*/
 
     //-------------- modal comes active -----------------------------------------
 
@@ -43,6 +54,7 @@ export default function eventListener(a, callbacks) {
 
       $("#input")[0].focus();
     });
+
 
     //-------------------- save button on modal clicked -------------------------
 
@@ -100,52 +112,68 @@ export default function eventListener(a, callbacks) {
       let values={};
       var empty = false;
 
-      //Check textareas and collect their data
-      $('input').each(function() {
+      //Check input fields and collect their data
+      $('.inp').each(function() {
 
-        if ($(this).val() == '' && $(this).inneHTML == '') {
+        if ($(this)[0].value == '') {
             //if any one of them is empty, change the bool to true
             empty = true;
-            console.log($(this))
+
         } 
-
+        //extract the data to values array
         else {
+          if ($(this)[0].tagName=="TD"){
+            let id=$(this)[0].id.split('-')[1]
+            values[id]=$(this)[0].innerHTML;
+          }
 
-          let id=$(this).attr('id').split('-')[1]
-          values[id]=$(this).val();
-        
+          else {
+
+          let id=$(this)[0].offsetParent.id.split('-')[1]
+          values[id]=$(this)[0].value;
+          }
+
         }
 
       });
 
 
-        //if bool is true, not all the fields are filled ->can't save
-        if (empty) {
+      //if bool is true, not all the fields are filled ->can't save
+      if (empty) {
 
-          alert("at least one field is empty")
+        alert("at least one field is empty")
 
-        } 
+      } 
 
-        //if everíthing is filled, we call the saveRow function
-        else {
+      //if everíthing is filled, we call the saveRow function
+      else {
 
-          let saveRow = callbacks.saveRow;
+        let saveRow = callbacks.saveRow;
 
-          saveRow(values);
+        saveRow(values);
 
-          //then clean up: increase row ID of input row and empty the textareas
-          table.lastChild.firstChild.innerHTML=parseInt(table.lastChild.firstChild.innerHTML)+1;
+        //then clean up: empty the input row
+        
+        $('.inp').each(function() {
           
-          $('input').each(function() {
-            if ($(this).attr("type")!="date")
+          if ($(this)[0].tagName=="TD"){
+            console.log($(this)[0].innerHTML)
+            $(this)[0].innerHTML="";
+          }
+          else{
+            if ($(this).attr("type")!="date" && $(this)[0].tagName!="SELECT") {
+
               $(this).val('')
-          })
+            }
+          }
+          
+            
+        })
 
 
-        }    
+      }   
 
     });
-
 
 
   }

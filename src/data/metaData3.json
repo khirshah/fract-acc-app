@@ -4,7 +4,7 @@
       "name": "Transaction Id",
       "visible": false,
       "editable": false,
-      "dataType": "integer",
+      "dataType": "INTEGER",
       "inputType": "ASSIGNED"
     },
    
@@ -56,14 +56,16 @@
       "visible": true,
       "editable": true,
       "dataType": "DATE",
-      "inputType": "USER_INPUT || ASSIGNED"
+      "inputType": "DATEINPUT",
+      "altInput":"ASSIGNED"
     },
     "TRANS_REF": {
       "name": "Transaction reference",
       "visible": true,
       "editable": false,
       "dataType": "CHARACTER",
-      "inputType": "USER_INPUT || CALCULATED"
+      "inputType": "USER_INPUT",
+      "altInput":"CALCULATED"
     },
     "TRANS_DESC": {
       "name": "Description",
@@ -77,7 +79,8 @@
       "visible": true,
       "editable": true,
       "dataType": "FLOAT",
-      "inputType": "CALCULATED || USER_INPUT",
+      "inputType": "USER_INPUT",
+      "altInput":"CALCULATED",
       "calculation": [
         "/",
         1,
@@ -89,8 +92,8 @@
       "name": "GBP/USD rate",
       "visible": true,
       "editable": true,
-      "dataType": "FLOAT",
-      "inputType": "CALCULATED || USER_INPUT",
+      "inputType": "USER_INPUT",
+      "altInput":"CALCULATED",
       "calculation": [
         "/",
         1,

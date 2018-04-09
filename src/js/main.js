@@ -2,7 +2,8 @@
 
 import DataBase from './DataBase.js';
 import modalContent from './modal.js';
-import {drawTable, addRow, insertTableRow, createDStruct, updateTableCell} from './tableHandler.js';
+import {drawTable, addRow, insertTableRow, createDStruct, 
+  updateTableCell} from './tableHandler.js';
 import eventListener from './eventListener.js';
 import getLocaleDateString from './dateFormatChecker.js'
 
@@ -55,6 +56,7 @@ function rUpdate(targ, text){
   updateTableCell(targ,text);
 
 };
+
 
 //-------------------- group callback functions --------------------
 
