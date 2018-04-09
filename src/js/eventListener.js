@@ -39,14 +39,6 @@ export default function eventListener(a, callbacks) {
 
     });
 
-    /*$("table").on("change", function() {
-      console.log("I'm called")
-      if (target.id.split("-")[0]=="newRow"){
-
-        let valueCalc=callbacks.valueCalc;
-        valueCalc();
-      }
-    })*/
 
     //-------------- modal comes active -----------------------------------------
 
@@ -107,7 +99,7 @@ export default function eventListener(a, callbacks) {
 
     //--------------------- Save row button clicked ----------------------------
 
-    $("#plusButton").click(function() {
+    $("#saveButton").click(function() {
       
       let values={};
       var empty = false;
@@ -149,19 +141,19 @@ export default function eventListener(a, callbacks) {
       else {
 
         let saveRow = callbacks.saveRow;
-
         saveRow(values);
 
-        //then clean up: empty the input row
-        
+        //then clean up: empty the input row        
         $('.inp').each(function() {
-          
+          //only calculated fields doesn't have inner input fields
+          //therefore treted differently using innerHTML property
           if ($(this)[0].tagName=="TD"){
             console.log($(this)[0].innerHTML)
             $(this)[0].innerHTML="";
           }
           else{
-            if ($(this).attr("type")!="date" && $(this)[0].tagName!="SELECT") {
+            //also don't empty the date and dropdown fields
+            if ($(this).attr("type")!="date") {
 
               $(this).val('')
             }

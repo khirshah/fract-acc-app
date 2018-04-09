@@ -1,9 +1,13 @@
-tbody {
-  background-color: yellowgreen;
+tbody > tr {
+  background-color: #b8dc6f;
 }
 
 .btn-prim {
-  background-color: yellowgreen;
+  background-color: #b8dc6f;
+}
+
+#saveButton {
+  background-color: #82a145;
 }
 
 input {
@@ -12,12 +16,12 @@ input {
     
 }
 
-thead {
-  background-color: green;
+thead > tr {
+  background-color: #006666;
 }
 
-.inp {
-  background-color: yellowgreen;
+.inp:only-child {
+  background-color: #cce698;
 }
 
 .date {

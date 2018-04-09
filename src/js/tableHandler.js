@@ -1,3 +1,5 @@
+//----------------------------------------- INIT -----------------------------------------------
+
 import ColHeads from '../data/metaData.json';
 import CH from '../data/metaData3.json';
 import dropDown from './dropdown.js'
@@ -6,8 +8,13 @@ var array=Object.keys(CH.columns)
 
 var xch=0.71;
 
+//----------------------------------------- FUNCTIONS -----------------------------------------
+
+//------------------------------ zeropad -----------------------------
 function zPad(n) {return n < 10 ? "0"+n : n;}
 
+
+//---------------------- table initializer functions -----------------
 function createTableHeader() {
 
   var tableHeader=document.createElement('thead');
@@ -130,7 +137,6 @@ export function  addRow() {
 
         case "DROPDOWN":
           var dd=dropDown();
-          //col.setAttribute("editable",variable.editable);
           col.innerHTML+=dd;
           break;
 
@@ -162,7 +168,7 @@ export function  addRow() {
   
 };
 
-
+//------------------------- table update functions ----------------------------
 
 export function insertTableRow(content) {
 
@@ -236,7 +242,7 @@ export function createDStruct(values) {
       } 
     
     };
-    //console.log(obj)
+
     return obj;
 
   }
@@ -250,18 +256,17 @@ function calc(target){
     case "USD":
 
       var gbpProjVal=target.firstChild.value*xch;
-
-      //console.log(CH.columns.GBP_PROJ.calculation)
-
       document.getElementById("newRow-GBP_PROJ").innerHTML=gbpProjVal.toFixed(2);
       break;
 
     case "XCH_USD_GBP":
+
       let gu = 1/target.firstChild.value;
       document.getElementById("newRow-XCH_GBP_USD").firstChild.value=gu.toFixed(2);
       break;
 
     case "XCH_GBP_USD":
+
       let ug = 1/target.firstChild.value;
       document.getElementById("newRow-XCH_USD_GBP").firstChild.value=ug.toFixed(2);
       break;
@@ -270,5 +275,5 @@ function calc(target){
       break;
   }
 
-    //console.log("calc()", target)
-  }
+
+}
