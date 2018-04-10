@@ -26,6 +26,7 @@
   "dependencies": {
     "bootstrap": "^4.0.0",
     "jquery": "^3.3.1",
+    "json-logic-js": "^1.2.2",
     "lodash": "^4.17.5",
     "nedb": "^1.8.0",
     "nedb-promise": "^2.0.1",

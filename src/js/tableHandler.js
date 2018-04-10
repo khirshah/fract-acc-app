@@ -2,7 +2,8 @@
 
 import ColHeads from '../data/metaData.json';
 import CH from '../data/metaData3.json';
-import dropDown from './dropdown.js'
+import dropDown from './dropdown.js';
+import jsonLogic from "json-logic-js";
 
 var array=Object.keys(CH.columns)
 
@@ -248,12 +249,22 @@ export function createDStruct(values) {
   }
 
 
-
-
 function calc(target){
 
   switch (target.id.split("-")[1]){
     case "USD":
+      let c=CH.columns.GBP_PROJ.calculation
+      console.log(c)
+      let rule=c[0];
+      console.log(document.getElementById("newRow-"+c[1]))
+      let val1=parseFloat(document.getElementById("newRow-"+c[1]).firstChild.value);
+      let val2=parseFloat(document.getElementById("newRow-"+c[2]).firstChild.value);
+      let values=[val1,val2]
+      console.log(values)
+
+
+      var gp=jsonLogic.apply(rule, [val1,val2]);
+      console.log("gp: ",gp)
 
       var gbpProjVal=target.firstChild.value*xch;
       document.getElementById("newRow-GBP_PROJ").innerHTML=gbpProjVal.toFixed(2);

@@ -1,4 +1,17 @@
+#container {
+  background-color: #c1e081;
+  font-family: "Lucida Console", Monaco, monospace;
+}
+
+
+thead > tr {
+  color: #a4c1be;
+  background-color: #006666;
+  font-weight: bold;
+}
+
 tbody > tr {
+  color: #1d4b50;
   background-color: #b8dc6f;
 }
 
@@ -7,7 +20,9 @@ tbody > tr {
 }
 
 #saveButton {
-  background-color: #82a145;
+  color: #a4c1be;
+  background-color: #026666;
+  font-weight: bold;
 }
 
 input {
@@ -16,15 +31,14 @@ input {
     
 }
 
-thead > tr {
-  background-color: #006666;
-}
-
 .inp:only-child {
   background-color: #cce698;
+  padding: 5px;
 }
 
 .date {
     width: 150px;
     height: 40px;
 }
+
+::-webkit-inner-spin-button { display: none; }

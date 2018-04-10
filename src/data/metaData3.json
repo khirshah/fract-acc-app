@@ -24,8 +24,8 @@
       "inputType": "CALCULATED",
       "calculation": [
         "*",
-        "[USD]",
-        "[XCH_USD_GBP]"
+        "USD",
+        "XCH_USD_GBP"
       ]
     },
     
