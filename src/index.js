@@ -3,4 +3,4 @@ window.Popper = require('popper.js') // required for tooltip, popup...
 require('bootstrap')
 
 import './index.scss';
-import './js/dataBaseHandler.js';
+import './js/main.js';

@@ -1,0 +1,26 @@
+[
+  {
+    "ID": 1522256839160,
+    "USD": 7800,
+    "GBP_PROJ": "[calculated: xch * USD]",
+    "GBP": 0.00,
+    "TRANS_TYPE": "IC",
+    "TRANS_DATE": "13/07/2017",
+    "TRANS_REF": "#CS24",
+    "TRANS_DESC": "$7800.00 USD  =  £6037.27 GBP  [inv: £6064.94 | 31/05/17]",
+    "XCH_USD_GBP": "0.7740096914",
+    "XCH_GBP_USD": "1.2919734870"
+  },
+  {
+    "ID": 1522256880536,
+    "USD": 9600,
+    "GBP_PROJ": "[calculated: xch * USD]",
+    "GBP": 0.00,
+    "TRANS_TYPE": "IC",
+    "TRANS_DATE": "13/07/2017",
+    "TRANS_REF": "#CS24",
+    "TRANS_DESC": "$7800.00 USD  =  £6037.27 GBP  [inv: £6064.94 | 31/05/17]",
+    "XCH_USD_GBP": "0.7740096914",
+    "XCH_GBP_USD": "1.2919734870"
+  }
+]

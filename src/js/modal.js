@@ -16,11 +16,8 @@ return(`<!-- Modal HTML -->
 
             <div class="modal-body">
 
-              <form>
 
                 <input id="input" type="text" class="form-control">
-
-              </form>
 
 
             </div>
@@ -29,7 +26,7 @@ return(`<!-- Modal HTML -->
 
                 <button id="dismisB" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 
-                <button id="saveB" type="button" class="btn btn-prim" data-dismiss="modal">Save changes</button>
+                <button id="saveB" type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
 
             </div>
 

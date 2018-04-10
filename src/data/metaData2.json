@@ -1,0 +1,84 @@
+{
+  "types": [
+    "TYPE/CALCULATED",
+    "TYPE/DROPDOWN",
+    "TYPE/DATE",
+    "TYPE/LIST",
+  ],
+  "dataTypeLists": {
+    "TransactionType": [
+      "IC",
+      "XC",
+      "XF",
+      "PA"
+    ],
+    "TransactionReference":[],
+    },
+  "columns": {
+    "ID": {
+      "name": "Transaction Id",
+      "visible": false,
+      "editable": false,
+      "type": "id"
+    },
+    "USD": {
+      "name": "USD",
+      "visible": true,
+      "editable": true,
+      "type": "number"
+    },
+    "GBP_PROJ": {
+      "name": "GBP projection",
+      "visible": true,
+      "editable": false,
+      "type": "types.TYPE/CALCULATED",
+      "dataType": "[USD] * [XCH_USD_GBP]"
+    },
+    "GBP": {
+      "name": "GBP",
+      "visible": true,
+      "editable": true,
+      "type": "number"
+    },
+    "TRANS_TYPE": {
+      "name": "Transaction type",
+      "visible": true,
+      "editable": false,
+      "type": "types.TYPE/DROPDOWN",
+      "dataType": "DataTypeLists.TransactionType"
+    },
+    "TRANS_DATE": {
+      "name":"Date",
+      "visible": true,
+      "editable": true,
+      "type": "TYPE/DATE"
+    },
+    "TRANS_REF": {
+      "name": "Transaction reference",
+      "visible": true,
+      "editable": false,
+      "type": "types.TYPE/LIST",
+      "dataType": "DataTypeLists.TransactionReference"
+    },
+    "TRANS_DESC": {
+      "name": "Description",
+      "visible": true,
+      "editable": true,
+      "type": "string"
+    },
+    "XCH_USD_GBP": {
+      "name": "USD/GBP rate",
+      "visible": true,
+      "editable": true,
+      "type": "types.TYPE/CALCULATED",
+      "dataType": "(1 / [XCH_GBP_USD]) || INPUT"
+    },
+    "XCH_GBP_USD": {
+      "name": "GBP/USD rate",
+      "visible": true,
+      "editable": true,
+      "type": "types.TYPE/CALCULATED",
+      "dataType": "(1 / [XCH_USD_GBP]) || INPUT"
+    }
+  }
+}

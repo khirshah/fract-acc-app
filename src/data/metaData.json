@@ -1,0 +1,41 @@
+[{"name" : "ID",
+  "visible" : true,
+  "editable" : false
+  },
+  {"name" : "USD",
+  "visible" : true,
+  "editable" : true
+  },
+  {"name" : "GBP xch",
+  "visible" : true,
+  "editable" : true
+  },
+  {"name" : "GBP",
+  "visible" : true,
+  "editable" : false
+  },
+  {"name" : "TYPE",
+  "visible" : true,
+  "editable" : false
+  },
+  {"name":"DATE",
+  "visible" : true,
+  "editable":true
+  },
+  {"name" : "INV",
+  "visible" : true,
+  "editable" : false
+  },
+  {"name" : "DESCRIPTION",
+  "visible" : false,
+  "editable" : false
+  },
+  {"name" : "XCH",
+  "visible" : true,
+  "editable" : false
+  },
+  {"name" : "_id",
+  "visible" : false,
+  "editable" : false
+  }
+]
