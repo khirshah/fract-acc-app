@@ -1,7 +1,6 @@
 //----------------------------------------- INIT -----------------------------------------------
 
-import ColHeads from '../data/metaData.json';
-import CH from '../data/metaData3.json';
+import CH from '../data/metaData.json';
 import dropDown from './dropdown.js';
 import jsonLogic from "json-logic-js";
 
@@ -253,33 +252,24 @@ function calc(target){
 
   switch (target.id.split("-")[1]){
     case "USD":
-      let c=CH.columns.GBP_PROJ.calculation
-      console.log(c)
-      let rule=c[0];
-      console.log(document.getElementById("newRow-"+c[1]))
-      let val1=parseFloat(document.getElementById("newRow-"+c[1]).firstChild.value);
-      let val2=parseFloat(document.getElementById("newRow-"+c[2]).firstChild.value);
-      let values=[val1,val2]
-      console.log(values)
 
-
-      var gp=jsonLogic.apply(rule, [val1,val2]);
-      console.log("gp: ",gp)
-
-      var gbpProjVal=target.firstChild.value*xch;
-      document.getElementById("newRow-GBP_PROJ").innerHTML=gbpProjVal.toFixed(2);
+      calcGBPProj();
       break;
 
     case "XCH_USD_GBP":
 
+      calcGBPProj();
       let gu = 1/target.firstChild.value;
-      document.getElementById("newRow-XCH_GBP_USD").firstChild.value=gu.toFixed(2);
+      document.getElementById("newRow-XCH_GBP_USD").firstChild.value=gu.toFixed(5);
+
+
+
       break;
 
     case "XCH_GBP_USD":
 
       let ug = 1/target.firstChild.value;
-      document.getElementById("newRow-XCH_USD_GBP").firstChild.value=ug.toFixed(2);
+      document.getElementById("newRow-XCH_USD_GBP").firstChild.value=ug.toFixed(5);
       break;
 
     default:
@@ -287,4 +277,25 @@ function calc(target){
   }
 
 
+}
+
+function calcGBPProj() {
+
+  let c=CH.columns.GBP_PROJ.calculation
+
+  if (document.getElementById("newRow-"+c[1]).firstChild.value!="" && 
+  document.getElementById("newRow-"+c[2]).firstChild.value!="") {
+
+    let op=c[0]
+    let rule={};
+    rule[op]=[{"var":"a"},{"var":"b"}];
+
+    let values={};
+    values["a"]=parseFloat(document.getElementById("newRow-"+c[1]).firstChild.value);
+    values["b"]=parseFloat(document.getElementById("newRow-"+c[2]).firstChild.value);
+
+    var gbpProjVal=jsonLogic.apply(rule, values);
+
+    document.getElementById("newRow-GBP_PROJ").innerHTML=gbpProjVal.toFixed(5);
+  }
 }

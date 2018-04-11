@@ -5,7 +5,6 @@ import modalContent from './modal.js';
 import {drawTable, addRow, insertTableRow, createDStruct, 
   updateTableCell} from './tableHandler.js';
 import eventListener from './eventListener.js';
-import getLocaleDateString from './dateFormatChecker.js'
 
 
 //-------------------------------- DATA -----------------------------------------------
@@ -86,5 +85,3 @@ $(document).ready(eventListener(jQuery, callBackFunctions ));
 
 dataB.fetchData(callBs);
 
-//let format= getLocaleDateString();
-//console.log(format)
