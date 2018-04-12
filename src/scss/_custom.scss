@@ -3,6 +3,11 @@
   font-family: "Lucida Console", Monaco, monospace;
 }
 
+#pageHeader {
+  background-color: #044242;
+  color: #70928f;
+  font-family: "Lucida Console", Monaco, monospace;
+}
 
 thead > tr {
   color: #a4c1be;
@@ -39,6 +44,10 @@ input {
 .date {
     width: 150px;
     height: 40px;
+}
+
+[active=true] {
+  background-color: #055a5a
 }
 
 ::-webkit-inner-spin-button { display: none; }
