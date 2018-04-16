@@ -1,38 +1,26 @@
-window.$ = window.jQuery = require('jquery') // required for bootstrap
-window.Popper = require('popper.js') // required for tooltip, popup...
+//---------------------------- INIT ----------------------------------
+// required for bootstrap
+window.$ = window.jQuery = require('jquery') 
+// required for tooltip, popup...
+window.Popper = require('popper.js') 
 require('bootstrap')
 
 import './index.scss';
-import runMain from './js/main.js';
+import {createTabs, tabEvents} from './js/pageHandler.js';
 import runAccounting from './js/accounting.js';
 
 
 
-$(document).ready(function (a) {
+//-------------------------- commands -------------------------------
+//create tabs
 
-  var t=a || window.event;
+createTabs();
 
-  $(".tab").on("click", function(t) {
+//add events
+$(document).ready(tabEvents());
 
-    document.getElementById("container").innerHTML="";
-
-    var target= t.target || a.srcElement;
-    
-    if (target.id=="accounting") {
-      target.setAttribute("active","true")
-      $("#main").attr("active","false")
-      runAccounting();
-    }
-    
-    else if (target.id=="main") {
-      target.setAttribute("active","true")
-      $("#accounting").attr("active","false")
-      runMain();
-    }
-  })
-
-})
-
-
+//set the accounting page as active
 $("#accounting").attr("active","true")
+
+//run the accounting page, so this shows up first
 runAccounting();
