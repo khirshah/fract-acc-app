@@ -45,12 +45,31 @@ input {
 }
 
 .date {
-    width: 150px;
+    width: 180px;
     height: 40px;
 }
 
 [active=true] {
   background-color: #055a5a
+}
+
+.modal-header {
+  color: #70928f;
+  background-color: #044242;
+}
+
+.modal-body {
+  color: #70928f;
+  background-color: #055a5a
+}
+
+.modal-footer {
+  color: #70928f;
+  background-color: #044242;
+}
+
+.close {
+  background-color: #70928f;
 }
 
 ::-webkit-inner-spin-button { display: none; }

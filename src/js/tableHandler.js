@@ -36,6 +36,9 @@ function createTableHeader() {
     }
 
   }
+  //to make the table look nice we add the extra column for the
+  //delete button, but no button here
+  headerRow.innerHTML+='<td class="col-sm"></td>';
   tableHeader.appendChild(headerRow);
   table.appendChild(tableHeader);
 }
@@ -81,7 +84,6 @@ export function drawTable(cont) {
     
           col.innerHTML = cont[i][array[j]];
         }
-
         //at the end we insert the current cell to the row
         r.appendChild(col);
 
@@ -112,7 +114,7 @@ function deleteButtons(row,id){
 
 
 
-export function  addRow() {
+export function  addInputRow() {
 
   var row = document.createElement("tr")
   row.setAttribute("class","row")
@@ -156,11 +158,14 @@ export function  addRow() {
         case "DATEINPUT":
           var dt = document.createElement('input');
           dt.setAttribute("type","date");
-          dt.classList.add('inp');
-          dt.classList.add('date');
+          dt.classList.add("inp");
+          dt.classList.add("date");
+          dt.setAttribute("id","dateinput")
           //we create a new date
-          let date= new Date()
+          var date= new Date()
+
           dt.value=date.toISOString().split("T")[0];
+
           col.appendChild(dt);
           break;
 
@@ -173,14 +178,17 @@ export function  addRow() {
       row.appendChild(col);
 
     };
-    //to make the table look nice we add the extra column for the
-    //delete button, but no button here
-    row.innerHTML+='<td class="col-sm"></td>';
+
 
   };
+  //to make the table look nice we add the extra column for the
+  //delete button, but no button here
+  row.innerHTML+='<td class="col-sm"></td>';
 
   //upon completion append row to table
   document.getElementsByClassName("tbody")[0].appendChild(row);
+  document.getElementById("dateinput").value=date.toISOString().split("T")[0];
+  console.log(dt.value)
   
 };
 

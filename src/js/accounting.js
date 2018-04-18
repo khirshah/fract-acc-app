@@ -1,7 +1,7 @@
 //-------------------------------- INIT ----------------------------------------------
 import DataBase from './DataBase.js';
-import modalContent from './modal.js';
-import {drawTable, addRow, insertTableRow, createDStruct, 
+import modalContent from './modal2.js';
+import {drawTable, addInputRow, insertTableRow, createDStruct, 
   updateTableCell} from './tableHandler.js';
 import eventListener from './eventListener.js';
 
@@ -18,9 +18,9 @@ var db = new Datastore({ filename: 'db.db', autoload: true });
 var dataB = new DataBase(db);
 
 //reset database original values from JSON
-//import Data from '../data/data.json';
-//dataB.clearDb();
-//dataB.insertContent(Data);
+import Data from '../data/data.json';
+dataB.clearDb();
+dataB.insertContent(Data);
 
 
 //-------------------------------- FUNCTIONS -----------------------------------------
@@ -80,23 +80,27 @@ function delDbRow(ID){
 
 function addEventLis() {
 
+  var callBackFunctions = {}
+  callBackFunctions.rUpdate = rUpdate
+  callBackFunctions.saveRow = saveRow
+  callBackFunctions.delDbRow = delDbRow
+
   $(document).ready(eventListener(jQuery, callBackFunctions ));
 }
 
 
 //-------------------- group callback functions --------------------
 
-var callBackFunctions = {}
-callBackFunctions.rUpdate = rUpdate
-callBackFunctions.saveRow = saveRow
-callBackFunctions.delDbRow = delDbRow
 
-var callBs = {}
-callBs.drawTable=drawTable
-callBs.addRow=addRow
-callBs.addEventLis=addEventLis
 
-export default function runAccounting(){
+
+
+export default function runAccounting() {
+
+  var callBs = {}
+  callBs.drawTable=drawTable
+  callBs.addInputRow=addInputRow
+  callBs.addEventLis=addEventLis
 
   //------------------------ insert html table -----------------------------
   insertTable();

@@ -20,7 +20,7 @@ class DataBase {
     this.data.find({}).sort({ ID: 1 }).exec(function (err, docs) {
       
       callbacks.drawTable(docs);
-      callbacks.addRow();
+      callbacks.addInputRow();
       callbacks.addEventLis();
 
     });

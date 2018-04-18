@@ -17,10 +17,16 @@ export default function eventListener(a, callbacks) {
         
         target.setAttribute("data-toggle","modal");
         target.setAttribute("data-target","#myModal");
+
+        $(".modal-body").append(`<input id="input" type="text" class="form-control">`)
+
+        $("#AcceptB").text("Save changes");
+        $("#myModal").attr("funct","saveValue");
       
         $("#myModal").modal("show",{
           keyboard: true
         });
+
 
         if (target.id.split("-")[1]=="TRANS_DATE") {
 
@@ -44,26 +50,54 @@ export default function eventListener(a, callbacks) {
 
     $("#myModal").on("shown.bs.modal",function() {
 
-      $("#input")[0].focus();
+      if ($("#myModal").attr("funct")=="saveValue") {
+
+        $("#input")[0].focus();
+      }
+
+    });
+
+    //--------------- modal goes hidden -----------------------------------------
+
+    $("#myModal").on("hide.bs.modal",function() {
+
+      $(".modal-body").empty();
+
     });
 
 
     //-------------------- save button on modal clicked -------------------------
 
-    $("#saveB").click(function() {
-      let targ=$("[data-target='#myModal']")[0];      
+    $("#AcceptB").click(function(t) {
+
+      if ($("#myModal").attr("funct")=="saveValue"){
+
+        let targ=$("[data-target='#myModal']")[0];      
       
-      if (targ.id.split("-")[1]!="DATE") {
+        if (targ.id.split("-")[1]!="DATE") {
 
-        var text = $("#input").val();
-      }
+          var text = $("#input").val();
+        }
+        else {
+          var text = $("#input").val();
+          console.log("saveB: "+text)
+        }
+
+        let rUpdate=callbacks.rUpdate;
+        rUpdate(targ,text);
+        }
+
       else {
-        var text = $("#input").val();
-        console.log("saveB: "+text)
-      }
 
-      let rUpdate=callbacks.rUpdate;
-      rUpdate(targ,text);
+        console.log($("#myModal").attr("rowId"))
+        let ID=$("#myModal").attr("rowId");
+        
+        $("#myModal").removeAttr("funct");
+        
+        let delDbRow = callbacks.delDbRow;
+        delDbRow(ID);
+
+      }
 
     });
 
@@ -89,11 +123,20 @@ export default function eventListener(a, callbacks) {
 
     //--------------------- dismis button on modal clicked ---------------------
 
-    $("#dismisB").click(function() {
-      
-      let targ=$("[data-target='#myModal']")[0];
-      targ.removeAttribute("data-toggle");
-      targ.removeAttribute("data-target");
+    $(".dism").click(function() {
+
+      if ($("#myModal").attr("funct")=="saveValue") {
+
+        let targ=$("[data-target='#myModal']")[0];
+        targ.removeAttribute("data-toggle");
+        targ.removeAttribute("data-target");
+
+      }
+
+      else {
+
+        $("#myModal").removeAttr("funct")
+      }
 
     });
 
@@ -171,9 +214,17 @@ export default function eventListener(a, callbacks) {
 
       var target = t.target || e.srcElement;
       let ID=target.offsetParent.id.split("-")[0]
+      $("#myModal").attr("rowId",ID)
 
-      let delDbRow = callbacks.delDbRow
-      delDbRow(ID)
+      $(".modal-body").append(`<p>Are you sure?</p>`)
+
+      $("#AcceptB").text("Delete row")
+      $("#myModal").attr("funct","deleteRow")
+
+      $("#myModal").modal("show",{
+        keyboard: true
+      });
+
     })
 
 
