@@ -70,16 +70,31 @@ function rUpdate(targ, text){
 
 };
 
+function delDbRow(ID){
+
+  dataB.deleteRow(ID)
+  let parent=document.getElementById(tbody)
+  let row=document.getElementById(ID)
+  tbody.removeChild(row);
+}
+
+function addEventLis() {
+
+  $(document).ready(eventListener(jQuery, callBackFunctions ));
+}
+
 
 //-------------------- group callback functions --------------------
 
 var callBackFunctions = {}
 callBackFunctions.rUpdate = rUpdate
 callBackFunctions.saveRow = saveRow
+callBackFunctions.delDbRow = delDbRow
 
 var callBs = {}
 callBs.drawTable=drawTable
 callBs.addRow=addRow
+callBs.addEventLis=addEventLis
 
 export default function runAccounting(){
 
@@ -90,12 +105,11 @@ export default function runAccounting(){
 
   //------------------------- set up eventlisteners -------------------------
 
-  $(document).ready(eventListener(jQuery, callBackFunctions ));
-
 
   //------------ read data from database, then populate html table-----------
 
   dataB.fetchData(callBs);
+
 
 }
 

@@ -47,6 +47,7 @@ export function drawTable(cont) {
   var tableBody = document.createElement("tbody");
   table.appendChild(tableBody);
   tableBody.setAttribute("class","tbody")
+  tableBody.setAttribute("id","tbody")
 
   //iterate through the content rows
   for (var i in cont){
@@ -54,6 +55,7 @@ export function drawTable(cont) {
       //and create rows of the html table accordingly
       var r = document.createElement('tr');
       r.classList.add('row');
+      r.setAttribute("id", cont[i]._id)
 
     for (var j in array){
       let variable=CH.columns[array[j]]
@@ -86,16 +88,27 @@ export function drawTable(cont) {
       };
 
     }
-
+    let rowid=cont[i]._id+"-"+"delbtn";
+    deleteButtons(r,rowid); 
     //when a row is filled, we insert that row to the table
     tableBody.appendChild(r);
+
   
   };
+
 
 
   return 0;
 
 };
+
+function deleteButtons(row,id){
+
+  row.innerHTML+=(`<td></td>`);
+  row.innerHTML+=(`<td id="`+id+ `"><button class="btn delbtn">-</button></td>`);
+
+  //console.log(document.getElementById("table"))
+}
 
 
 
@@ -104,10 +117,10 @@ export function  addRow() {
   var row = document.createElement("tr")
   row.setAttribute("class","row")
 
-  for (var j in array){
+  for (var j in array) {
     var variable=CH.columns[array[j]]
-    
-    if (variable.visible){
+
+    if (variable.visible) {
         //create divs
       var col = document.createElement('td');
       col.setAttribute("class",'col-sm');
@@ -160,6 +173,9 @@ export function  addRow() {
       row.appendChild(col);
 
     };
+    //to make the table look nice we add the extra column for the
+    //delete button, but no button here
+    row.innerHTML+='<td class="col-sm"></td>';
 
   };
 

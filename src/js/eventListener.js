@@ -167,6 +167,16 @@ export default function eventListener(a, callbacks) {
 
     });
 
+    $(".delbtn").on("click", function(t) {
+
+      var target = t.target || e.srcElement;
+      let ID=target.offsetParent.id.split("-")[0]
+
+      let delDbRow = callbacks.delDbRow
+      delDbRow(ID)
+    })
+
+
 
   }
 };

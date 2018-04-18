@@ -21,6 +21,7 @@ class DataBase {
       
       callbacks.drawTable(docs);
       callbacks.addRow();
+      callbacks.addEventLis();
 
     });
 
@@ -51,6 +52,14 @@ class DataBase {
 
 
     });
+  };
+
+
+  deleteRow(ID) {
+    this.data.remove({ _id: ID }, {}, function (err, numRemoved) {
+    // numRemoved = 1
+    });
+  
   };
 
 
