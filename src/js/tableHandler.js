@@ -106,7 +106,6 @@ export function drawTable(cont) {
 
 function deleteButtons(row,id){
 
-  row.innerHTML+=(`<td></td>`);
   row.innerHTML+=(`<td id="`+id+ `"><button class="btn delbtn">-</button></td>`);
 
   //console.log(document.getElementById("table"))
@@ -183,12 +182,19 @@ export function  addInputRow() {
   };
   //to make the table look nice we add the extra column for the
   //delete button, but no button here
-  row.innerHTML+='<td class="col-sm"></td>';
+  row.innerHTML+='<td id="newRow-button" class="col-sm"><button id="saveButton" class="btn">SAVE</button></td>';
+
+  //and put the save button at the end of this row
+  /*var button = document.createElement("button")
+  button.classList.add("btn")
+  button.setAttribute("id","saveButton")
+  button.innerHTML="SAVE"
+  console.log(document.getElementById("newRow-button"))*/
+  //document.getElementById("newRow-button").appendChild(button)
 
   //upon completion append row to table
   document.getElementsByClassName("tbody")[0].appendChild(row);
   document.getElementById("dateinput").value=date.toISOString().split("T")[0];
-  console.log(dt.value)
   
 };
 

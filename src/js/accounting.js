@@ -32,12 +32,6 @@ function insertTable() {
   table.setAttribute('id','table')
   document.getElementById("container").appendChild(table)
 
-  var button = document.createElement("button")
-  button.classList.add("btn")
-  button.setAttribute("id","saveButton")
-  button.innerHTML="SAVE"
-  document.getElementById("container").appendChild(button)
-
 }
 
 function insertModal() {

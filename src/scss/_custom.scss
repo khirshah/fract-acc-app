@@ -28,6 +28,16 @@ tbody > tr {
   font-weight: bold;
 }
 
+#bootstrap-overrides .delbtn {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 50%;
+}
+
 .btn-prim {
   color: #1d4b50;
   background-color: #b8dc6f;
@@ -53,23 +63,28 @@ input {
   background-color: #055a5a
 }
 
-.modal-header {
+#bootstrap-overrides .modal-header {
+
   color: #70928f;
   background-color: #044242;
+  border-bottom-color:#546d6d;
 }
 
-.modal-body {
+#bootstrap-overrides .modal-body {
   color: #70928f;
-  background-color: #055a5a
+  background-color: #004e4e;
+
 }
 
-.modal-footer {
+#bootstrap-overrides .modal-footer {
   color: #70928f;
-  background-color: #044242;
+  background-color: #014d4d;
+  border-top: 0;
 }
 
-.close {
-  background-color: #70928f;
+#bootstrap-overrides .close {
+  color: #0f7777;
 }
 
 ::-webkit-inner-spin-button { display: none; }
+
