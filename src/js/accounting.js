@@ -1,8 +1,8 @@
 //-------------------------------- INIT ----------------------------------------------
 import DataBase from './DataBase.js';
-import modalContent from './modal2.js';
+import modalContent from '../html/modal.js';
 import {drawTable, addInputRow, insertTableRow, createDStruct, 
-  updateTableCell} from './tableHandler.js';
+  updateTableCell, calInpVal} from './tableHandler.js';
 import eventListener from './eventListener.js';
 
 
@@ -18,9 +18,9 @@ var db = new Datastore({ filename: 'db.db', autoload: true });
 var dataB = new DataBase(db);
 
 //reset database original values from JSON
-import Data from '../data/data.json';
-dataB.clearDb();
-dataB.insertContent(Data);
+//import Data from '../data/data.json';
+//dataB.clearDb();
+//dataB.insertContent(Data);
 
 
 //-------------------------------- FUNCTIONS -----------------------------------------
@@ -78,6 +78,7 @@ function addEventLis() {
   callBackFunctions.rUpdate = rUpdate
   callBackFunctions.saveRow = saveRow
   callBackFunctions.delDbRow = delDbRow
+  callBackFunctions.calInpVal=calInpVal
 
   $(document).ready(eventListener(jQuery, callBackFunctions ));
 }
@@ -101,12 +102,10 @@ export default function runAccounting() {
   //------------------------- insert modal from file ------------------------
   insertModal();  
 
-  //------------------------- set up eventlisteners -------------------------
-
 
   //------------ read data from database, then populate html table-----------
 
-  dataB.fetchData(callBs);
+  var dbcall= dataB.fetchData(callBs);
 
 
 }

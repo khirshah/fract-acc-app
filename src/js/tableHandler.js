@@ -1,7 +1,7 @@
 //----------------------------------------- INIT -----------------------------------------------
 
 import CH from '../data/metaData.json';
-import dropDown from './dropdown.js';
+import dropDown from '../html/dropdown.js';
 import jsonLogic from "json-logic-js";
 
 var array=Object.keys(CH.columns)
@@ -108,7 +108,6 @@ function deleteButtons(row,id){
 
   row.innerHTML+=(`<td id="`+id+ `"><button class="btn delbtn">-</button></td>`);
 
-  //console.log(document.getElementById("table"))
 }
 
 
@@ -134,17 +133,6 @@ export function  addInputRow() {
           var inp = document.createElement('input');
           inp.setAttribute("placeholder",'edit');
           inp.classList.add('inp');
-
-          //inp.classList.add('w-100')
-          //inp.classList.add('h-100')
-          var ID = 'newRow-'+array[j];  
-
-          inp.addEventListener("blur", function(event) {
-            let targ=event.srcElement.offsetParent;
-
-            //let target = t.relatedTarget.parentElement;
-            calc(targ)
-          })
 
           col.appendChild(inp);
           break;
@@ -180,20 +168,12 @@ export function  addInputRow() {
 
 
   };
-  //to make the table look nice we add the extra column for the
-  //delete button, but no button here
+
+  // put the save button at the end of this row
   row.innerHTML+='<td id="newRow-button" class="col-sm"><button id="saveButton" class="btn">SAVE</button></td>';
 
-  //and put the save button at the end of this row
-  /*var button = document.createElement("button")
-  button.classList.add("btn")
-  button.setAttribute("id","saveButton")
-  button.innerHTML="SAVE"
-  console.log(document.getElementById("newRow-button"))*/
-  //document.getElementById("newRow-button").appendChild(button)
-
   //upon completion append row to table
-  document.getElementsByClassName("tbody")[0].appendChild(row);
+  document.getElementById("tbody").appendChild(row);
   document.getElementById("dateinput").value=date.toISOString().split("T")[0];
   
 };
@@ -277,12 +257,13 @@ export function createDStruct(values) {
 
   }
 
+//----------- calculate input field value -------------------------------------
 
-function calc(target){
+export function calInpVal(target){
 
   switch (target.id.split("-")[1]){
     case "USD":
-
+      console.log(target.id.split("-")[1])
       calcGBPProj();
       break;
 

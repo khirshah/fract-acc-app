@@ -1,19 +1,20 @@
-import dropDown from './dropdown.js'
+import dropDown from '../html/dropdown.js'
 
-//-------------------------- JQuery -------------------------------------------------
+//-------------------------- JQuery ------------------------------------------------
 
 export default function eventListener(a, callbacks) {
   return function(a){
 
     var t=a || window.event;
 
-    //-------------------- table clicked ---------------------------------------
+    //-------------------- table clicked --------------------------------------
 
-    $("#table").on("click",function(t) {
+    $("#tbody").on("click",function(t) {
 
       var target = t.target || e.srcElement;
       //if field is not in the input row and is editable, open modal window
-      if (target.id.split("-")[0]!="newRow" && target.getAttribute("editable")=="true"){
+      if (target.id.split("-")[0]!="newRow" 
+        && target.getAttribute("editable")=="true"){
         
         target.setAttribute("data-toggle","modal");
         target.setAttribute("data-target","#myModal");
@@ -46,7 +47,7 @@ export default function eventListener(a, callbacks) {
     });
 
 
-    //-------------- modal comes active -----------------------------------------
+    //-------------- modal comes active ---------------------------------------
 
     $("#myModal").on("shown.bs.modal",function() {
 
@@ -57,7 +58,7 @@ export default function eventListener(a, callbacks) {
 
     });
 
-    //--------------- modal goes hidden -----------------------------------------
+    //--------------- modal goes hidden ---------------------------------------
 
     $("#myModal").on("hide.bs.modal",function() {
 
@@ -66,7 +67,7 @@ export default function eventListener(a, callbacks) {
     });
 
 
-    //-------------------- save button on modal clicked -------------------------
+    //-------------------- save button on modal clicked -----------------------
 
     $("#AcceptB").click(function(t) {
 
@@ -101,7 +102,7 @@ export default function eventListener(a, callbacks) {
 
     });
 
-    //----------------------- user hits enter on modal -------------------------
+    //----------------------- user hits enter on modal ------------------------
     //prevent the default "close modal and refresh site" event
     //rather act like the Save button
 
@@ -121,7 +122,7 @@ export default function eventListener(a, callbacks) {
       }
     });
 
-    //--------------------- dismis button on modal clicked ---------------------
+    //--------------------- dismis button on modal clicked --------------------
 
     $(".dism").click(function() {
 
@@ -140,7 +141,7 @@ export default function eventListener(a, callbacks) {
 
     });
 
-    //--------------------- Save row button clicked ----------------------------
+    //--------------------- Save row button clicked ---------------------------
 
     $("#saveButton").click(function() {
       
@@ -210,6 +211,8 @@ export default function eventListener(a, callbacks) {
 
     });
 
+    //--------------------- Delete row button clicked -------------------------
+
     $(".delbtn").on("click", function(t) {
 
       var target = t.target || e.srcElement;
@@ -227,7 +230,12 @@ export default function eventListener(a, callbacks) {
 
     })
 
-
-
+    $(".inp").on("blur", function(t) {
+        
+        let targ=t.originalEvent.path[1];
+        let calInpVal=callbacks.calInpVal
+        calInpVal(targ)
+      });
+    
   }
 };
