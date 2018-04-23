@@ -20,7 +20,8 @@ class DataBase {
     this.data.find({}).sort({ ID: 1 }).exec(function (err, docs) {
       
       callbacks.drawTable(docs);
-      callbacks.addRow();
+      callbacks.addInputRow();
+      callbacks.addEventLis();
 
     });
 
@@ -51,6 +52,14 @@ class DataBase {
 
 
     });
+  };
+
+
+  deleteRow(ID) {
+    this.data.remove({ _id: ID }, {}, function (err, numRemoved) {
+    // numRemoved = 1
+    });
+  
   };
 
 

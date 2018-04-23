@@ -1,8 +1,8 @@
 //----------------------------------------- INIT -----------------------------------------------
 
-import ColHeads from '../data/metaData.json';
-import CH from '../data/metaData3.json';
-import dropDown from './dropdown.js'
+import CH from '../data/metaData.json';
+import dropDown from '../html/dropdown.js';
+import jsonLogic from "json-logic-js";
 
 var array=Object.keys(CH.columns)
 
@@ -36,6 +36,9 @@ function createTableHeader() {
     }
 
   }
+  //to make the table look nice we add the extra column for the
+  //delete button, but no button here
+  headerRow.innerHTML+='<td class="col-sm"></td>';
   tableHeader.appendChild(headerRow);
   table.appendChild(tableHeader);
 }
@@ -47,6 +50,7 @@ export function drawTable(cont) {
   var tableBody = document.createElement("tbody");
   table.appendChild(tableBody);
   tableBody.setAttribute("class","tbody")
+  tableBody.setAttribute("id","tbody")
 
   //iterate through the content rows
   for (var i in cont){
@@ -54,6 +58,7 @@ export function drawTable(cont) {
       //and create rows of the html table accordingly
       var r = document.createElement('tr');
       r.classList.add('row');
+      r.setAttribute("id", cont[i]._id)
 
     for (var j in array){
       let variable=CH.columns[array[j]]
@@ -79,35 +84,43 @@ export function drawTable(cont) {
     
           col.innerHTML = cont[i][array[j]];
         }
-
         //at the end we insert the current cell to the row
         r.appendChild(col);
 
       };
 
     }
-
+    let rowid=cont[i]._id+"-"+"delbtn";
+    deleteButtons(r,rowid); 
     //when a row is filled, we insert that row to the table
     tableBody.appendChild(r);
+
   
   };
+
 
 
   return 0;
 
 };
 
+function deleteButtons(row,id){
+
+  row.innerHTML+=(`<td id="`+id+ `"><button class="btn delbtn">-</button></td>`);
+
+}
 
 
-export function  addRow() {
+
+export function  addInputRow() {
 
   var row = document.createElement("tr")
   row.setAttribute("class","row")
 
-  for (var j in array){
+  for (var j in array) {
     var variable=CH.columns[array[j]]
-    
-    if (variable.visible){
+
+    if (variable.visible) {
         //create divs
       var col = document.createElement('td');
       col.setAttribute("class",'col-sm');
@@ -121,17 +134,6 @@ export function  addRow() {
           inp.setAttribute("placeholder",'edit');
           inp.classList.add('inp');
 
-          //inp.classList.add('w-100')
-          //inp.classList.add('h-100')
-          var ID = 'newRow-'+array[j];  
-
-          inp.addEventListener("blur", function(event) {
-            let targ=event.srcElement.offsetParent;
-
-            //let target = t.relatedTarget.parentElement;
-            calc(targ)
-          })
-
           col.appendChild(inp);
           break;
 
@@ -143,11 +145,14 @@ export function  addRow() {
         case "DATEINPUT":
           var dt = document.createElement('input');
           dt.setAttribute("type","date");
-          dt.classList.add('inp');
-          dt.classList.add('date');
+          dt.classList.add("inp");
+          dt.classList.add("date");
+          dt.setAttribute("id","dateinput")
           //we create a new date
-          let date= new Date()
+          var date= new Date()
+
           dt.value=date.toISOString().split("T")[0];
+
           col.appendChild(dt);
           break;
 
@@ -161,10 +166,15 @@ export function  addRow() {
 
     };
 
+
   };
 
+  // put the save button at the end of this row
+  row.innerHTML+='<td id="newRow-button" class="col-sm"><button id="saveButton" class="btn">SAVE</button></td>';
+
   //upon completion append row to table
-  document.getElementsByClassName("tbody")[0].appendChild(row);
+  document.getElementById("tbody").appendChild(row);
+  document.getElementById("dateinput").value=date.toISOString().split("T")[0];
   
 };
 
@@ -247,28 +257,30 @@ export function createDStruct(values) {
 
   }
 
+//----------- calculate input field value -------------------------------------
 
-
-
-function calc(target){
+export function calInpVal(target){
 
   switch (target.id.split("-")[1]){
     case "USD":
-
-      var gbpProjVal=target.firstChild.value*xch;
-      document.getElementById("newRow-GBP_PROJ").innerHTML=gbpProjVal.toFixed(2);
+      console.log(target.id.split("-")[1])
+      calcGBPProj();
       break;
 
     case "XCH_USD_GBP":
 
+      calcGBPProj();
       let gu = 1/target.firstChild.value;
-      document.getElementById("newRow-XCH_GBP_USD").firstChild.value=gu.toFixed(2);
+      document.getElementById("newRow-XCH_GBP_USD").firstChild.value=gu.toFixed(5);
+
+
+
       break;
 
     case "XCH_GBP_USD":
 
       let ug = 1/target.firstChild.value;
-      document.getElementById("newRow-XCH_USD_GBP").firstChild.value=ug.toFixed(2);
+      document.getElementById("newRow-XCH_USD_GBP").firstChild.value=ug.toFixed(5);
       break;
 
     default:
@@ -276,4 +288,25 @@ function calc(target){
   }
 
 
+}
+
+function calcGBPProj() {
+
+  let c=CH.columns.GBP_PROJ.calculation
+
+  if (document.getElementById("newRow-"+c[1]).firstChild.value!="" && 
+  document.getElementById("newRow-"+c[2]).firstChild.value!="") {
+
+    let op=c[0]
+    let rule={};
+    rule[op]=[{"var":"a"},{"var":"b"}];
+
+    let values={};
+    values["a"]=parseFloat(document.getElementById("newRow-"+c[1]).firstChild.value);
+    values["b"]=parseFloat(document.getElementById("newRow-"+c[2]).firstChild.value);
+
+    var gbpProjVal=jsonLogic.apply(rule, values);
+
+    document.getElementById("newRow-GBP_PROJ").innerHTML=gbpProjVal.toFixed(5);
+  }
 }

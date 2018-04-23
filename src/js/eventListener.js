@@ -1,26 +1,33 @@
-import dropDown from './dropdown.js'
+import dropDown from '../html/dropdown.js'
 
-//-------------------------- JQuery -------------------------------------------------
+//-------------------------- JQuery ------------------------------------------------
 
 export default function eventListener(a, callbacks) {
   return function(a){
 
     var t=a || window.event;
 
-    //-------------------- table clicked ---------------------------------------
+    //-------------------- table clicked --------------------------------------
 
-    $("#table").on("click",function(t) {
+    $("#tbody").on("click",function(t) {
 
       var target = t.target || e.srcElement;
       //if field is not in the input row and is editable, open modal window
-      if (target.id.split("-")[0]!="newRow" && target.getAttribute("editable")=="true"){
+      if (target.id.split("-")[0]!="newRow" 
+        && target.getAttribute("editable")=="true"){
         
         target.setAttribute("data-toggle","modal");
         target.setAttribute("data-target","#myModal");
+
+        $(".modal-body").append(`<input id="input" type="text" class="form-control">`)
+
+        $("#AcceptB").text("Save changes");
+        $("#myModal").attr("funct","saveValue");
       
         $("#myModal").modal("show",{
           keyboard: true
         });
+
 
         if (target.id.split("-")[1]=="TRANS_DATE") {
 
@@ -40,34 +47,62 @@ export default function eventListener(a, callbacks) {
     });
 
 
-    //-------------- modal comes active -----------------------------------------
+    //-------------- modal comes active ---------------------------------------
 
     $("#myModal").on("shown.bs.modal",function() {
 
-      $("#input")[0].focus();
+      if ($("#myModal").attr("funct")=="saveValue") {
+
+        $("#input")[0].focus();
+      }
+
+    });
+
+    //--------------- modal goes hidden ---------------------------------------
+
+    $("#myModal").on("hide.bs.modal",function() {
+
+      $(".modal-body").empty();
+
     });
 
 
-    //-------------------- save button on modal clicked -------------------------
+    //-------------------- save button on modal clicked -----------------------
 
-    $("#saveB").click(function() {
-      let targ=$("[data-target='#myModal']")[0];      
+    $("#AcceptB").click(function(t) {
+
+      if ($("#myModal").attr("funct")=="saveValue"){
+
+        let targ=$("[data-target='#myModal']")[0];      
       
-      if (targ.id.split("-")[1]!="DATE") {
+        if (targ.id.split("-")[1]!="DATE") {
 
-        var text = $("#input").val();
-      }
+          var text = $("#input").val();
+        }
+        else {
+          var text = $("#input").val();
+          console.log("saveB: "+text)
+        }
+
+        let rUpdate=callbacks.rUpdate;
+        rUpdate(targ,text);
+        }
+
       else {
-        var text = $("#input").val();
-        console.log("saveB: "+text)
-      }
 
-      let rUpdate=callbacks.rUpdate;
-      rUpdate(targ,text);
+        console.log($("#myModal").attr("rowId"))
+        let ID=$("#myModal").attr("rowId");
+        
+        $("#myModal").removeAttr("funct");
+        
+        let delDbRow = callbacks.delDbRow;
+        delDbRow(ID);
+
+      }
 
     });
 
-    //----------------------- user hits enter on modal -------------------------
+    //----------------------- user hits enter on modal ------------------------
     //prevent the default "close modal and refresh site" event
     //rather act like the Save button
 
@@ -87,17 +122,26 @@ export default function eventListener(a, callbacks) {
       }
     });
 
-    //--------------------- dismis button on modal clicked ---------------------
+    //--------------------- dismis button on modal clicked --------------------
 
-    $("#dismisB").click(function() {
-      
-      let targ=$("[data-target='#myModal']")[0];
-      targ.removeAttribute("data-toggle");
-      targ.removeAttribute("data-target");
+    $(".dism").click(function() {
+
+      if ($("#myModal").attr("funct")=="saveValue") {
+
+        let targ=$("[data-target='#myModal']")[0];
+        targ.removeAttribute("data-toggle");
+        targ.removeAttribute("data-target");
+
+      }
+
+      else {
+
+        $("#myModal").removeAttr("funct")
+      }
 
     });
 
-    //--------------------- Save row button clicked ----------------------------
+    //--------------------- Save row button clicked ---------------------------
 
     $("#saveButton").click(function() {
       
@@ -167,6 +211,31 @@ export default function eventListener(a, callbacks) {
 
     });
 
+    //--------------------- Delete row button clicked -------------------------
 
+    $(".delbtn").on("click", function(t) {
+
+      var target = t.target || e.srcElement;
+      let ID=target.offsetParent.id.split("-")[0]
+      $("#myModal").attr("rowId",ID)
+
+      $(".modal-body").append(`<p>Are you sure?</p>`)
+
+      $("#AcceptB").text("Delete row")
+      $("#myModal").attr("funct","deleteRow")
+
+      $("#myModal").modal("show",{
+        keyboard: true
+      });
+
+    })
+
+    $(".inp").on("blur", function(t) {
+        
+        let targ=t.originalEvent.path[1];
+        let calInpVal=callbacks.calInpVal
+        calInpVal(targ)
+      });
+    
   }
 };

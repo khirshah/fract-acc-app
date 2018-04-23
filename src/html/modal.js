@@ -10,23 +10,20 @@ return(`<!-- Modal HTML -->
 
             <div class="modal-header">
 
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <button type="button" class="close dism" data-dismiss="modal" aria-hidden="true">&times;</button>
 
             </div>
 
             <div class="modal-body">
 
 
-                <input id="input" type="text" class="form-control">
-
-
             </div>
 
             <div class="modal-footer">
 
-                <button id="dismisB" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="dismisB" type="button" class="btn btn-default dism" data-dismiss="modal">Cancel</button>
 
-                <button id="saveB" type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                <button id="AcceptB" type="button" class="btn btn-prim" data-dismiss="modal"></button>
 
             </div>
 

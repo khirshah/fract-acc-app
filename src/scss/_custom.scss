@@ -1,13 +1,46 @@
+#container {
+  background-color: #c1e081;
+  font-family: "Lucida Console", Monaco, monospace;
+}
+
+#pageHeader {
+  background-color: #044242;
+  color: #70928f;
+  font-family: "Lucida Console", Monaco, monospace;
+}
+
+thead > tr {
+  color: #a4c1be;
+  background-color: #006666;
+  font-weight: bold;
+}
+
 tbody > tr {
+  color: #1d4b50;
   background-color: #b8dc6f;
+}
+
+
+
+.btn {
+  color: #a4c1be;
+  background-color: #026666;
+  font-weight: bold;
+}
+
+#bootstrap-overrides .delbtn {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 50%;
 }
 
 .btn-prim {
+  color: #1d4b50;
   background-color: #b8dc6f;
-}
-
-#saveButton {
-  background-color: #82a145;
 }
 
 input {
@@ -16,15 +49,42 @@ input {
     
 }
 
-thead > tr {
-  background-color: #006666;
-}
-
 .inp:only-child {
   background-color: #cce698;
+  padding: 5px;
 }
 
 .date {
-    width: 150px;
+    width: 180px;
     height: 40px;
 }
+
+[active=true] {
+  background-color: #055a5a
+}
+
+#bootstrap-overrides .modal-header {
+
+  color: #70928f;
+  background-color: #044242;
+  border-bottom-color:#546d6d;
+}
+
+#bootstrap-overrides .modal-body {
+  color: #70928f;
+  background-color: #004e4e;
+
+}
+
+#bootstrap-overrides .modal-footer {
+  color: #70928f;
+  background-color: #014d4d;
+  border-top: 0;
+}
+
+#bootstrap-overrides .close {
+  color: #0f7777;
+}
+
+::-webkit-inner-spin-button { display: none; }
+
