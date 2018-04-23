@@ -8,6 +8,7 @@ require('bootstrap')
 import './index.scss';
 import {createTabs, tabEvents} from './js/pageHandler.js';
 import runAccounting from './js/accounting.js';
+import './apiCall.js';
 
 
 

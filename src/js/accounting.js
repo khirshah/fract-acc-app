@@ -105,7 +105,7 @@ export default function runAccounting() {
 
   //------------ read data from database, then populate html table-----------
 
-  var dbcall= dataB.fetchData(callBs);
+  dataB.fetchData(callBs);
 
 
 }
