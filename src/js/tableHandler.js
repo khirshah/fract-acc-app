@@ -258,29 +258,32 @@ export function createDStruct(values) {
   }
 
 //----------- calculate input field value -------------------------------------
+ export function calInpVal(target) {
 
-export function calInpVal(target){
-
-  switch (target.id.split("-")[1]){
+  switch (target.id.split("-")[1]) {
     case "USD":
+
       console.log(target.id.split("-")[1])
       calcGBPProj();
+      
       break;
 
     case "XCH_USD_GBP":
-
-      calcGBPProj();
-      let gu = 1/target.firstChild.value;
-      document.getElementById("newRow-XCH_GBP_USD").firstChild.value=gu.toFixed(5);
-
-
+      if (target.firstChild.value!="") {
+        calcGBPProj();
+        let gu = 1/target.firstChild.value;
+        document.getElementById("newRow-XCH_GBP_USD").firstChild.value=gu.toFixed(5);
+      }
 
       break;
 
     case "XCH_GBP_USD":
+      
+      if (target.firstChild.value!="") {
+        let ug = 1/target.firstChild.value;
+        document.getElementById("newRow-XCH_USD_GBP").firstChild.value=ug.toFixed(5);       
+      }
 
-      let ug = 1/target.firstChild.value;
-      document.getElementById("newRow-XCH_USD_GBP").firstChild.value=ug.toFixed(5);
       break;
 
     default:

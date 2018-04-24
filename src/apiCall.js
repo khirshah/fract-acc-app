@@ -16,7 +16,7 @@ function apiCall(){
   })
 }
 
-apiCall();
+//apiCall();
 
 // get the most recent exchange rates via the "live" endpoint:
 /*$.ajax({
