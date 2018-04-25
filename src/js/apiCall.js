@@ -8,15 +8,22 @@ var USDGBP=0.71;
 
 function apiCall() {
 
+  var data= fetch(url);
+  return data;
+
+}
+/*function apiCall() {
+
   fetch(url)
   .then((resp) => resp.json())
   .then(function(data) {
     USDGBP=data.quotes.USDGBP
+    document.getElementById("newRow-XCH_USD_GBP").firstChild.value=USDGBP;
+    document.getElementById("newRow-XCH_GBP_USD").firstChild.value=1/USDGBP;
     console.log(USDGBP);
   })
   .catch(function(error){
     console.log(error)
   })
-}
-
+}*/
 export default apiCall;

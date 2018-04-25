@@ -80,8 +80,8 @@ export default function eventListener(a, callbacks) {
           var text = $("#input").val();
         }
         else {
+
           var text = $("#input").val();
-          console.log("saveB: "+text)
         }
 
         let rUpdate=callbacks.rUpdate;
@@ -90,7 +90,6 @@ export default function eventListener(a, callbacks) {
 
       else {
 
-        console.log($("#myModal").attr("rowId"))
         let ID=$("#myModal").attr("rowId");
         
         $("#myModal").removeAttr("funct");
@@ -156,7 +155,6 @@ export default function eventListener(a, callbacks) {
           $(this).attr("empty",true)
           //if any one of them is empty, change the bool to true
           empty = true;
-          console.log($(this).attr("empty"))
 
         } 
         //extract the data to values array
@@ -200,11 +198,11 @@ export default function eventListener(a, callbacks) {
           //only calculated fields doesn't have inner input fields
           //therefore treted differently using innerHTML property
           if ($(this)[0].tagName=="TD"){
-            //console.log($(this)[0].innerHTML)
+
             $(this)[0].innerHTML="";
           }
           else{
-            console.log($(this),$(this)[0])
+
             if ($(this).attr("empty")) {
               $(this).removeAttr("empty")              
             }

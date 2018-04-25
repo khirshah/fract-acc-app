@@ -4,6 +4,8 @@ import modalContent from '../html/modal.js';
 import {drawTable, addInputRow, insertTableRow, createDStruct, 
   updateTableCell, calInpVal} from './tableHandler.js';
 import eventListener from './eventListener.js';
+import apiCall from './apiCall.js';
+
 
 
 //-------------------------------- DATA -----------------------------------------------
@@ -84,6 +86,10 @@ function addEventLis() {
 }
 
 
+function dispXchData(dat) {
+  console.log(dat)
+}
+
 //-------------------- group callback functions --------------------
 
 
@@ -92,10 +98,6 @@ function addEventLis() {
 
 export default function runAccounting() {
 
-  var callBs = {}
-  callBs.drawTable=drawTable
-  callBs.addInputRow=addInputRow
-  callBs.addEventLis=addEventLis
 
   //------------------------ insert html table -----------------------------
   insertTable();
@@ -105,7 +107,28 @@ export default function runAccounting() {
 
   //------------ read data from database, then populate html table-----------
 
-  dataB.fetchData(callBs);
+  var promise=dataB.fetchData();
+
+  promise.exec(function(error,docs) {
+
+    drawTable(docs);
+    addInputRow();
+    addEventLis();
+   
+    var xchd=apiCall();
+    console.log(xchd)
+    
+    xchd.then((resp) => resp.json())
+    .then(function (data) {
+    var USDGBP=data.quotes.USDGBP
+    document.getElementById("newRow-XCH_USD_GBP").firstChild.value=USDGBP;
+    document.getElementById("newRow-XCH_GBP_USD").firstChild.value=1/USDGBP;
+    //console.log(USDGBP);
+  })
+  .catch(function(error){
+    console.log(error)
+  })
+  })
 
 
 }

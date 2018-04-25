@@ -118,7 +118,7 @@ function delBtnEvLis(id) {
 
   //--------------------- Delete row button clicked -------------------------
   $("#"+id+"0").on("click", function(t) {
-    console.log("delbutton listener")
+
     t = t || window.event;
     var target = t.target || e.srcElement;
     let ID=target.offsetParent.id.split("-")[0]
@@ -288,8 +288,8 @@ export function createDStruct(values) {
 
   }
 
-//----------- calculate input field value -------------------------------------
- export function calInpVal(target) {
+ //----------- calculate input field value -------------------------------------
+export function calInpVal(target) {
 
   switch (target.id.split("-")[1]) {
     case "USD":

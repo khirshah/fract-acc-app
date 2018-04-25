@@ -17,13 +17,9 @@ class DataBase {
   
   fetchData(callbacks) {
 
-    this.data.find({}).sort({ ID: 1 }).exec(function (err, docs) {
-      
-      callbacks.drawTable(docs);
-      callbacks.addInputRow();
-      callbacks.addEventLis();
+    var d=this.data.find({}).sort({ ID: 1 })
 
-    });
+    return d;
 
   };
 
