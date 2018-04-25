@@ -63,6 +63,10 @@ input {
   background-color: #055a5a
 }
 
+[empty=true] {
+  border-color:red;
+}
+
 #bootstrap-overrides .modal-header {
 
   color: #70928f;

@@ -152,8 +152,11 @@ export default function eventListener(a, callbacks) {
       $('.inp').each(function() {
 
         if ($(this)[0].value == '') {
-            //if any one of them is empty, change the bool to true
-            empty = true;
+
+          $(this).attr("empty",true)
+          //if any one of them is empty, change the bool to true
+          empty = true;
+          console.log($(this).attr("empty"))
 
         } 
         //extract the data to values array
@@ -164,7 +167,7 @@ export default function eventListener(a, callbacks) {
           }
 
           else {
-
+          $(this).attr("empty",false)
           let id=$(this)[0].offsetParent.id.split('-')[1]
           values[id]=$(this)[0].value;
           }
@@ -177,12 +180,17 @@ export default function eventListener(a, callbacks) {
       //if bool is true, not all the fields are filled ->can't save
       if (empty) {
 
+
         alert("at least one field is empty")
 
       } 
 
       //if everíthing is filled, we call the saveRow function
       else {
+        
+        /*$("input").each(function(this) {
+          this.attr("empty",true)
+        })*/
 
         let saveRow = callbacks.saveRow;
         saveRow(values);
@@ -192,10 +200,15 @@ export default function eventListener(a, callbacks) {
           //only calculated fields doesn't have inner input fields
           //therefore treted differently using innerHTML property
           if ($(this)[0].tagName=="TD"){
-            console.log($(this)[0].innerHTML)
+            //console.log($(this)[0].innerHTML)
             $(this)[0].innerHTML="";
           }
           else{
+            console.log($(this),$(this)[0])
+            if ($(this).attr("empty")) {
+              $(this).removeAttr("empty")              
+            }
+
             //also don't empty the date and dropdown fields
             if ($(this).attr("type")!="date") {
 
@@ -211,24 +224,6 @@ export default function eventListener(a, callbacks) {
 
     });
 
-    //--------------------- Delete row button clicked -------------------------
-
-    $(".delbtn").on("click", function(t) {
-
-      var target = t.target || e.srcElement;
-      let ID=target.offsetParent.id.split("-")[0]
-      $("#myModal").attr("rowId",ID)
-
-      $(".modal-body").append(`<p>Are you sure?</p>`)
-
-      $("#AcceptB").text("Delete row")
-      $("#myModal").attr("funct","deleteRow")
-
-      $("#myModal").modal("show",{
-        keyboard: true
-      });
-
-    })
 
     $(".inp").on("blur", function(t) {
         

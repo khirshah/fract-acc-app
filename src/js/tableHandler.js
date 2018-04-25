@@ -90,10 +90,14 @@ export function drawTable(cont) {
       };
 
     }
-    let rowid=cont[i]._id+"-"+"delbtn";
-    deleteButtons(r,rowid); 
+    let cellid=cont[i]._id+"-"+"delbtn";
+    let btn = deleteButtons(cellid); 
+    r.innerHTML+=btn;
+
     //when a row is filled, we insert that row to the table
+    //console.log(document.getElementById(cellid))
     tableBody.appendChild(r);
+    delBtnEvLis(cellid);
 
   
   };
@@ -104,12 +108,33 @@ export function drawTable(cont) {
 
 };
 
-function deleteButtons(row,id){
+function deleteButtons(id){
 
-  row.innerHTML+=(`<td id="`+id+ `"><button class="btn delbtn">-</button></td>`);
+  return `<td id="`+id+ `"><button id=`+id+`0`+` class="btn delbtn">-</button></td>`;
 
 }
 
+function delBtnEvLis(id) {
+
+  //--------------------- Delete row button clicked -------------------------
+  $("#"+id+"0").on("click", function(t) {
+    console.log("delbutton listener")
+    t = t || window.event;
+    var target = t.target || e.srcElement;
+    let ID=target.offsetParent.id.split("-")[0]
+    $("#myModal").attr("rowId",ID)
+
+    $(".modal-body").append(`<p>Are you sure?</p>`)
+
+    $("#AcceptB").text("Delete row")
+    $("#myModal").attr("funct","deleteRow")
+
+    $("#myModal").modal("show",{
+      keyboard: true
+    });
+
+  })
+}
 
 
 export function  addInputRow() {
@@ -193,6 +218,7 @@ export function insertTableRow(content) {
       var col = document.createElement('td');
       col.setAttribute("id", content[0]._id+"-"+array[j]);
       col.classList.add('col-sm');
+      col.setAttribute("editable",variable.editable);
       
       //we copy the data from the database to the html
       col.innerHTML = content[0][array[j]];
@@ -200,9 +226,14 @@ export function insertTableRow(content) {
       r.appendChild(col);
     };
   };
+  
+  let cellid=content[0]._id+"-"+"delbtn";
+  let btn = deleteButtons(cellid); 
+  r.innerHTML+=btn;
   //insert new row before last row of table
   let tbody=document.getElementsByClassName("tbody")[0]
   tbody.insertBefore(r, tbody.lastChild);
+  delBtnEvLis(cellid);
 
 };
 
@@ -263,9 +294,9 @@ export function createDStruct(values) {
   switch (target.id.split("-")[1]) {
     case "USD":
 
-      console.log(target.id.split("-")[1])
+      //console.log(target.id.split("-")[1])
       calcGBPProj();
-      
+
       break;
 
     case "XCH_USD_GBP":
