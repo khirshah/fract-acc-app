@@ -83,12 +83,53 @@ function addEventLis() {
   callBackFunctions.calInpVal=calInpVal
 
   $(document).ready(eventListener(jQuery, callBackFunctions ));
+
+  var originalSetItem = localStorage.setItem; 
+
+  localStorage.setItem = function() {
+
+    var event = new Event('itemInserted');
+    document.dispatchEvent(event);
+
+    originalSetItem.apply(this, arguments);
+    //console.log("Listening..",arguments[0])
+    if (arguments[0]=="USDGBP") {
+      displayXchData()
+    }
+  }
+
 }
 
 
-function dispXchData(dat) {
-  console.log(dat)
+function displayXchData() {
+
+      let USDGBP=window.localStorage.getItem("USDGBP")
+
+      document.getElementById("newRow-XCH_USD_GBP").firstChild.value=USDGBP;
+      document.getElementById("newRow-XCH_GBP_USD").firstChild.value=1/USDGBP;
+
 }
+
+function checkLocalStorage() {
+    //let's compare the time difference in minutes between now and the recording
+    // date of the data in the local sotrage 
+    let now=new Date().getTime();
+    let date= parseInt(window.localStorage.getItem("timestamp") || 0)
+    let difference=(now-date)/1000/60
+    console.log(parseInt(difference)+" minutes since the last API call")
+    //if it's more than an hour, make another API call
+    if ( difference > 0 || date == 0 ) {
+
+      apiCall();
+    }
+    //if less, display the data currently in the local storage
+    else {
+
+      displayXchData();
+    }
+
+}
+
 
 //-------------------- group callback functions --------------------
 
@@ -114,21 +155,9 @@ export default function runAccounting() {
     drawTable(docs);
     addInputRow();
     addEventLis();
-   
-    var xchd=apiCall();
-    console.log(xchd)
-    
-    xchd.then((resp) => resp.json())
-    .then(function (data) {
-    var USDGBP=data.quotes.USDGBP
-    document.getElementById("newRow-XCH_USD_GBP").firstChild.value=USDGBP;
-    document.getElementById("newRow-XCH_GBP_USD").firstChild.value=1/USDGBP;
-    //console.log(USDGBP);
-  })
-  .catch(function(error){
-    console.log(error)
-  })
-  })
+    checkLocalStorage();
+
+    })
 
 
 }

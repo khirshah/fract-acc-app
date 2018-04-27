@@ -151,6 +151,7 @@ export function  addInputRow() {
       col.setAttribute("class",'col-sm');
       col.setAttribute("id",'newRow-'+array[j]);
       col.setAttribute("editable",variable.editable);
+      col.setAttribute("dataType",variable.dataType);
 
       switch (variable.inputType) {
         
