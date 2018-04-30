@@ -5,6 +5,7 @@ class DataBase {
   constructor(D) {
   
     this.data=D;
+  
   };
 
   
@@ -15,15 +16,11 @@ class DataBase {
   };
 
   
-  fetchData(callbacks) {
+  fetchData() {
 
-    this.data.find({}).sort({ ID: 1 }).exec(function (err, docs) {
-      
-      callbacks.drawTable(docs);
-      callbacks.addInputRow();
-      callbacks.addEventLis();
+    var d=this.data.find({}).sort({ ID: 1 })
 
-    });
+    return d;
 
   };
 
@@ -35,6 +32,7 @@ class DataBase {
       callback(docs);
 
     });
+  
   };
 
 
@@ -52,6 +50,7 @@ class DataBase {
 
 
     });
+  
   };
 
 

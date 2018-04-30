@@ -80,8 +80,8 @@ export default function eventListener(a, callbacks) {
           var text = $("#input").val();
         }
         else {
+
           var text = $("#input").val();
-          console.log("saveB: "+text)
         }
 
         let rUpdate=callbacks.rUpdate;
@@ -90,7 +90,6 @@ export default function eventListener(a, callbacks) {
 
       else {
 
-        console.log($("#myModal").attr("rowId"))
         let ID=$("#myModal").attr("rowId");
         
         $("#myModal").removeAttr("funct");
@@ -152,8 +151,10 @@ export default function eventListener(a, callbacks) {
       $('.inp').each(function() {
 
         if ($(this)[0].value == '') {
-            //if any one of them is empty, change the bool to true
-            empty = true;
+
+          $(this).attr("empty",true)
+          //if any one of them is empty, change the bool to true
+          empty = true;
 
         } 
         //extract the data to values array
@@ -164,7 +165,7 @@ export default function eventListener(a, callbacks) {
           }
 
           else {
-
+          $(this).attr("empty",false)
           let id=$(this)[0].offsetParent.id.split('-')[1]
           values[id]=$(this)[0].value;
           }
@@ -177,12 +178,17 @@ export default function eventListener(a, callbacks) {
       //if bool is true, not all the fields are filled ->can't save
       if (empty) {
 
+
         alert("at least one field is empty")
 
       } 
 
       //if everíthing is filled, we call the saveRow function
       else {
+        
+        /*$("input").each(function(this) {
+          this.attr("empty",true)
+        })*/
 
         let saveRow = callbacks.saveRow;
         saveRow(values);
@@ -192,10 +198,15 @@ export default function eventListener(a, callbacks) {
           //only calculated fields doesn't have inner input fields
           //therefore treted differently using innerHTML property
           if ($(this)[0].tagName=="TD"){
-            console.log($(this)[0].innerHTML)
+
             $(this)[0].innerHTML="";
           }
           else{
+
+            if ($(this).attr("empty")) {
+              $(this).removeAttr("empty")              
+            }
+
             //also don't empty the date and dropdown fields
             if ($(this).attr("type")!="date") {
 
@@ -211,30 +222,19 @@ export default function eventListener(a, callbacks) {
 
     });
 
-    //--------------------- Delete row button clicked -------------------------
-
-    $(".delbtn").on("click", function(t) {
-
-      var target = t.target || e.srcElement;
-      let ID=target.offsetParent.id.split("-")[0]
-      $("#myModal").attr("rowId",ID)
-
-      $(".modal-body").append(`<p>Are you sure?</p>`)
-
-      $("#AcceptB").text("Delete row")
-      $("#myModal").attr("funct","deleteRow")
-
-      $("#myModal").modal("show",{
-        keyboard: true
-      });
-
-    })
 
     $(".inp").on("blur", function(t) {
         
         let targ=t.originalEvent.path[1];
         let calInpVal=callbacks.calInpVal
         calInpVal(targ)
+      });
+
+    $(".inp").on("click", function(t) {
+        
+        let checkLocalStorage=callbacks.checkLocalStorage
+        
+        checkLocalStorage();
       });
     
   }
