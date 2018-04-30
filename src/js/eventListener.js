@@ -230,6 +230,12 @@ export default function eventListener(a, callbacks) {
         calInpVal(targ)
       });
 
+    $(".inp").on("click", function(t) {
+        
+        let checkLocalStorage=callbacks.checkLocalStorage
+        
+        checkLocalStorage();
+      });
     
   }
 };

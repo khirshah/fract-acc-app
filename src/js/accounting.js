@@ -25,8 +25,9 @@ var dataB = new DataBase(db);
 //dataB.insertContent(Data);
 
 
-//-------------------------------- FUNCTIONS -----------------------------------------
+//-------------------------------- FUNCTIONS ----------------------------------
 
+//--------------------- build up the html base ---------------------------
 function insertTable() {
 
   var table=document.createElement('table')
@@ -43,7 +44,67 @@ function insertModal() {
 
 };
 
+//---------------------- place event listeners ---------------------------
+function addEventLis() {
 
+  var callBackFunctions = {};
+  callBackFunctions.checkLocalStorage=checkLocalStorage;
+  callBackFunctions.rUpdate = rUpdate;
+  callBackFunctions.saveRow = saveRow;
+  callBackFunctions.delDbRow = delDbRow;
+  callBackFunctions.calInpVal=calInpVal;
+
+  $(document).ready(eventListener(jQuery, callBackFunctions ));
+
+  var originalSetItem = localStorage.setItem; 
+
+  localStorage.setItem = function() {
+
+    var event = new Event('itemInserted');
+    document.dispatchEvent(event);
+
+    originalSetItem.apply(this, arguments);
+
+    if (arguments[0]=="USDGBP") {
+
+      displayXchData();
+    }
+  }
+
+};
+
+//-------------------- get exchange data ---------------------------------
+function checkLocalStorage() {
+    //let's compare the time difference in minutes between now and the recording
+    // date of the data in the local sotrage 
+    let now=new Date().getTime();
+    let date= parseInt(window.localStorage.getItem("timestamp") || 0);
+    let difference=(now-date)/1000/60;
+    console.log(parseInt(difference)+" minutes since the last API call");
+    //if it's more than an hour, make another API call
+    if ( difference > 60 || date == 0 ) {
+
+      apiCall();
+    }
+    //if less, display the data currently in the local storage
+    else {
+
+      displayXchData();
+    }
+
+};
+
+//-------------------- display exchange data -----------------------------
+function displayXchData() {
+
+      let USDGBP=window.localStorage.getItem("USDGBP")
+
+      document.getElementById("newRow-XCH_USD_GBP").firstChild.value=USDGBP;
+      document.getElementById("newRow-XCH_GBP_USD").firstChild.value=1/USDGBP;
+
+};
+
+//---------------------- callbacks of event listeners --------------------
 function saveRow(values) {
   //create JSON from the array recieved from the event listener
   //containing user defined values
@@ -72,71 +133,11 @@ function delDbRow(ID){
   let parent=document.getElementById(tbody)
   let row=document.getElementById(ID)
   tbody.removeChild(row);
-}
 
-function addEventLis() {
-
-  var callBackFunctions = {}
-  callBackFunctions.rUpdate = rUpdate
-  callBackFunctions.saveRow = saveRow
-  callBackFunctions.delDbRow = delDbRow
-  callBackFunctions.calInpVal=calInpVal
-
-  $(document).ready(eventListener(jQuery, callBackFunctions ));
-
-  var originalSetItem = localStorage.setItem; 
-
-  localStorage.setItem = function() {
-
-    var event = new Event('itemInserted');
-    document.dispatchEvent(event);
-
-    originalSetItem.apply(this, arguments);
-    //console.log("Listening..",arguments[0])
-    if (arguments[0]=="USDGBP") {
-      displayXchData()
-    }
-  }
-
-}
+};
 
 
-function displayXchData() {
-
-      let USDGBP=window.localStorage.getItem("USDGBP")
-
-      document.getElementById("newRow-XCH_USD_GBP").firstChild.value=USDGBP;
-      document.getElementById("newRow-XCH_GBP_USD").firstChild.value=1/USDGBP;
-
-}
-
-function checkLocalStorage() {
-    //let's compare the time difference in minutes between now and the recording
-    // date of the data in the local sotrage 
-    let now=new Date().getTime();
-    let date= parseInt(window.localStorage.getItem("timestamp") || 0)
-    let difference=(now-date)/1000/60
-    console.log(parseInt(difference)+" minutes since the last API call")
-    //if it's more than an hour, make another API call
-    if ( difference > 0 || date == 0 ) {
-
-      apiCall();
-    }
-    //if less, display the data currently in the local storage
-    else {
-
-      displayXchData();
-    }
-
-}
-
-
-//-------------------- group callback functions --------------------
-
-
-
-
-
+//------------------------------ main function ---------------------------
 export default function runAccounting() {
 
 
@@ -159,8 +160,7 @@ export default function runAccounting() {
 
     })
 
-
-}
+};
 
 
 
