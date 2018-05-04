@@ -1,12 +1,13 @@
 //-------------------------------- INIT ----------------------------------------------
 import DataBase from './DataBase.js';
-import modalContent from '../html/modal.js';
-import {drawTable, addInputRow, insertTableRow, createDStruct, 
-  updateTableCell, calInpVal} from './tableHandler.js';
+
+import {insertTable, insertModal, drawTable, addInputRow, insertTableRow, createDStruct, 
+  updateTableCell, displayXchData, calInpVal} from './tableHandler.js';
 import eventListener from './eventListener.js';
 import apiCall from './apiCall.js';
+import addDispachedEventListener from './dispachedEventListener.js'
 
-
+var refreshInterval=120;
 
 //-------------------------------- DATA -----------------------------------------------
 
@@ -28,21 +29,7 @@ var dataB = new DataBase(db);
 //-------------------------------- FUNCTIONS ----------------------------------
 
 //--------------------- build up the html base ---------------------------
-function insertTable() {
 
-  var table=document.createElement('table')
-  table.classList.add("table")
-  table.setAttribute('id','table')
-  document.getElementById("container").appendChild(table)
-
-}
-
-function insertModal() {
-
-  var m=modalContent();
-  document.getElementById("container").innerHTML+=m;
-
-};
 
 //---------------------- place event listeners ---------------------------
 function addEventLis() {
@@ -56,12 +43,11 @@ function addEventLis() {
 
   $(document).ready(eventListener(jQuery, callBackFunctions ));
 
-  var originalSetItem = localStorage.setItem; 
+  /*var originalSetItem = localStorage.setItem; 
 
   localStorage.setItem = function() {
 
-    var event = new Event('itemInserted');
-    document.dispatchEvent(event);
+
 
     originalSetItem.apply(this, arguments);
 
@@ -69,7 +55,9 @@ function addEventLis() {
 
       displayXchData();
     }
-  }
+  }*/
+
+
 
 };
 
@@ -82,7 +70,7 @@ function checkLocalStorage() {
     let difference=(now-date)/1000/60;
     console.log(parseInt(difference)+" minutes since the last API call");
     //if it's more than an hour, make another API call
-    if ( difference > 60 || date == 0 ) {
+    if ( difference > refreshInterval || date == 0 ) {
 
       apiCall();
     }
@@ -95,14 +83,7 @@ function checkLocalStorage() {
 };
 
 //-------------------- display exchange data -----------------------------
-function displayXchData() {
 
-      let USDGBP=window.localStorage.getItem("USDGBP")
-
-      document.getElementById("newRow-XCH_USD_GBP").firstChild.value=USDGBP;
-      document.getElementById("newRow-XCH_GBP_USD").firstChild.value=1/USDGBP;
-
-};
 
 //---------------------- callbacks of event listeners --------------------
 function saveRow(values) {
@@ -155,8 +136,12 @@ export default function runAccounting() {
 
     drawTable(docs);
     addInputRow();
+    //displayXchData();
+    //console.log("addDispachedEventListener done")
     addEventLis();
+    addDispachedEventListener();
     checkLocalStorage();
+
 
     })
 

@@ -185,10 +185,6 @@ export default function eventListener(a, callbacks) {
 
       //if everíthing is filled, we call the saveRow function
       else {
-        
-        /*$("input").each(function(this) {
-          this.attr("empty",true)
-        })*/
 
         let saveRow = callbacks.saveRow;
         saveRow(values);
@@ -222,14 +218,16 @@ export default function eventListener(a, callbacks) {
 
     });
 
-
+    //--------------------- input loses focus ---------------------------------
     $(".inp").on("blur", function(t) {
         
         let targ=t.originalEvent.path[1];
-        let calInpVal=callbacks.calInpVal
+        let calInpVal=callbacks.calInpVal;
         calInpVal(targ)
+
       });
 
+    //---------------------------- input field clicked ------------------------
     $(".inp").on("click", function(t) {
         
         let checkLocalStorage=callbacks.checkLocalStorage
