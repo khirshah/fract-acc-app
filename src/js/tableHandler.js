@@ -280,7 +280,7 @@ export function updateTableCell(target,text) {
   }
   if (variable.calcBase){
    
-    var event=new CustomEvent("customEvent",{detail: {name:"valueCalcNeeded", target: target}})
+    var event=new CustomEvent("customEvent",{detail: {name:"valueCalculation", target: target}})
     document.dispatchEvent(event);
     //console.log(event)
   }
@@ -340,9 +340,15 @@ export function calInpVal(target) {
     case "XCH_USD_GBP":
       if (target.firstChild.value!="") {
         calcGBPProj(target);
+
         let gu = 1/target.firstChild.value || 1/target.innerHTML;
         document.getElementById(rowID+"-XCH_GBP_USD").innerHTML=gu.toFixed(5);
 
+        if (target.id.split("-")[0]!="newRow") {
+
+          let event=new CustomEvent("customEvent",{detail: {name:"dbValueUpdate", target: target, text: gu.toFixed(5)}})
+          document.dispatchEvent(event);
+        }
       }
 
       break;
@@ -373,7 +379,7 @@ function calcGBPProj(target) {
   
   if (USD!="" && xchDP!="") {
     console.log("USD: "+USD+", xchDP: "+xchDP)
-    let op=c[0]
+    let op=c[0];
     let rule={};
     rule[op]=[{"var":"a"},{"var":"b"}];
 
@@ -387,8 +393,11 @@ function calcGBPProj(target) {
     document.getElementById(rowID+"-GBP_PROJ").innerHTML=gbpProjVal.toFixed(5);
 
     //Create event for database update
-    let event=new CustomEvent("customEvent",{detail: {name:"dbValUpdateNeeded", target: GBP_PROJ, text: gbpProjVal}})
+    if (rowID!="newRow") {
+
+    let event=new CustomEvent("customEvent",{detail: {name:"dbValueUpdate", target: gbpProj, text: gbpProjVal}})
     document.dispatchEvent(event);
+    }
   }
 
 };

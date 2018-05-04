@@ -5,25 +5,13 @@ import {insertTable, insertModal, drawTable, addInputRow, insertTableRow, create
   updateTableCell, displayXchData, calInpVal} from './tableHandler.js';
 import eventListener from './eventListener.js';
 import apiCall from './apiCall.js';
-import addDispachedEventListener from './dispachedEventListener.js'
+import {addDispachedEventListener,dataB} from './dispachedEventListener.js'
+
+//import dataB from './dispachedEventListener.js'
 
 var refreshInterval=120;
 
-//-------------------------------- DATA -----------------------------------------------
 
-//------------------------ initialize database ---------------------------
-
-var Datastore = require('nedb');
-var db = new Datastore({ filename: 'db.db', autoload: true });
-
-//--------------- create an instance of the DataBase class ---------------
-
-var dataB = new DataBase(db);
-
-//reset database original values from JSON
-//import Data from '../data/data.json';
-//dataB.clearDb();
-//dataB.insertContent(Data);
 
 
 //-------------------------------- FUNCTIONS ----------------------------------
@@ -36,28 +24,10 @@ function addEventLis() {
 
   var callBackFunctions = {};
   callBackFunctions.checkLocalStorage=checkLocalStorage;
-  callBackFunctions.rUpdate = rUpdate;
   callBackFunctions.saveRow = saveRow;
-  callBackFunctions.delDbRow = delDbRow;
-  callBackFunctions.calInpVal=calInpVal;
+
 
   $(document).ready(eventListener(jQuery, callBackFunctions ));
-
-  /*var originalSetItem = localStorage.setItem; 
-
-  localStorage.setItem = function() {
-
-
-
-    originalSetItem.apply(this, arguments);
-
-    if (arguments[0]=="USDGBP") {
-
-      displayXchData();
-    }
-  }*/
-
-
 
 };
 
@@ -94,26 +64,6 @@ function saveRow(values) {
   let dbFill = dataB.insertContent(obj);
   //dbFill variable ensures the program waits before the insertion is done
   dataB.findData(insertTableRow,obj.ID);
-
-};
-
-
-function rUpdate(targ, text){
-  //get key and id from target html object's id
-  let ID=targ.id.split("-");
-  //overwrite corresponding data in database
-  dataB.updateDbRec(ID[0], ID[1], text);
-  //and also in the html
-  updateTableCell(targ,text);
-
-};
-
-function delDbRow(ID){
-
-  dataB.deleteRow(ID)
-  let parent=document.getElementById(tbody)
-  let row=document.getElementById(ID)
-  tbody.removeChild(row);
 
 };
 

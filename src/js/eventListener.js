@@ -84,8 +84,14 @@ export default function eventListener(a, callbacks) {
           var text = $("#input").val();
         }
 
-        let rUpdate=callbacks.rUpdate;
-        rUpdate(targ,text);
+
+        let ev = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target: targ, text: text}})
+        document.dispatchEvent(ev);
+
+            //Create event for database update
+        let event=new CustomEvent("customEvent",{detail: {name:"dbValueUpdate", target: targ, text: text}})
+        document.dispatchEvent(event);
+
         }
 
       else {
@@ -94,8 +100,9 @@ export default function eventListener(a, callbacks) {
         
         $("#myModal").removeAttr("funct");
         
-        let delDbRow = callbacks.delDbRow;
-        delDbRow(ID);
+        let event = new CustomEvent("customEvent", {detail: {name: "deleteDbRow",ID: ID}})
+        document.dispatchEvent(event);
+
 
       }
 
@@ -114,8 +121,8 @@ export default function eventListener(a, callbacks) {
      
       let text = $("#input").val();
 
-      let rUpdate=callbacks.rUpdate;
-      rUpdate(targ,text);
+      let event = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target: targ, text: text}})
+      document.dispatchEvent(event);
 
       $("#myModal").modal("hide");
       }
@@ -222,8 +229,9 @@ export default function eventListener(a, callbacks) {
     $(".inp").on("blur", function(t) {
         
         let targ=t.originalEvent.path[1];
-        let calInpVal=callbacks.calInpVal;
-        calInpVal(targ)
+
+        let event=new CustomEvent("customEvent",{detail: {name:"valueCalculation", target: targ}})
+        document.dispatchEvent(event);
 
       });
 
