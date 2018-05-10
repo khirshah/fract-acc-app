@@ -2,8 +2,8 @@ import dropDown from '../html/dropdown.js'
 
 //-------------------------- JQuery ------------------------------------------------
 
-export default function eventListener(a, callbacks) {
-  return function(a){
+export default function addAccountingEventListener(a) {
+
 
     var t=a || window.event;
 
@@ -192,9 +192,9 @@ export default function eventListener(a, callbacks) {
 
       //if everíthing is filled, we call the saveRow function
       else {
-
-        let saveRow = callbacks.saveRow;
-        saveRow(values);
+        
+        let event=new CustomEvent("customEvent",{detail: {name:"saveRow", values: values}})
+        document.dispatchEvent(event);
 
         //then clean up: empty the input row        
         $('.inp').each(function() {
@@ -237,11 +237,10 @@ export default function eventListener(a, callbacks) {
 
     //---------------------------- input field clicked ------------------------
     $(".inp").on("click", function(t) {
-        
-        let checkLocalStorage=callbacks.checkLocalStorage
-        
-        checkLocalStorage();
+        console.log("I'm running eventlis")
+        let event=new CustomEvent("customEvent",{detail: {name:"checkLocalStorage"}})
+        document.dispatchEvent(event);
       });
     
-  }
+  
 };

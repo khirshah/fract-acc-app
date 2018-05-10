@@ -1,7 +1,8 @@
 import {insertTable, insertModal, drawTable, addInputRow, insertTableRow, createDStruct, 
-  updateTableCell, displayXchData, calInpVal} from './tableHandler.js';
+  updateTableCell, displayXchData, calInpVal, checkLocalStorage, addEventLis} from './tableHandler.js';
 
 import DataBase from './DataBase.js';
+import apiCall from './apiCall.js';
 
 //-------------------------------- DATA --------------------------------------------
 
@@ -22,13 +23,13 @@ export var dataB = new DataBase(db);
 //console.log(dataB)
 
 // ------------------------ EVENT HANDLER ------------------------------------------
-export function addDispachedEventListener () {
+export function addAccountingEventHandler () {
 
 document.addEventListener("customEvent", function(event) {
-  console.log(event.detail)
+  console.log("accounting: ",event.detail)
   switch (event.detail.name) {
 
-    case "itemInserted":
+    case "displayXchData":
       
       displayXchData();
       break;
@@ -56,6 +57,44 @@ document.addEventListener("customEvent", function(event) {
       let row=document.getElementById(event.detail.ID)
       tbody.removeChild(row);
       break;
+
+    case "saveRow":
+
+      //create JSON from the array recieved from the event listener
+      //containing user defined values
+      let obj = createDStruct(event.detail.values);
+      //feed JSON with the insertContent function of the DataBase class
+      let dbFill = dataB.insertContent(obj);
+      //dbFill variable ensures the program waits before the insertion is done
+      dataB.findData(insertTableRow,obj.ID);
+      break;
+
+    case "checkLocalStorage":
+
+      checkLocalStorage();
+      break;
+
+    case "apiCall":
+
+      apiCall();
+      break;
+
+    case "buildTable":
+
+      var promise=dataB.fetchData();
+
+      promise.exec(function(error,docs) {
+
+        drawTable(docs);
+        addInputRow();
+        addEventLis();
+
+        checkLocalStorage();
+
+
+        })
+      break;
+
 
   }
 

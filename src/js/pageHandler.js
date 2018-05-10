@@ -1,5 +1,3 @@
-import runMain from './main.js';
-import runAccounting from './accounting.js';
 
 export function createTabs() {
 
@@ -48,15 +46,16 @@ export function tabEvents(a) {
       var target= t.target || a.srcElement;
       
       if (target.id=="accounting") {
-        target.setAttribute("active","true")
-        $("#main").attr("active","false")
-        runAccounting();
+
+        var event=new CustomEvent("pageEvent",{detail: {name:"runAccounting"}})
+        document.dispatchEvent(event);
       }
       
       else if (target.id=="main") {
-        target.setAttribute("active","true")
-        $("#accounting").attr("active","false")
-        runMain();
+        console.log("I'm running pageHandler")
+
+        var event=new CustomEvent("pageEvent",{detail: {name:"runMain"}})
+        document.dispatchEvent(event);
       }
     })
 

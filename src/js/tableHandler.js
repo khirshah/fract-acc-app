@@ -4,10 +4,11 @@ import CH from '../data/metaData.json';
 import dropDown from '../html/dropdown.js';
 import jsonLogic from "json-logic-js";
 import modalContent from '../html/modal.js';
+import addAccountingEventListener from './accountingEventListener.js';
 
 var array=Object.keys(CH.columns)
 
-var xch=0.71;
+var refreshInterval=120;
 
 //----------------------------------------- FUNCTIONS -------------------------
 
@@ -282,7 +283,7 @@ export function updateTableCell(target,text) {
    
     var event=new CustomEvent("customEvent",{detail: {name:"valueCalculation", target: target}})
     document.dispatchEvent(event);
-    //console.log(event)
+  
   }
 
 };
@@ -328,8 +329,11 @@ export function createDStruct(values) {
  //----------- calculate input field value -------------------------------------
 
 export function calInpVal(target) {
+
   let rowID=target.id.split("-")[0];
+
   switch (target.id.split("-")[1]) {
+
     case "USD":
 
       //console.log(target.id.split("-")[1])
@@ -338,6 +342,7 @@ export function calInpVal(target) {
       break;
 
     case "XCH_USD_GBP":
+
       if (target.firstChild.value!="") {
         calcGBPProj(target);
 
@@ -353,15 +358,6 @@ export function calInpVal(target) {
 
       break;
 
-    /*case "XCH_GBP_USD":
-      
-      if (target.firstChild.value!="") {
-        let ug = 1/target.firstChild.value || 1/target.innerHTML;
-        document.getElementById(rowID+"-XCH_USD_GBP").firstChild.value=ug.toFixed(5);       
-      }
-
-      break;
-    */
     default:
       break;
   }
@@ -399,5 +395,38 @@ function calcGBPProj(target) {
     document.dispatchEvent(event);
     }
   }
+
+};
+
+//-------------------- get exchange data ---------------------------------
+export function checkLocalStorage() {
+
+    //let's compare the time difference in minutes between now and the recording
+    // date of the data in the local sotrage 
+    let now=new Date().getTime();
+    let date= parseInt(window.localStorage.getItem("timestamp") || 0);
+    let difference=(now-date)/1000/60;
+    console.log(parseInt(difference)+" minutes since the last API call");
+    //if it's more than an hour, make another API call
+    if ( difference > refreshInterval || date == 0 ) {
+
+      let event=new CustomEvent("customEvent",{detail: {name:"apiCall"}})
+      document.dispatchEvent(event);
+    }
+    //if less, display the data currently in the local storage
+    else {
+
+      let event=new CustomEvent("customEvent",{detail: {name:"displayXchData"}})
+      document.dispatchEvent(event);
+    }
+
+};
+
+
+
+//---------------------- place event listeners ---------------------------
+export function addEventLis() {
+
+  $(document).ready(addAccountingEventListener());
 
 };

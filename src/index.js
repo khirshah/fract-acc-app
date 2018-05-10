@@ -7,20 +7,20 @@ require('bootstrap')
 
 import './index.scss';
 import {createTabs, tabEvents} from './js/pageHandler.js';
-import runAccounting from './js/accounting.js';
-
+import addPageEventHandler from './js/pageEventHandler.js'
 
 
 //-------------------------- commands -------------------------------
-//create tabs
 
+//create tabs
 createTabs();
 
-//add events
+//add page eventlisteners
 $(document).ready(tabEvents());
 
-//set the accounting page as active
-$("#accounting").attr("active","true")
+//add page event handlers
+addPageEventHandler();
 
 //run the accounting page, so this shows up first
-runAccounting();
+var event=new CustomEvent("pageEvent",{detail: {name:"runAccounting"}})
+document.dispatchEvent(event);

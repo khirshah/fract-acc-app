@@ -15,8 +15,8 @@ function apiCall() {
       window.localStorage.setItem('USDGBP', USDGBP);
       let date = new Date();
       window.localStorage.setItem('timestamp', date.getTime())
-      
-      var event = new CustomEvent('customEvent',{"detail":{name: "itemInserted"}});
+      console.log("I'm running apiCall")
+      var event = new CustomEvent('customEvent',{"detail":{name: "displayXchData"}});
       document.dispatchEvent(event);
       console.log("items set in local storage");
     })
