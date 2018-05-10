@@ -12,14 +12,15 @@ document.addEventListener("pageEvent", function(event) {
       //set the accounting page as active
       $("#main").attr("active","false")
       $("#accounting").attr("active","true")
-      //run the accounting page, so this shows up first
+
       runAccounting();
       break;
 
     case "runMain":
-      console.log("I am running for some reason I have no idea of")
+      //set the main page as active
       $("#accounting").attr("active","false")
       $("#main").attr("active","true")
+      
       runMain();
       break;
 

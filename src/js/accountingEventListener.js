@@ -1,6 +1,45 @@
 import dropDown from '../html/dropdown.js'
+import CH from '../data/metaData.json';
 
 //-------------------------- JQuery ------------------------------------------------
+function acceptBtnClicked() {
+
+  if ($("#myModal").attr("funct")=="saveValue"){
+
+    let targ=$("[data-target='#myModal']")[0];      
+    var text = $("#input").val();
+
+
+    let event1 = new CustomEvent("customEvent", {detail: {name: "tableRecordUpdate",target: targ, text: text}})
+    document.dispatchEvent(event1);
+
+        //Create event for database update
+    let event2=new CustomEvent("customEvent",{detail: {name:"dbValueUpdate", target: targ, text: text}})
+    document.dispatchEvent(event2);
+    
+    //console.log(targ)
+    let variable=CH.columns[targ.id.split("-")[1]]
+    
+    if (variable.calcBase) {
+      
+      let event3=new CustomEvent("customEvent",{detail: {name:"valueCalculation", target: targ}})
+      document.dispatchEvent(event3);
+    }
+
+    }
+
+  else if ($("#myModal").attr("funct")=="deleteRow"){
+
+    let ID=$("#myModal").attr("rowId");
+    
+    $("#myModal").removeAttr("funct");
+    
+    let event4 = new CustomEvent("customEvent", {detail: {name: "deleteDbRow",ID: ID}})
+    document.dispatchEvent(event4);
+
+
+  }
+}
 
 export default function addAccountingEventListener(a) {
 
@@ -56,6 +95,11 @@ export default function addAccountingEventListener(a) {
         $("#input")[0].focus();
       }
 
+      else if ($("#myModal").attr("funct")=="deleteRow") {
+
+        $("#AcceptB")[0].focus();
+      }
+
     });
 
     //--------------- modal goes hidden ---------------------------------------
@@ -71,61 +115,24 @@ export default function addAccountingEventListener(a) {
 
     $("#AcceptB").click(function(t) {
 
-      if ($("#myModal").attr("funct")=="saveValue"){
-
-        let targ=$("[data-target='#myModal']")[0];      
-      
-        if (targ.id.split("-")[1]!="DATE") {
-
-          var text = $("#input").val();
-        }
-        else {
-
-          var text = $("#input").val();
-        }
-
-
-        let ev = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target: targ, text: text}})
-        document.dispatchEvent(ev);
-
-            //Create event for database update
-        let event=new CustomEvent("customEvent",{detail: {name:"dbValueUpdate", target: targ, text: text}})
-        document.dispatchEvent(event);
-
-        }
-
-      else {
-
-        let ID=$("#myModal").attr("rowId");
-        
-        $("#myModal").removeAttr("funct");
-        
-        let event = new CustomEvent("customEvent", {detail: {name: "deleteDbRow",ID: ID}})
-        document.dispatchEvent(event);
-
-
-      }
-
+      acceptBtnClicked()
     });
 
     //----------------------- user hits enter on modal ------------------------
     //prevent the default "close modal and refresh site" event
-    //rather act like the Save button
+    //rather act like the Accept button
 
     $('.modal-content').keypress(function(e) {
       if(e.which == 13) {
 
       event.preventDefault()
       
-      let targ=$("[data-target='#myModal']")[0];
-     
-      let text = $("#input").val();
-
-      let event = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target: targ, text: text}})
-      document.dispatchEvent(event);
+      acceptBtnClicked();
 
       $("#myModal").modal("hide");
+
       }
+
     });
 
     //--------------------- dismis button on modal clicked --------------------
@@ -193,8 +200,8 @@ export default function addAccountingEventListener(a) {
       //if everíthing is filled, we call the saveRow function
       else {
         
-        let event=new CustomEvent("customEvent",{detail: {name:"saveRow", values: values}})
-        document.dispatchEvent(event);
+        let event1=new CustomEvent("customEvent",{detail: {name:"saveRow", values: values}})
+        document.dispatchEvent(event1);
 
         //then clean up: empty the input row        
         $('.inp').each(function() {
@@ -220,6 +227,8 @@ export default function addAccountingEventListener(a) {
             
         })
 
+      let event2=new CustomEvent("customEvent",{detail: {name:"displayXchData"}})
+      document.dispatchEvent(event2);
 
       }   
 
@@ -237,7 +246,7 @@ export default function addAccountingEventListener(a) {
 
     //---------------------------- input field clicked ------------------------
     $(".inp").on("click", function(t) {
-        console.log("I'm running eventlis")
+
         let event=new CustomEvent("customEvent",{detail: {name:"checkLocalStorage"}})
         document.dispatchEvent(event);
       });

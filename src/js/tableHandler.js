@@ -63,6 +63,7 @@ function createTableHeader() {
 }
 
 export function drawTable(cont) {
+  console.log(cont)
 
   createTableHeader();
 
@@ -223,8 +224,51 @@ export function  addInputRow() {
   
 };
 
+
+
+
+
+//---------------------- place event listeners ---------------------------
+export function addEventLis() {
+
+  $(document).ready(addAccountingEventListener());
+
+};
+
 //------------------------- table update functions ----------------------------
 
+//-------------------- get exchange data ---------------------------------
+export function checkLocalStorage() {
+
+    //let's compare the time difference in minutes between now and the recording
+    // date of the data in the local sotrage 
+    let now=new Date().getTime();
+    let date= parseInt(window.localStorage.getItem("timestamp") || 0);
+    let difference=(now-date)/1000/60;
+    console.log(parseInt(difference)+" minutes since the last API call");
+    //if it's more than an hour, make another API call
+    if ( difference > refreshInterval || date == 0 ) {
+
+      let event=new CustomEvent("customEvent",{detail: {name:"apiCall"}})
+      document.dispatchEvent(event);
+    }
+    //if less, display the data currently in the local storage
+    else {
+
+      let event=new CustomEvent("customEvent",{detail: {name:"displayXchData"}})
+      document.dispatchEvent(event);
+    }
+
+};
+//------------------- display exchange data ------------------------------
+export function displayXchData() {
+
+      let USDGBP=window.localStorage.getItem("USDGBP")
+
+      document.getElementById("newRow-XCH_USD_GBP").firstChild.value=parseFloat(USDGBP).toFixed(5);
+      document.getElementById("newRow-XCH_GBP_USD").innerHTML=(1/USDGBP).toFixed(5);
+
+};
 export function insertTableRow(content) {
 
   var r = document.createElement('tr');
@@ -258,12 +302,15 @@ export function insertTableRow(content) {
 };
 
 
-export function updateTableCell(target,text) {
+export function tableRecordUpdate(target,text) {
 
   let variable=CH.columns[target.id.split("-")[1]]
-
-  target.removeAttribute("data-toggle");
-  target.removeAttribute("data-target");
+  
+  if (target.hasAttribute("data-toggle")) {
+  
+    target.removeAttribute("data-toggle");
+    target.removeAttribute("data-target");
+  }
 
 
   if (target.id.split("-")[1]!="TRANS_DATE"){
@@ -279,23 +326,10 @@ export function updateTableCell(target,text) {
     target.innerText=date.toLocaleDateString();
 
   }
-  if (variable.calcBase){
-   
-    var event=new CustomEvent("customEvent",{detail: {name:"valueCalculation", target: target}})
-    document.dispatchEvent(event);
-  
-  }
 
 };
 
-export function displayXchData() {
 
-      let USDGBP=window.localStorage.getItem("USDGBP")
-
-      document.getElementById("newRow-XCH_USD_GBP").firstChild.value=parseFloat(USDGBP).toFixed(5);
-      document.getElementById("newRow-XCH_GBP_USD").innerHTML=(1/USDGBP).toFixed(5);
-
-};
 
 export function createDStruct(values) {
 
@@ -328,7 +362,7 @@ export function createDStruct(values) {
 
  //----------- calculate input field value -------------------------------------
 
-export function calInpVal(target) {
+export function valueCalculation(target) {
 
   let rowID=target.id.split("-")[0];
 
@@ -336,7 +370,6 @@ export function calInpVal(target) {
 
     case "USD":
 
-      //console.log(target.id.split("-")[1])
       calcGBPProj(target);
 
       break;
@@ -346,13 +379,16 @@ export function calInpVal(target) {
       if (target.firstChild.value!="") {
         calcGBPProj(target);
 
-        let gu = 1/target.firstChild.value || 1/target.innerHTML;
-        document.getElementById(rowID+"-XCH_GBP_USD").innerHTML=gu.toFixed(5);
+        let text = 1/target.firstChild.value || 1/target.innerHTML;
+        let targ = document.getElementById(rowID+"-XCH_GBP_USD")
+
+        let event1 = new CustomEvent("customEvent", {detail: {name: "tableRecordUpdate",target: targ, text: text.toFixed(5)}})
+        document.dispatchEvent(event1);
 
         if (target.id.split("-")[0]!="newRow") {
 
-          let event=new CustomEvent("customEvent",{detail: {name:"dbValueUpdate", target: target, text: gu.toFixed(5)}})
-          document.dispatchEvent(event);
+          let event2=new CustomEvent("customEvent",{detail: {name:"dbValueUpdate", target: target, text: text.toFixed(5)}})
+          document.dispatchEvent(event2);
         }
       }
 
@@ -374,7 +410,7 @@ function calcGBPProj(target) {
   let xchDP = typeof document.getElementById(rowID+"-"+c[2]).firstChild.value == "undefined" ? document.getElementById(rowID+"-"+c[2]).innerHTML : document.getElementById(rowID+"-"+c[2]).firstChild.value;
   
   if (USD!="" && xchDP!="") {
-    console.log("USD: "+USD+", xchDP: "+xchDP)
+
     let op=c[0];
     let rule={};
     rule[op]=[{"var":"a"},{"var":"b"}];
@@ -384,49 +420,19 @@ function calcGBPProj(target) {
     values["b"]=parseFloat(xchDP);
 
     var gbpProjVal=jsonLogic.apply(rule, values);
-    
     let gbpProj=document.getElementById(rowID+"-GBP_PROJ")
-    document.getElementById(rowID+"-GBP_PROJ").innerHTML=gbpProjVal.toFixed(5);
 
-    //Create event for database update
+    //create event for table update
+    let event1 = new CustomEvent("customEvent", {detail: {name: "tableRecordUpdate",target: gbpProj, text: gbpProjVal.toFixed(5)}})
+    document.dispatchEvent(event1);
+
+    //In other than new rows create event for database update
     if (rowID!="newRow") {
 
-    let event=new CustomEvent("customEvent",{detail: {name:"dbValueUpdate", target: gbpProj, text: gbpProjVal}})
-    document.dispatchEvent(event);
+      let event2=new CustomEvent("customEvent",{detail: {name:"dbValueUpdate", target: gbpProj, text: gbpProjVal}})
+      document.dispatchEvent(event2);
     }
   }
 
 };
 
-//-------------------- get exchange data ---------------------------------
-export function checkLocalStorage() {
-
-    //let's compare the time difference in minutes between now and the recording
-    // date of the data in the local sotrage 
-    let now=new Date().getTime();
-    let date= parseInt(window.localStorage.getItem("timestamp") || 0);
-    let difference=(now-date)/1000/60;
-    console.log(parseInt(difference)+" minutes since the last API call");
-    //if it's more than an hour, make another API call
-    if ( difference > refreshInterval || date == 0 ) {
-
-      let event=new CustomEvent("customEvent",{detail: {name:"apiCall"}})
-      document.dispatchEvent(event);
-    }
-    //if less, display the data currently in the local storage
-    else {
-
-      let event=new CustomEvent("customEvent",{detail: {name:"displayXchData"}})
-      document.dispatchEvent(event);
-    }
-
-};
-
-
-
-//---------------------- place event listeners ---------------------------
-export function addEventLis() {
-
-  $(document).ready(addAccountingEventListener());
-
-};

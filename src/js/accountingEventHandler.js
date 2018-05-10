@@ -1,5 +1,5 @@
 import {insertTable, insertModal, drawTable, addInputRow, insertTableRow, createDStruct, 
-  updateTableCell, displayXchData, calInpVal, checkLocalStorage, addEventLis} from './tableHandler.js';
+  tableRecordUpdate, displayXchData, valueCalculation, checkLocalStorage, addEventLis} from './tableHandler.js';
 
 import DataBase from './DataBase.js';
 import apiCall from './apiCall.js';
@@ -34,13 +34,13 @@ document.addEventListener("customEvent", function(event) {
       displayXchData();
       break;
 
-    case "recordUpdate":
-      updateTableCell(event.detail.target,event.detail.text);
+    case "tableRecordUpdate":
+      tableRecordUpdate(event.detail.target,event.detail.text);
       break;
 
     case "valueCalculation":
       
-      calInpVal(event.detail.target);
+      valueCalculation(event.detail.target);
       break;
 
     case "dbValueUpdate":
@@ -53,7 +53,7 @@ document.addEventListener("customEvent", function(event) {
     case "deleteDbRow":
 
       dataB.deleteRow(event.detail.ID)
-      //let parent=document.getElementById(tbody)
+
       let row=document.getElementById(event.detail.ID)
       tbody.removeChild(row);
       break;
@@ -80,7 +80,7 @@ document.addEventListener("customEvent", function(event) {
       break;
 
     case "buildTable":
-
+    //------------ read data from database, then populate html table-----------
       var promise=dataB.fetchData();
 
       promise.exec(function(error,docs) {
@@ -95,6 +95,15 @@ document.addEventListener("customEvent", function(event) {
         })
       break;
 
+    case "insertModal":
+
+      insertModal();
+      break;
+
+    case "insertTable":
+
+      insertTable();
+      break;
 
   }
 
