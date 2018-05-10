@@ -1,3 +1,4 @@
+/* ------------------------------- table  ---------------------------------  */
 #container {
   background-color: #c1e081;
   font-family: "Lucida Console", Monaco, monospace;
@@ -21,14 +22,14 @@ tbody > tr {
 }
 
 
-
+/* ---------------------------------- buttons ---------------------------------*/
 .btn {
   color: #a4c1be;
   background-color: #026666;
   font-weight: bold;
 }
 
-#bootstrap-overrides .delbtn {
+#bootstrap-overrides .delbtn, #saveButton {
   width: 30px;
   height: 30px;
   text-align: center;

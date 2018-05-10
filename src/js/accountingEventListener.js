@@ -2,8 +2,8 @@ import dropDown from '../html/dropdown.js'
 
 //-------------------------- JQuery ------------------------------------------------
 
-export default function eventListener(a, callbacks) {
-  return function(a){
+export default function addAccountingEventListener(a) {
+
 
     var t=a || window.event;
 
@@ -84,8 +84,14 @@ export default function eventListener(a, callbacks) {
           var text = $("#input").val();
         }
 
-        let rUpdate=callbacks.rUpdate;
-        rUpdate(targ,text);
+
+        let ev = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target: targ, text: text}})
+        document.dispatchEvent(ev);
+
+            //Create event for database update
+        let event=new CustomEvent("customEvent",{detail: {name:"dbValueUpdate", target: targ, text: text}})
+        document.dispatchEvent(event);
+
         }
 
       else {
@@ -94,8 +100,9 @@ export default function eventListener(a, callbacks) {
         
         $("#myModal").removeAttr("funct");
         
-        let delDbRow = callbacks.delDbRow;
-        delDbRow(ID);
+        let event = new CustomEvent("customEvent", {detail: {name: "deleteDbRow",ID: ID}})
+        document.dispatchEvent(event);
+
 
       }
 
@@ -114,8 +121,8 @@ export default function eventListener(a, callbacks) {
      
       let text = $("#input").val();
 
-      let rUpdate=callbacks.rUpdate;
-      rUpdate(targ,text);
+      let event = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target: targ, text: text}})
+      document.dispatchEvent(event);
 
       $("#myModal").modal("hide");
       }
@@ -186,12 +193,8 @@ export default function eventListener(a, callbacks) {
       //if everíthing is filled, we call the saveRow function
       else {
         
-        /*$("input").each(function(this) {
-          this.attr("empty",true)
-        })*/
-
-        let saveRow = callbacks.saveRow;
-        saveRow(values);
+        let event=new CustomEvent("customEvent",{detail: {name:"saveRow", values: values}})
+        document.dispatchEvent(event);
 
         //then clean up: empty the input row        
         $('.inp').each(function() {
@@ -222,20 +225,22 @@ export default function eventListener(a, callbacks) {
 
     });
 
-
+    //--------------------- input loses focus ---------------------------------
     $(".inp").on("blur", function(t) {
         
         let targ=t.originalEvent.path[1];
-        let calInpVal=callbacks.calInpVal
-        calInpVal(targ)
+
+        let event=new CustomEvent("customEvent",{detail: {name:"valueCalculation", target: targ}})
+        document.dispatchEvent(event);
+
       });
 
+    //---------------------------- input field clicked ------------------------
     $(".inp").on("click", function(t) {
-        
-        let checkLocalStorage=callbacks.checkLocalStorage
-        
-        checkLocalStorage();
+        console.log("I'm running eventlis")
+        let event=new CustomEvent("customEvent",{detail: {name:"checkLocalStorage"}})
+        document.dispatchEvent(event);
       });
     
-  }
+  
 };

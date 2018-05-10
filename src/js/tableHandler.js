@@ -1,20 +1,39 @@
-//----------------------------------------- INIT -----------------------------------------------
+//----------------------------------------- INIT ------------------------------
 
 import CH from '../data/metaData.json';
 import dropDown from '../html/dropdown.js';
 import jsonLogic from "json-logic-js";
+import modalContent from '../html/modal.js';
+import addAccountingEventListener from './accountingEventListener.js';
 
 var array=Object.keys(CH.columns)
 
-var xch=0.71;
+var refreshInterval=120;
 
-//----------------------------------------- FUNCTIONS -----------------------------------------
+//----------------------------------------- FUNCTIONS -------------------------
 
 //------------------------------ zeropad -----------------------------
 function zPad(n) {return n < 10 ? "0"+n : n;}
 
 
 //---------------------- table initializer functions -----------------
+
+export function insertTable() {
+
+  var table=document.createElement('table')
+  table.classList.add("table")
+  table.setAttribute('id','table')
+  document.getElementById("container").appendChild(table)
+
+}
+
+export function insertModal() {
+
+  var m=modalContent();
+  document.getElementById("container").innerHTML+=m;
+
+};
+
 function createTableHeader() {
 
   var tableHeader=document.createElement('thead');
@@ -91,7 +110,7 @@ export function drawTable(cont) {
 
     }
     let cellid=cont[i]._id+"-"+"delbtn";
-    let btn = deleteButtons(cellid); 
+    let btn = createDelBtns(cellid); 
     r.innerHTML+=btn;
 
     //when a row is filled, we insert that row to the table
@@ -108,7 +127,7 @@ export function drawTable(cont) {
 
 };
 
-function deleteButtons(id){
+function createDelBtns(id){
 
   return `<td id="`+id+ `"><button id=`+id+`0`+` class="btn delbtn">-</button></td>`;
 
@@ -196,7 +215,7 @@ export function  addInputRow() {
   };
 
   // put the save button at the end of this row
-  row.innerHTML+='<td id="newRow-button" class="col-sm"><button id="saveButton" class="btn">SAVE</button></td>';
+  row.innerHTML+='<td id="newRow-button" class="col-sm"><button id="saveButton" class="btn">+</button></td>';
 
   //upon completion append row to table
   document.getElementById("tbody").appendChild(row);
@@ -229,7 +248,7 @@ export function insertTableRow(content) {
   };
   
   let cellid=content[0]._id+"-"+"delbtn";
-  let btn = deleteButtons(cellid); 
+  let btn = createDelBtns(cellid); 
   r.innerHTML+=btn;
   //insert new row before last row of table
   let tbody=document.getElementsByClassName("tbody")[0]
@@ -241,6 +260,8 @@ export function insertTableRow(content) {
 
 export function updateTableCell(target,text) {
 
+  let variable=CH.columns[target.id.split("-")[1]]
+
   target.removeAttribute("data-toggle");
   target.removeAttribute("data-target");
 
@@ -248,6 +269,7 @@ export function updateTableCell(target,text) {
   if (target.id.split("-")[1]!="TRANS_DATE"){
 
     target.innerText=text;
+
   }
   else {
     //we format the date to user locale value
@@ -257,8 +279,23 @@ export function updateTableCell(target,text) {
     target.innerText=date.toLocaleDateString();
 
   }
+  if (variable.calcBase){
+   
+    var event=new CustomEvent("customEvent",{detail: {name:"valueCalculation", target: target}})
+    document.dispatchEvent(event);
+  
+  }
+
 };
 
+export function displayXchData() {
+
+      let USDGBP=window.localStorage.getItem("USDGBP")
+
+      document.getElementById("newRow-XCH_USD_GBP").firstChild.value=parseFloat(USDGBP).toFixed(5);
+      document.getElementById("newRow-XCH_GBP_USD").innerHTML=(1/USDGBP).toFixed(5);
+
+};
 
 export function createDStruct(values) {
 
@@ -287,33 +324,36 @@ export function createDStruct(values) {
 
     return obj;
 
-  }
+};
 
  //----------- calculate input field value -------------------------------------
+
 export function calInpVal(target) {
 
+  let rowID=target.id.split("-")[0];
+
   switch (target.id.split("-")[1]) {
+
     case "USD":
 
       //console.log(target.id.split("-")[1])
-      calcGBPProj();
+      calcGBPProj(target);
 
       break;
 
     case "XCH_USD_GBP":
-      if (target.firstChild.value!="") {
-        calcGBPProj();
-        let gu = 1/target.firstChild.value;
-        document.getElementById("newRow-XCH_GBP_USD").firstChild.value=gu.toFixed(5);
-      }
 
-      break;
-
-    case "XCH_GBP_USD":
-      
       if (target.firstChild.value!="") {
-        let ug = 1/target.firstChild.value;
-        document.getElementById("newRow-XCH_USD_GBP").firstChild.value=ug.toFixed(5);       
+        calcGBPProj(target);
+
+        let gu = 1/target.firstChild.value || 1/target.innerHTML;
+        document.getElementById(rowID+"-XCH_GBP_USD").innerHTML=gu.toFixed(5);
+
+        if (target.id.split("-")[0]!="newRow") {
+
+          let event=new CustomEvent("customEvent",{detail: {name:"dbValueUpdate", target: target, text: gu.toFixed(5)}})
+          document.dispatchEvent(event);
+        }
       }
 
       break;
@@ -322,26 +362,71 @@ export function calInpVal(target) {
       break;
   }
 
+};
 
-}
-
-function calcGBPProj() {
+function calcGBPProj(target) {
 
   let c=CH.columns.GBP_PROJ.calculation
-
-  if (document.getElementById("newRow-"+c[1]).firstChild.value!="" && 
-  document.getElementById("newRow-"+c[2]).firstChild.value!="") {
-
-    let op=c[0]
+  let rowID=target.id.split("-")[0]
+  //get the USD field of the given row
+  let USD = typeof document.getElementById(rowID+"-"+c[1]).firstChild.value == "undefined" ? document.getElementById(rowID+"-"+c[1]).innerHTML : document.getElementById(rowID+"-"+c[1]).firstChild.value;
+  //get the XCH_USD_GBP field of the given row
+  let xchDP = typeof document.getElementById(rowID+"-"+c[2]).firstChild.value == "undefined" ? document.getElementById(rowID+"-"+c[2]).innerHTML : document.getElementById(rowID+"-"+c[2]).firstChild.value;
+  
+  if (USD!="" && xchDP!="") {
+    console.log("USD: "+USD+", xchDP: "+xchDP)
+    let op=c[0];
     let rule={};
     rule[op]=[{"var":"a"},{"var":"b"}];
 
     let values={};
-    values["a"]=parseFloat(document.getElementById("newRow-"+c[1]).firstChild.value);
-    values["b"]=parseFloat(document.getElementById("newRow-"+c[2]).firstChild.value);
+    values["a"]=parseFloat(USD);
+    values["b"]=parseFloat(xchDP);
 
     var gbpProjVal=jsonLogic.apply(rule, values);
+    
+    let gbpProj=document.getElementById(rowID+"-GBP_PROJ")
+    document.getElementById(rowID+"-GBP_PROJ").innerHTML=gbpProjVal.toFixed(5);
 
-    document.getElementById("newRow-GBP_PROJ").innerHTML=gbpProjVal.toFixed(5);
+    //Create event for database update
+    if (rowID!="newRow") {
+
+    let event=new CustomEvent("customEvent",{detail: {name:"dbValueUpdate", target: gbpProj, text: gbpProjVal}})
+    document.dispatchEvent(event);
+    }
   }
-}
+
+};
+
+//-------------------- get exchange data ---------------------------------
+export function checkLocalStorage() {
+
+    //let's compare the time difference in minutes between now and the recording
+    // date of the data in the local sotrage 
+    let now=new Date().getTime();
+    let date= parseInt(window.localStorage.getItem("timestamp") || 0);
+    let difference=(now-date)/1000/60;
+    console.log(parseInt(difference)+" minutes since the last API call");
+    //if it's more than an hour, make another API call
+    if ( difference > refreshInterval || date == 0 ) {
+
+      let event=new CustomEvent("customEvent",{detail: {name:"apiCall"}})
+      document.dispatchEvent(event);
+    }
+    //if less, display the data currently in the local storage
+    else {
+
+      let event=new CustomEvent("customEvent",{detail: {name:"displayXchData"}})
+      document.dispatchEvent(event);
+    }
+
+};
+
+
+
+//---------------------- place event listeners ---------------------------
+export function addEventLis() {
+
+  $(document).ready(addAccountingEventListener());
+
+};
