@@ -1,8 +1,9 @@
 import {insertTable, insertModal, drawTable, addInputRow, insertTableRow, createDStruct, 
-  tableRecordUpdate, displayXchData, valueCalculation, checkLocalStorage, addEventLis} from './tableHandler.js';
+  tableRecordUpdate, displayXchData, displayHistXchData, valueCalculation, checkLocalStorage, addEventLis} from './tableHandler.js';
 
 import DataBase from './DataBase.js';
 import apiCall from './apiCall.js';
+import historicApiCall from './historicAPIcall.js';
 
 //-------------------------------- DATA --------------------------------------------
 
@@ -20,7 +21,6 @@ export var dataB = new DataBase(db);
 //dataB.clearDb();
 //dataB.insertContent(Data);
 
-//console.log(dataB)
 
 // ------------------------ EVENT HANDLER ------------------------------------------
 export function addAccountingEventHandler () {
@@ -29,13 +29,29 @@ document.addEventListener("customEvent", function(event) {
   console.log("accounting: ",event.detail)
   switch (event.detail.name) {
 
+    case "historicApiCall":
+
+      historicApiCall(event.detail.date,event.detail.targ);
+      break;
+
+    case "displayHistXchData":
+
+      displayHistXchData(event.detail.targ);
+      break;
+
     case "displayXchData":
       
-      displayXchData();
+      displayXchData(event.detail.targ);
       break;
 
     case "tableRecordUpdate":
+
       tableRecordUpdate(event.detail.target,event.detail.text);
+      if (event.detail.target.id.split("-")[0]!="newRow"){
+        let ID = event.detail.target.id.split("-")[0]
+        let key = event.detail.target.id.split("-")[1]
+        dataB.updateDbRec(ID, key, event.detail.text);
+      }
       break;
 
     case "valueCalculation":
@@ -43,12 +59,6 @@ document.addEventListener("customEvent", function(event) {
       valueCalculation(event.detail.target);
       break;
 
-    case "dbValueUpdate":
-
-      let ID = event.detail.target.id.split("-")[0]
-      let key = event.detail.target.id.split("-")[1]
-      dataB.updateDbRec(ID, key, event.detail.text);
-      break;
 
     case "deleteDbRow":
 

@@ -64,7 +64,6 @@ function createTableHeader() {
 
 export function drawTable(cont) {
   console.log(cont)
-
   createTableHeader();
 
   var tableBody = document.createElement("tbody");
@@ -115,7 +114,6 @@ export function drawTable(cont) {
     r.innerHTML+=btn;
 
     //when a row is filled, we insert that row to the table
-    //console.log(document.getElementById(cellid))
     tableBody.appendChild(r);
     delBtnEvLis(cellid);
 
@@ -255,7 +253,7 @@ export function checkLocalStorage() {
     //if less, display the data currently in the local storage
     else {
 
-      let event=new CustomEvent("customEvent",{detail: {name:"displayXchData"}})
+      let event=new CustomEvent("customEvent",{detail: {name:"displayXchData", targ: document.getElementById("newRow-TRANS_DATE")}})
       document.dispatchEvent(event);
     }
 
@@ -263,12 +261,33 @@ export function checkLocalStorage() {
 //------------------- display exchange data ------------------------------
 export function displayXchData() {
 
-      let USDGBP=window.localStorage.getItem("USDGBP")
 
-      document.getElementById("newRow-XCH_USD_GBP").firstChild.value=parseFloat(USDGBP).toFixed(5);
-      document.getElementById("newRow-XCH_GBP_USD").innerHTML=(1/USDGBP).toFixed(5);
+  let USDGBP=window.localStorage.getItem("USDGBP")
+
+  let event1 = new CustomEvent("customEvent", {detail: {name: "tableRecordUpdate",target: document.getElementById("newRow-XCH_USD_GBP"), text: parseFloat(USDGBP).toFixed(5)}})
+  document.dispatchEvent(event1);
+
+  let event2 = new CustomEvent("customEvent", {detail: {name: "tableRecordUpdate",target:   document.getElementById("newRow-XCH_GBP_USD"), text: (1/USDGBP).toFixed(5)}})
+  document.dispatchEvent(event2);
 
 };
+
+export function displayHistXchData(target) {
+
+  let USDGBP=window.localStorage.getItem("hist_USDGBP")
+  let ID=target.id.split("-")[0]
+        
+  let event1 = new CustomEvent("customEvent", {detail: {name: "tableRecordUpdate",target: document.getElementById(ID+"-XCH_USD_GBP"), text: parseFloat(USDGBP).toFixed(5)}})
+  document.dispatchEvent(event1);
+
+  let event2 = new CustomEvent("customEvent", {detail: {name: "tableRecordUpdate",target: document.getElementById(ID+"-XCH_GBP_USD"), text: (1/USDGBP).toFixed(5)}})
+  document.dispatchEvent(event2);
+
+  let event3=new CustomEvent("customEvent",{detail: {name:"valueCalculation", target: document.getElementById(ID+"-XCH_USD_GBP")}})
+  document.dispatchEvent(event3);
+
+}
+
 export function insertTableRow(content) {
 
   var r = document.createElement('tr');
@@ -318,6 +337,7 @@ export function tableRecordUpdate(target,text) {
     target.innerText=text;
 
   }
+
   else {
     //we format the date to user locale value
     let date=new Date(text);
@@ -385,11 +405,6 @@ export function valueCalculation(target) {
         let event1 = new CustomEvent("customEvent", {detail: {name: "tableRecordUpdate",target: targ, text: text.toFixed(5)}})
         document.dispatchEvent(event1);
 
-        if (target.id.split("-")[0]!="newRow") {
-
-          let event2=new CustomEvent("customEvent",{detail: {name:"dbValueUpdate", target: target, text: text.toFixed(5)}})
-          document.dispatchEvent(event2);
-        }
       }
 
       break;
@@ -426,12 +441,6 @@ function calcGBPProj(target) {
     let event1 = new CustomEvent("customEvent", {detail: {name: "tableRecordUpdate",target: gbpProj, text: gbpProjVal.toFixed(5)}})
     document.dispatchEvent(event1);
 
-    //In other than new rows create event for database update
-    if (rowID!="newRow") {
-
-      let event2=new CustomEvent("customEvent",{detail: {name:"dbValueUpdate", target: gbpProj, text: gbpProjVal}})
-      document.dispatchEvent(event2);
-    }
   }
 
 };

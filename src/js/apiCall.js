@@ -16,7 +16,7 @@ function apiCall() {
       let date = new Date();
       window.localStorage.setItem('timestamp', date.getTime())
       console.log("I'm running apiCall")
-      var event = new CustomEvent('customEvent',{"detail":{name: "displayXchData"}});
+      var event = new CustomEvent('customEvent',{"detail":{name: "displayXchData", targ: document.getElementById("newRow-TRANS_DATE")}});
       document.dispatchEvent(event);
       console.log("items set in local storage");
     })

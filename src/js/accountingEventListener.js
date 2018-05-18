@@ -4,29 +4,47 @@ import CH from '../data/metaData.json';
 //-------------------------- JQuery ------------------------------------------------
 function acceptBtnClicked() {
 
-  if ($("#myModal").attr("funct")=="saveValue"){
+  if ($("#myModal").attr("funct")=="saveValue") {
 
     let targ=$("[data-target='#myModal']")[0];      
     var text = $("#input").val();
-
-
-    let event1 = new CustomEvent("customEvent", {detail: {name: "tableRecordUpdate",target: targ, text: text}})
-    document.dispatchEvent(event1);
-
-        //Create event for database update
-    let event2=new CustomEvent("customEvent",{detail: {name:"dbValueUpdate", target: targ, text: text}})
-    document.dispatchEvent(event2);
-    
-    //console.log(targ)
     let variable=CH.columns[targ.id.split("-")[1]]
-    
-    if (variable.calcBase) {
+    var targText=""
+
+    if (variable.name=="Date") {
       
-      let event3=new CustomEvent("customEvent",{detail: {name:"valueCalculation", target: targ}})
-      document.dispatchEvent(event3);
+        let date=targ.innerHTML.split("/")[2]+"-"+targ.innerHTML.split("/")[1]+"-"+targ.innerHTML.split("/")[0]
+        //targ.getAttribute("timestamp")
+        //date.toISOString().split("T")[0]
+        targText=date
     }
 
+    else {
+      targText=targ.innerHTML
     }
+
+    if(targText!=text) {
+      
+      //record update
+      let event1 = new CustomEvent("customEvent", {detail: {name: "tableRecordUpdate",target: targ, text: text}})
+      document.dispatchEvent(event1);
+
+
+      if (variable.name=="Date") {
+
+        let event4=new CustomEvent("customEvent",{detail: {name:"historicApiCall", targ: targ, date: text}})
+        document.dispatchEvent(event4);
+      }
+
+      if (variable.calcBase) {
+      
+        let event3=new CustomEvent("customEvent",{detail: {name:"valueCalculation", target: targ}})
+        document.dispatchEvent(event3);
+      }
+    
+    }
+
+  }
 
   else if ($("#myModal").attr("funct")=="deleteRow"){
 
@@ -235,7 +253,7 @@ export default function addAccountingEventListener(a) {
     });
 
     //--------------------- input loses focus ---------------------------------
-    $(".inp").on("blur", function(t) {
+    $(".inp").on("change", function(t) {
         
         let targ=t.originalEvent.path[1];
 

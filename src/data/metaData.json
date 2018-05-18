@@ -86,9 +86,9 @@
     "XCH_USD_GBP": {
       "name": "USD/GBP rate",
       "visible": true,
-      "editable": true,
+      "editable": false,
       "dataType": "FLOAT",
-      "inputType": "USER_INPUT",
+      "inputType": "ASSIGNED",
       "calcBase" : true,
       "affectedFields":["GBP_PROJ","XCH_GBP_USD"]
     },
