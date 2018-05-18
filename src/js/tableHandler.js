@@ -8,7 +8,7 @@ import addAccountingEventListener from './accountingEventListener.js';
 
 var array=Object.keys(CH.columns)
 
-var refreshInterval=120;
+var refreshInterval=60;
 
 //----------------------------------------- FUNCTIONS -------------------------
 
@@ -63,7 +63,7 @@ function createTableHeader() {
 }
 
 export function drawTable(cont) {
-  console.log(cont)
+
   createTableHeader();
 
   var tableBody = document.createElement("tbody");
@@ -122,7 +122,8 @@ export function drawTable(cont) {
 
 
 
-  return 0;
+  let event=new CustomEvent("customEvent",{detail: {name:"addInputRow", trigger: "drawTable"}})
+  document.dispatchEvent(event);
 
 };
 
@@ -220,16 +221,20 @@ export function  addInputRow() {
   document.getElementById("tbody").appendChild(row);
   document.getElementById("dateinput").value=date.toISOString().split("T")[0];
   
+  let event=new CustomEvent("customEvent",{detail: {name:"addEventLis", trigger: "addInputRow"}})
+  document.dispatchEvent(event);
+
 };
-
-
-
 
 
 //---------------------- place event listeners ---------------------------
 export function addEventLis() {
 
   $(document).ready(addAccountingEventListener());
+      
+  let event=new CustomEvent("customEvent",{detail: {name:"checkLocalStorage", trigger: "addEventLis"}})
+  document.dispatchEvent(event);
+
 
 };
 
@@ -237,56 +242,71 @@ export function addEventLis() {
 
 //-------------------- get exchange data ---------------------------------
 export function checkLocalStorage() {
-
+    //see what date we have in the date field
+    //if today's
+    let dateFieldValue=document.getElementById("dateinput").value
     //let's compare the time difference in minutes between now and the recording
     // date of the data in the local sotrage 
-    let now=new Date().getTime();
-    let date= parseInt(window.localStorage.getItem("timestamp") || 0);
-    let difference=(now-date)/1000/60;
-    console.log(parseInt(difference)+" minutes since the last API call");
-    //if it's more than an hour, make another API call
-    if ( difference > refreshInterval || date == 0 ) {
+    let now=new Date();
+    let nowtime=now.getTime();
+    let nowdate=now.toISOString().split("T")[0]
 
-      let event=new CustomEvent("customEvent",{detail: {name:"apiCall"}})
-      document.dispatchEvent(event);
+    if (nowdate==dateFieldValue) {
+
+      let date= parseInt(window.localStorage.getItem("timestamp") || 0);
+      let difference=(nowtime-date)/1000/60;
+      console.log(parseInt(difference)+" minutes since the last API call");
+      //if it's more than an hour, make another API call
+      if ( difference > refreshInterval || date == 0 ) {
+
+        let event=new CustomEvent("customEvent",{detail: {name:"apiCall", trigger: "checkLocalStorage"}})
+        document.dispatchEvent(event);
+      }
+      //if less, display the data currently in the local storage
+      else {
+
+        let event=new CustomEvent("customEvent",{detail: {name:"displayXchData", targ: document.getElementById("newRow-TRANS_DATE"), trigger: "checkLocalStorage"}})
+        document.dispatchEvent(event);
+      }
     }
-    //if less, display the data currently in the local storage
+
     else {
-
-      let event=new CustomEvent("customEvent",{detail: {name:"displayXchData", targ: document.getElementById("newRow-TRANS_DATE")}})
-      document.dispatchEvent(event);
+      let event=new CustomEvent("customEvent",{detail: {name:"historicApiCall", targ: document.getElementById("newRow-TRANS_DATE"), date: nowdate, trigger: "checkLocalStorage"}})
+      document.dispatchEvent(event);     
     }
+
 
 };
 //------------------- display exchange data ------------------------------
-export function displayXchData() {
+export function displayXchData(target, trigger) {
+
+  let variable=CH.columns[target.id.split("-")[1]]
+  var ID=target.id.split("-")[0]
+
+  console.log("trigger: ",trigger)
+  if (trigger=="historicAPIcall") {
+      var USDGBP=window.localStorage.getItem("hist_USDGBP")
+
+  }
+
+  else {
+      var USDGBP=window.localStorage.getItem("USDGBP")
+  }
 
 
-  let USDGBP=window.localStorage.getItem("USDGBP")
-
-  let event1 = new CustomEvent("customEvent", {detail: {name: "tableRecordUpdate",target: document.getElementById("newRow-XCH_USD_GBP"), text: parseFloat(USDGBP).toFixed(5)}})
+  let event1 = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target: document.getElementById(ID+"-XCH_USD_GBP"), text: parseFloat(USDGBP).toFixed(5), trigger: "displayXchData"}})
   document.dispatchEvent(event1);
 
-  let event2 = new CustomEvent("customEvent", {detail: {name: "tableRecordUpdate",target:   document.getElementById("newRow-XCH_GBP_USD"), text: (1/USDGBP).toFixed(5)}})
+  let event2 = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target:   document.getElementById(ID+"-XCH_GBP_USD"), text: (1/USDGBP).toFixed(5), trigger: "displayXchData"}})
   document.dispatchEvent(event2);
+
+  if (variable.calcBase) {
+    let event3=new CustomEvent("customEvent",{detail: {name:"valueCalculation", target: document.getElementById(ID+"-XCH_USD_GBP"), trigger: "displayXchData"}})
+    document.dispatchEvent(event3);
+  }
 
 };
 
-export function displayHistXchData(target) {
-
-  let USDGBP=window.localStorage.getItem("hist_USDGBP")
-  let ID=target.id.split("-")[0]
-        
-  let event1 = new CustomEvent("customEvent", {detail: {name: "tableRecordUpdate",target: document.getElementById(ID+"-XCH_USD_GBP"), text: parseFloat(USDGBP).toFixed(5)}})
-  document.dispatchEvent(event1);
-
-  let event2 = new CustomEvent("customEvent", {detail: {name: "tableRecordUpdate",target: document.getElementById(ID+"-XCH_GBP_USD"), text: (1/USDGBP).toFixed(5)}})
-  document.dispatchEvent(event2);
-
-  let event3=new CustomEvent("customEvent",{detail: {name:"valueCalculation", target: document.getElementById(ID+"-XCH_USD_GBP")}})
-  document.dispatchEvent(event3);
-
-}
 
 export function insertTableRow(content) {
 
@@ -402,7 +422,7 @@ export function valueCalculation(target) {
         let text = 1/target.firstChild.value || 1/target.innerHTML;
         let targ = document.getElementById(rowID+"-XCH_GBP_USD")
 
-        let event1 = new CustomEvent("customEvent", {detail: {name: "tableRecordUpdate",target: targ, text: text.toFixed(5)}})
+        let event1 = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target: targ, text: text.toFixed(5), trigger: "valueCalculation"}})
         document.dispatchEvent(event1);
 
       }
@@ -438,7 +458,7 @@ function calcGBPProj(target) {
     let gbpProj=document.getElementById(rowID+"-GBP_PROJ")
 
     //create event for table update
-    let event1 = new CustomEvent("customEvent", {detail: {name: "tableRecordUpdate",target: gbpProj, text: gbpProjVal.toFixed(5)}})
+    let event1 = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target: gbpProj, text: gbpProjVal.toFixed(5), trigger: "calcGBPval"}})
     document.dispatchEvent(event1);
 
   }

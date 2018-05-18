@@ -26,19 +26,19 @@ function acceptBtnClicked() {
     if(targText!=text) {
       
       //record update
-      let event1 = new CustomEvent("customEvent", {detail: {name: "tableRecordUpdate",target: targ, text: text}})
+      let event1 = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target: targ, text: text, trigger: "AcceptB"}})
       document.dispatchEvent(event1);
 
 
       if (variable.name=="Date") {
 
-        let event4=new CustomEvent("customEvent",{detail: {name:"historicApiCall", targ: targ, date: text}})
+        let event4=new CustomEvent("customEvent",{detail: {name:"historicApiCall", targ: targ, date: text, trigger: "AcceptB"}})
         document.dispatchEvent(event4);
       }
 
       if (variable.calcBase) {
       
-        let event3=new CustomEvent("customEvent",{detail: {name:"valueCalculation", target: targ}})
+        let event3=new CustomEvent("customEvent",{detail: {name:"valueCalculation", target: targ, trigger: "AcceptB"}})
         document.dispatchEvent(event3);
       }
     
@@ -52,7 +52,7 @@ function acceptBtnClicked() {
     
     $("#myModal").removeAttr("funct");
     
-    let event4 = new CustomEvent("customEvent", {detail: {name: "deleteDbRow",ID: ID}})
+    let event4 = new CustomEvent("customEvent", {detail: {name: "deleteDbRow",ID: ID, trigger: "AcceptB"}})
     document.dispatchEvent(event4);
 
 
@@ -218,7 +218,7 @@ export default function addAccountingEventListener(a) {
       //if everíthing is filled, we call the saveRow function
       else {
         
-        let event1=new CustomEvent("customEvent",{detail: {name:"saveRow", values: values}})
+        let event1=new CustomEvent("customEvent",{detail: {name:"saveRow", values: values, trigger: "saveButton"}})
         document.dispatchEvent(event1);
 
         //then clean up: empty the input row        
@@ -245,7 +245,7 @@ export default function addAccountingEventListener(a) {
             
         })
 
-      let event2=new CustomEvent("customEvent",{detail: {name:"displayXchData"}})
+      let event2=new CustomEvent("customEvent",{detail: {name:"displayXchData", trigger: "saveButton"}})
       document.dispatchEvent(event2);
 
       }   
@@ -257,17 +257,20 @@ export default function addAccountingEventListener(a) {
         
         let targ=t.originalEvent.path[1];
 
-        let event=new CustomEvent("customEvent",{detail: {name:"valueCalculation", target: targ}})
+        let event=new CustomEvent("customEvent",{detail: {name:"valueCalculation", target: targ, trigger: "input field change"}})
         document.dispatchEvent(event);
+
+        let event2=new CustomEvent("customEvent",{detail: {name:"checkLocalStorage", target: targ, trigger: "input field change"}})
+        document.dispatchEvent(event2);
 
       });
 
     //---------------------------- input field clicked ------------------------
-    $(".inp").on("click", function(t) {
+    /*$(".inp").on("click", function(t) {
 
-        let event=new CustomEvent("customEvent",{detail: {name:"checkLocalStorage"}})
+        let event=new CustomEvent("customEvent",{detail: {name:"checkLocalStorage", trigger: "input field clicked"}})
         document.dispatchEvent(event);
-      });
+      });*/
     
   
 };

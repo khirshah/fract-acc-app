@@ -34,17 +34,12 @@ document.addEventListener("customEvent", function(event) {
       historicApiCall(event.detail.date,event.detail.targ);
       break;
 
-    case "displayHistXchData":
-
-      displayHistXchData(event.detail.targ);
-      break;
-
     case "displayXchData":
       
-      displayXchData(event.detail.targ);
+      displayXchData(event.detail.targ, event.detail.trigger);
       break;
 
-    case "tableRecordUpdate":
+    case "recordUpdate":
 
       tableRecordUpdate(event.detail.target,event.detail.text);
       if (event.detail.target.id.split("-")[0]!="newRow"){
@@ -96,13 +91,23 @@ document.addEventListener("customEvent", function(event) {
       promise.exec(function(error,docs) {
 
         drawTable(docs);
-        addInputRow();
-        addEventLis();
-
-        checkLocalStorage();
-
 
         })
+      break;
+
+    case  "addInputRow":
+
+      addInputRow();
+      break;
+
+    case "addEventLis":
+      
+      addEventLis();
+      break;
+
+    case "checkLocalStorage":
+
+      checkLocalStorage();
       break;
 
     case "insertModal":

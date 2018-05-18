@@ -14,7 +14,7 @@ const url = 'http://apilayer.net/api/' + endpoint + '?access_key=' + access_key 
     .then(function (data) {
       var USDGBP = data.quotes.USDGBP
       window.localStorage.setItem('hist_USDGBP', USDGBP);
-      var event = new CustomEvent('customEvent',{"detail":{name: "displayXchData", targ: target}});
+      var event = new CustomEvent('customEvent',{"detail":{name: "displayXchData", targ: target, trigger: "historicAPIcall"}});
       document.dispatchEvent(event);
     })
     .catch(function(error) {
