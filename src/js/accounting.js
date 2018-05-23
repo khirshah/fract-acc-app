@@ -1,26 +1,14 @@
 //-------------------------------- INIT ----------------------------------------------
-import DataBase from './DataBase.js';
 
-import {insertTable, insertModal, drawTable, addInputRow, insertTableRow, createDStruct, 
-  updateTableCell, displayXchData, calInpVal, checkLocalStorage} from './tableHandler.js';
-import addAccountingEventListener from './accountingEventListener.js';
-//import apiCall from './apiCall.js';
+
+import {insertTable, insertModal} from './tableHandler.js';
+
 import {addAccountingEventHandler,dataB} from './accountingEventHandler.js'
 
-//import dataB from './dispachedEventListener.js'
 
 
+//----------------------------- set event handlers ----------------------------
 
-
-//-------------------------------- FUNCTIONS ----------------------------------
-
-
-//---------------------- place event listeners ---------------------------
-function addEventLis() {
-
-  $(document).ready(addAccountingEventListener());
-
-};
 
 addAccountingEventHandler();
 
@@ -28,17 +16,20 @@ addAccountingEventHandler();
 export default function runAccounting() {
 
 
-  //------------------------ insert html table -----------------------------
-  insertTable();
-  //------------------------- insert modal from file ------------------------
-  insertModal();  
+  //------------------------ insert html table -------------------------------
+  
+  let event1 = new CustomEvent("customEvent",{detail: {name:"insertTable", trigger: "accounting main"}})
+  document.dispatchEvent(event1);
+  //------------------------- insert modal from file --------------------------
+    
 
-  let event = new CustomEvent("customEvent",{detail: {name:"buildTable"}})
-  document.dispatchEvent(event);
+  let event2 = new CustomEvent("customEvent",{detail: {name:"insertModal", trigger: "accounting main"}})
+  document.dispatchEvent(event2);
 
+  //------------------------ build html table --------------------------------- 
 
-  //------------ read data from database, then populate html table-----------
-
+  let event3 = new CustomEvent("customEvent",{detail: {name:"buildTable", trigger: "accounting main"}})
+  document.dispatchEvent(event3);
 
 };
 

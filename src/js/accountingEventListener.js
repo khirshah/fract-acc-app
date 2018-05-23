@@ -1,6 +1,67 @@
 import dropDown from '../html/dropdown.js'
+import CH from '../data/metaData.json';
 
 //-------------------------- JQuery ------------------------------------------------
+function acceptBtnClicked() {
+
+  if ($("#myModal").attr("funct")=="saveValue") {
+
+    let targ=$("[data-target='#myModal']")[0];      
+    var text = $("#input").val();
+    let variable=CH.columns[targ.id.split("-")[1]]
+    var targText=""
+
+    if (variable.name=="Date") {
+      
+        let date=targ.innerHTML.split("/")[2]+"-"+targ.innerHTML.split("/")[1]+"-"+targ.innerHTML.split("/")[0]
+        targText=date
+    }
+
+    else {
+      targText=targ.innerHTML
+    }
+
+    if(targText!=text) {
+      
+      //record update
+      let event1 = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target: targ, text: text, trigger: "AcceptB"}})
+      document.dispatchEvent(event1);
+
+
+      if (variable.name=="Date") {
+
+        let event4=new CustomEvent("customEvent",{detail: {name:"historicApiCall", targ: targ, date: text, trigger: "AcceptB"}})
+        document.dispatchEvent(event4);
+
+        let UG=document.getElementById(targ.id.split("-")[0]+"-XCH_USD_GBP")
+
+        let event3=new CustomEvent("customEvent",{detail: {name:"valueCalculation", target: UG, trigger: "AcceptB"}})
+        document.dispatchEvent(event3);
+      }
+
+      if (variable.calcBase) {
+      
+        let event3=new CustomEvent("customEvent",{detail: {name:"valueCalculation", target: targ, trigger: "AcceptB"}})
+        document.dispatchEvent(event3);
+      }
+    
+    }
+
+  }
+
+  else if ($("#myModal").attr("funct")=="deleteRow"){
+
+    let ID=$("#myModal").attr("rowid");
+    console.log($("#myModal"))
+    
+    $("#myModal").removeAttr("funct");
+    
+    let event4 = new CustomEvent("customEvent", {detail: {name: "deleteDbRow",ID: ID, trigger: "AcceptB"}})
+    document.dispatchEvent(event4);
+
+
+  }
+}
 
 export default function addAccountingEventListener(a) {
 
@@ -34,12 +95,13 @@ export default function addAccountingEventListener(a) {
           $("#input").attr("type","date");
           let date = new Date(target.getAttribute("timestamp"));
           $("#input")[0].value=date.toISOString().split("T")[0];
+
         }
         //any other field than date
         else {
 
-        $("#input").attr("type","text");
-        $("#input")[0].value=target.textContent;
+          $("#input").attr("type","text");
+          $("#input")[0].value=target.textContent;
         }
 
       }
@@ -54,6 +116,11 @@ export default function addAccountingEventListener(a) {
       if ($("#myModal").attr("funct")=="saveValue") {
 
         $("#input")[0].focus();
+      }
+
+      else if ($("#myModal").attr("funct")=="deleteRow") {
+
+        $("#AcceptB")[0].focus();
       }
 
     });
@@ -71,61 +138,24 @@ export default function addAccountingEventListener(a) {
 
     $("#AcceptB").click(function(t) {
 
-      if ($("#myModal").attr("funct")=="saveValue"){
-
-        let targ=$("[data-target='#myModal']")[0];      
-      
-        if (targ.id.split("-")[1]!="DATE") {
-
-          var text = $("#input").val();
-        }
-        else {
-
-          var text = $("#input").val();
-        }
-
-
-        let ev = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target: targ, text: text}})
-        document.dispatchEvent(ev);
-
-            //Create event for database update
-        let event=new CustomEvent("customEvent",{detail: {name:"dbValueUpdate", target: targ, text: text}})
-        document.dispatchEvent(event);
-
-        }
-
-      else {
-
-        let ID=$("#myModal").attr("rowId");
-        
-        $("#myModal").removeAttr("funct");
-        
-        let event = new CustomEvent("customEvent", {detail: {name: "deleteDbRow",ID: ID}})
-        document.dispatchEvent(event);
-
-
-      }
-
+      acceptBtnClicked()
     });
 
     //----------------------- user hits enter on modal ------------------------
     //prevent the default "close modal and refresh site" event
-    //rather act like the Save button
+    //rather act like the Accept button
 
     $('.modal-content').keypress(function(e) {
       if(e.which == 13) {
 
       event.preventDefault()
       
-      let targ=$("[data-target='#myModal']")[0];
-     
-      let text = $("#input").val();
-
-      let event = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target: targ, text: text}})
-      document.dispatchEvent(event);
+      acceptBtnClicked();
 
       $("#myModal").modal("hide");
+
       }
+
     });
 
     //--------------------- dismis button on modal clicked --------------------
@@ -193,8 +223,8 @@ export default function addAccountingEventListener(a) {
       //if everíthing is filled, we call the saveRow function
       else {
         
-        let event=new CustomEvent("customEvent",{detail: {name:"saveRow", values: values}})
-        document.dispatchEvent(event);
+        let event1=new CustomEvent("customEvent",{detail: {name:"saveRow", values: values, trigger: "saveButton"}})
+        document.dispatchEvent(event1);
 
         //then clean up: empty the input row        
         $('.inp').each(function() {
@@ -220,26 +250,24 @@ export default function addAccountingEventListener(a) {
             
         })
 
+      let event2=new CustomEvent("customEvent",{detail: {name:"displayXchData", targ: document.getElementById("newRow-TRANS_DATE"), trigger: "saveButton"}})
+      document.dispatchEvent(event2);
 
       }   
 
     });
 
     //--------------------- input loses focus ---------------------------------
-    $(".inp").on("blur", function(t) {
+    $(".inp").on("change", function(t) {
         
-        let targ=t.originalEvent.path[1];
+        let targ=t.originalEvent.target.offsetParent;
 
-        let event=new CustomEvent("customEvent",{detail: {name:"valueCalculation", target: targ}})
+        let event=new CustomEvent("customEvent",{detail: {name:"valueCalculation", target: targ, trigger: "input field change"}})
         document.dispatchEvent(event);
 
-      });
+        let event2=new CustomEvent("customEvent",{detail: {name:"checkLocalStorage", target: targ, trigger: "input field change"}})
+        document.dispatchEvent(event2);
 
-    //---------------------------- input field clicked ------------------------
-    $(".inp").on("click", function(t) {
-        console.log("I'm running eventlis")
-        let event=new CustomEvent("customEvent",{detail: {name:"checkLocalStorage"}})
-        document.dispatchEvent(event);
       });
     
   

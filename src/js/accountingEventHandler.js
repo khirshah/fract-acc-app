@@ -1,8 +1,9 @@
 import {insertTable, insertModal, drawTable, addInputRow, insertTableRow, createDStruct, 
-  updateTableCell, displayXchData, calInpVal, checkLocalStorage, addEventLis} from './tableHandler.js';
+  tableRecordUpdate, displayXchData, displayHistXchData, valueCalculation, checkLocalStorage, addEventLis} from './tableHandler.js';
 
 import DataBase from './DataBase.js';
 import apiCall from './apiCall.js';
+import historicApiCall from './historicAPIcall.js';
 
 //-------------------------------- DATA --------------------------------------------
 
@@ -20,7 +21,6 @@ export var dataB = new DataBase(db);
 //dataB.clearDb();
 //dataB.insertContent(Data);
 
-//console.log(dataB)
 
 // ------------------------ EVENT HANDLER ------------------------------------------
 export function addAccountingEventHandler () {
@@ -29,31 +29,36 @@ document.addEventListener("customEvent", function(event) {
   console.log("accounting: ",event.detail)
   switch (event.detail.name) {
 
+    case "historicApiCall":
+
+      historicApiCall(event.detail.date,event.detail.targ);
+      break;
+
     case "displayXchData":
       
-      displayXchData();
+      displayXchData(event.detail.targ, event.detail.trigger);
       break;
 
     case "recordUpdate":
-      updateTableCell(event.detail.target,event.detail.text);
+
+      tableRecordUpdate(event.detail.target,event.detail.text);
+      if (event.detail.target.id.split("-")[0]!="newRow"){
+        let ID = event.detail.target.id.split("-")[0]
+        let key = event.detail.target.id.split("-")[1]
+        dataB.updateDbRec(ID, key, event.detail.text);
+      }
       break;
 
     case "valueCalculation":
       
-      calInpVal(event.detail.target);
+      valueCalculation(event.detail.target);
       break;
 
-    case "dbValueUpdate":
-
-      let ID = event.detail.target.id.split("-")[0]
-      let key = event.detail.target.id.split("-")[1]
-      dataB.updateDbRec(ID, key, event.detail.text);
-      break;
 
     case "deleteDbRow":
 
       dataB.deleteRow(event.detail.ID)
-      //let parent=document.getElementById(tbody)
+
       let row=document.getElementById(event.detail.ID)
       tbody.removeChild(row);
       break;
@@ -80,21 +85,40 @@ document.addEventListener("customEvent", function(event) {
       break;
 
     case "buildTable":
-
+    //------------ read data from database, then populate html table-----------
       var promise=dataB.fetchData();
 
       promise.exec(function(error,docs) {
 
         drawTable(docs);
-        addInputRow();
-        addEventLis();
-
-        checkLocalStorage();
-
 
         })
       break;
 
+    case  "addInputRow":
+
+      addInputRow();
+      break;
+
+    case "addEventLis":
+      
+      addEventLis();
+      break;
+
+    case "checkLocalStorage":
+
+      checkLocalStorage();
+      break;
+
+    case "insertModal":
+
+      insertModal();
+      break;
+
+    case "insertTable":
+
+      insertTable();
+      break;
 
   }
 
