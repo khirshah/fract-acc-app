@@ -99,8 +99,12 @@ export function drawTable(cont) {
           col.innerHTML = date.toLocaleDateString();
         }
 
-        else{
+        else if (array[j]=="GBP_PROJ" || array[j]=="GBP_USD" || array[j]=="USD_GBP"){
     
+          col.innerHTML = parseFloat(cont[i][array[j]]).toFixed(5);
+        }
+
+        else {
           col.innerHTML = cont[i][array[j]];
         }
         //at the end we insert the current cell to the row
@@ -140,7 +144,9 @@ function delBtnEvLis(id) {
 
     t = t || window.event;
     var target = t.target || e.srcElement;
-    let ID=target.offsetParent.id.split("-")[0]
+
+    let ID=target.id.split("-")[0]
+
     $("#myModal").attr("rowId",ID)
 
     $(".modal-body").append(`<p>Are you sure?</p>`)
@@ -230,7 +236,7 @@ export function  addInputRow() {
 //---------------------- place event listeners ---------------------------
 export function addEventLis() {
 
-  $(document).ready(addAccountingEventListener());
+  $(document).ready(addAccountingEventListener(jQuery));
       
   let event=new CustomEvent("customEvent",{detail: {name:"checkLocalStorage", trigger: "addEventLis"}})
   document.dispatchEvent(event);
@@ -264,9 +270,15 @@ export function checkLocalStorage() {
       }
       //if less, display the data currently in the local storage
       else {
+        //but only if the values already in the table don't match the values already displayed
+        let tableValue=document.getElementById("newRow-XCH_USD_GBP").innerHTML
+        let storageValue=localStorage.getItem("USDGBP")
+        
+        if (tableValue!=storageValue){
+          let event=new CustomEvent("customEvent",{detail: {name:"displayXchData", targ: document.getElementById("newRow-TRANS_DATE"), trigger: "checkLocalStorage"}})
+          document.dispatchEvent(event);
+        }
 
-        let event=new CustomEvent("customEvent",{detail: {name:"displayXchData", targ: document.getElementById("newRow-TRANS_DATE"), trigger: "checkLocalStorage"}})
-        document.dispatchEvent(event);
       }
     }
 
@@ -283,7 +295,6 @@ export function displayXchData(target, trigger) {
   let variable=CH.columns[target.id.split("-")[1]]
   var ID=target.id.split("-")[0]
 
-  console.log("trigger: ",trigger)
   if (trigger=="historicAPIcall") {
       var USDGBP=window.localStorage.getItem("hist_USDGBP")
 

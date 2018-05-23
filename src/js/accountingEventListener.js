@@ -14,8 +14,6 @@ function acceptBtnClicked() {
     if (variable.name=="Date") {
       
         let date=targ.innerHTML.split("/")[2]+"-"+targ.innerHTML.split("/")[1]+"-"+targ.innerHTML.split("/")[0]
-        //targ.getAttribute("timestamp")
-        //date.toISOString().split("T")[0]
         targText=date
     }
 
@@ -34,6 +32,11 @@ function acceptBtnClicked() {
 
         let event4=new CustomEvent("customEvent",{detail: {name:"historicApiCall", targ: targ, date: text, trigger: "AcceptB"}})
         document.dispatchEvent(event4);
+
+        let UG=document.getElementById(targ.id.split("-")[0]+"-XCH_USD_GBP")
+
+        let event3=new CustomEvent("customEvent",{detail: {name:"valueCalculation", target: UG, trigger: "AcceptB"}})
+        document.dispatchEvent(event3);
       }
 
       if (variable.calcBase) {
@@ -48,7 +51,8 @@ function acceptBtnClicked() {
 
   else if ($("#myModal").attr("funct")=="deleteRow"){
 
-    let ID=$("#myModal").attr("rowId");
+    let ID=$("#myModal").attr("rowid");
+    console.log($("#myModal"))
     
     $("#myModal").removeAttr("funct");
     
@@ -91,12 +95,13 @@ export default function addAccountingEventListener(a) {
           $("#input").attr("type","date");
           let date = new Date(target.getAttribute("timestamp"));
           $("#input")[0].value=date.toISOString().split("T")[0];
+
         }
         //any other field than date
         else {
 
-        $("#input").attr("type","text");
-        $("#input")[0].value=target.textContent;
+          $("#input").attr("type","text");
+          $("#input")[0].value=target.textContent;
         }
 
       }
@@ -245,7 +250,7 @@ export default function addAccountingEventListener(a) {
             
         })
 
-      let event2=new CustomEvent("customEvent",{detail: {name:"displayXchData", trigger: "saveButton"}})
+      let event2=new CustomEvent("customEvent",{detail: {name:"displayXchData", targ: document.getElementById("newRow-TRANS_DATE"), trigger: "saveButton"}})
       document.dispatchEvent(event2);
 
       }   
@@ -255,7 +260,7 @@ export default function addAccountingEventListener(a) {
     //--------------------- input loses focus ---------------------------------
     $(".inp").on("change", function(t) {
         
-        let targ=t.originalEvent.path[1];
+        let targ=t.originalEvent.target.offsetParent;
 
         let event=new CustomEvent("customEvent",{detail: {name:"valueCalculation", target: targ, trigger: "input field change"}})
         document.dispatchEvent(event);
@@ -264,13 +269,6 @@ export default function addAccountingEventListener(a) {
         document.dispatchEvent(event2);
 
       });
-
-    //---------------------------- input field clicked ------------------------
-    /*$(".inp").on("click", function(t) {
-
-        let event=new CustomEvent("customEvent",{detail: {name:"checkLocalStorage", trigger: "input field clicked"}})
-        document.dispatchEvent(event);
-      });*/
     
   
 };
