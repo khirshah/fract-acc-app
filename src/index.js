@@ -6,9 +6,11 @@ window.Popper = require('popper.js')
 require('bootstrap')
 
 import './index.scss';
+
 import {createTabs, tabEvents} from './js/pageHandler.js';
 import addPageEventHandler from './js/pageEventHandler.js'
 
+import './httpReq.js'
 
 //-------------------------- commands -------------------------------
 
