@@ -8,12 +8,12 @@ import historicApiCall from './historicAPIcall.js';
 //-------------------------------- DATA --------------------------------------------
 
 //------------------------ initialize database ---------------------------
-//var database = require('./mongo');
 
 var Datastore = require('nedb');
 var db = new Datastore({ filename: 'db.db', autoload: true });
 
-
+import {getData, insertData} from './httpReq.js'
+insertData();
 
 //--------------- create an instance of the DataBase class --------------------
 
