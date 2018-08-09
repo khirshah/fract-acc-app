@@ -12,8 +12,10 @@ import historicApiCall from './historicAPIcall.js';
 var Datastore = require('nedb');
 var db = new Datastore({ filename: 'db.db', autoload: true });
 
-import {getData, insertData} from './httpReq.js'
-insertData();
+import {getData, insertData, updateData} from './httpReq.js'
+
+updateData();
+getData();
 
 //--------------- create an instance of the DataBase class --------------------
 
