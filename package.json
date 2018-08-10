@@ -40,6 +40,7 @@
     "node-loader": "^0.6.0",
     "popper.js": "^1.12.9",
     "python": "0.0.4",
+    "qs": "^6.5.2",
     "require_optional": "^1.0.1"
   }
 }
