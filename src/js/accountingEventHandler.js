@@ -8,13 +8,14 @@ import historicApiCall from './historicAPIcall.js';
 //-------------------------------- DATA --------------------------------------------
 
 //------------------------ initialize database ---------------------------
+import MongoDb from './httpReq.js'
+
+export var MDB = new MongoDb();
+
 
 var Datastore = require('nedb');
 var db = new Datastore({ filename: 'db.db', autoload: true });
 
-import {getData, insertData, updateData, removeData} from './httpReq.js'
-
-getData();
 
 //--------------- create an instance of the DataBase class --------------------
 
@@ -29,7 +30,7 @@ export var dataB = new DataBase(db);
 // ------------------------ EVENT HANDLER ------------------------------------------
 export function addAccountingEventHandler () {
 
-document.addEventListener("customEvent", function(event) {
+document.addEventListener("customEvent", async function(event) {
   console.log("accounting: ",event.detail)
   switch (event.detail.name) {
 
@@ -89,14 +90,11 @@ document.addEventListener("customEvent", function(event) {
       break;
 
     case "buildTable":
-    //------------ read data from database, then populate html table-----------
-      var promise=dataB.fetchData();
+      //------------ read data from database, then populate html table-----------
+      var docs = await MDB.getData()
+  
+      drawTable(docs)
 
-      promise.exec(function(error,docs) {
-
-        drawTable(docs);
-
-        })
       break;
 
     case  "addInputRow":
