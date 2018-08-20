@@ -74,15 +74,16 @@ class MongoDb {
   }
 
 
-  updateData() {
+  updateData(id, key, value) {
     //data to be updated
     const putData = qs.stringify(
       {
-        "_id":"5b688eecbf2b6a12da0be66a",
+        "_id":id,
         "dat": {
-         "USD":3200
+         [key]:value
         }
     })
+    console.log(putData)
     //give the options required for the request
     var options={
     hostname: 'localhost',
@@ -108,11 +109,11 @@ class MongoDb {
     req.end();
   }
 
-  removeData() {
+  removeData(id) {
     //id of the row to be deleted
     const removeD = qs.stringify(
       {
-        "_id":"5b688eecbf2b6a12da0be66a"
+        "_id":id
     })
     //give the options required for the request
     var options={

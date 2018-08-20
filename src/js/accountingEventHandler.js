@@ -1,7 +1,6 @@
 import {insertTable, insertModal, drawTable, addInputRow, insertTableRow, createDStruct, 
   tableRecordUpdate, displayXchData, displayHistXchData, valueCalculation, checkLocalStorage, addEventLis} from './tableHandler.js';
 
-import DataBase from './DataBase.js';
 import apiCall from './apiCall.js';
 import historicApiCall from './historicAPIcall.js';
 
@@ -10,22 +9,9 @@ import historicApiCall from './historicAPIcall.js';
 //------------------------ initialize database ---------------------------
 import MongoDb from './MongoDb.js'
 
-export var Mongo = new MongoDb();
-
-
-var Datastore = require('nedb');
-var db = new Datastore({ filename: 'db.db', autoload: true });
-
-
 //--------------- create an instance of the DataBase class --------------------
 
-export var dataB = new DataBase(db);
-
-//reset database original values from JSON
-//import Data from '../data/data.json';
-//dataB.clearDb();
-//dataB.insertContent(Data);
-
+export var Mongo = new MongoDb();
 
 // ------------------------ EVENT HANDLER ------------------------------------------
 export function addAccountingEventHandler () {
@@ -51,9 +37,7 @@ document.addEventListener("customEvent", async function(event) {
       var dbFill = await Mongo.insertData(obj);
       //dbFill variable ensures the program waits before the insertion is done
       obj._id=dbFill
-      //console.log("dbFill: ", dbFill)
-      //var doc = await Mongo.getDataLine(obj.ID);
-      //console.log(doc)
+
       insertTableRow(obj)
       
       break;
@@ -64,13 +48,13 @@ document.addEventListener("customEvent", async function(event) {
       if (event.detail.target.id.split("-")[0]!="newRow"){
         let ID = event.detail.target.id.split("-")[0]
         let key = event.detail.target.id.split("-")[1]
-        dataB.updateDbRec(ID, key, event.detail.text);
+        Mongo.updateData(ID, key, event.detail.text);
       }
       break;
 
     case "deleteDbRow":
 
-      dataB.deleteRow(event.detail.ID)
+      Mongo.removeData(event.detail.ID)
 
       let row=document.getElementById(event.detail.ID)
       tbody.removeChild(row);
