@@ -21,6 +21,12 @@ function apiCall() {
     })
     .catch(function(error) {
       console.log(error)
+      window.localStorage.setItem('USDGBP', USDGBP);
+      let date = new Date();
+      window.localStorage.setItem('timestamp', date.getTime())
+      var event = new CustomEvent('customEvent',{"detail":{name: "displayXchData", targ: document.getElementById("newRow-TRANS_DATE"), trigger: "APIcall"}});
+      document.dispatchEvent(event);
+      console.log("default value set in local storage");
       })
 
 };

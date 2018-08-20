@@ -328,20 +328,30 @@ export function insertTableRow(content) {
     let variable=CH.columns[array[j]]
 
     if (variable.visible) {
+
       
       var col = document.createElement('td');
-      col.setAttribute("id", content[0]._id+"-"+array[j]);
+
+      if (array[j]=="TRANS_DATE"){
+        //we convert the format to browser locale value
+        let date=new Date(content[array[j]]);
+        //and save the actual timestamp as an attribute of this field
+        col.setAttribute("timestamp",date);
+        content[array[j]]= date.toLocaleDateString();
+      }
+      
+      col.setAttribute("id", content._id+"-"+array[j]);
       col.classList.add('col-sm');
       col.setAttribute("editable",variable.editable);
       
       //we copy the data from the database to the html
-      col.innerHTML = content[0][array[j]];
+      col.innerHTML = content[array[j]];
       //at the end we insert the current cell to the row
       r.appendChild(col);
     };
   };
   
-  let cellid=content[0]._id+"-"+"delbtn";
+  let cellid=content._id+"-"+"delbtn";
   let btn = createDelBtns(cellid); 
   r.innerHTML+=btn;
   //insert new row before last row of table
