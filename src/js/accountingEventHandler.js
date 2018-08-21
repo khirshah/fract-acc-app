@@ -1,4 +1,4 @@
-import {insertTable, insertModal, drawTable, addInputRow, insertTableRow, createDStruct, 
+import {insertTable, insertModal, drawTable, addInputRow, insertTableRow, 
   tableRecordUpdate, displayXchData, displayHistXchData, valueCalculation, checkLocalStorage, addEventLis} from './tableHandler.js';
 
 import apiCall from './apiCall.js';
@@ -32,7 +32,7 @@ document.addEventListener("customEvent", async function(event) {
 
       //create JSON from the array recieved from the event listener
       //containing user defined values
-      let obj = createDStruct(event.detail.values);
+      let obj = event.detail.values;
       //feed JSON with the insertContent function of the DataBase class
       var dbFill = await Mongo.insertData(obj);
       //dbFill variable ensures the program waits before the insertion is done

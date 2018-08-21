@@ -83,7 +83,7 @@ class MongoDb {
          [key]:value
         }
     })
-    console.log(putData)
+
     //give the options required for the request
     var options={
     hostname: 'localhost',
