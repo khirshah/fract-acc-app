@@ -1,5 +1,6 @@
 const webpack = require('webpack')
 const path = require('path');
+const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
@@ -26,6 +27,10 @@ module.exports = {
       $: "jquery", // Used for Bootstrap JavaScript components
       jQuery: "jquery", // Used for Bootstrap JavaScript components
       Popper: ['popper.js', 'default'] // Used for Bootstrap dropdown, popup and tooltip JavaScript components
+    }),
+    new Dotenv({
+      path: './.env',
+      systemvars: true
     })
   ],
   output: {

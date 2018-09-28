@@ -137,7 +137,7 @@ export default function addAccountingEventListener(a) {
     //-------------------- save button on modal clicked -----------------------
 
     $("#AcceptB").click(function(t) {
-
+      console.log("USER: SAVE VALUE")
       acceptBtnClicked()
     });
 
@@ -148,6 +148,7 @@ export default function addAccountingEventListener(a) {
     $('.modal-content').keypress(function(e) {
       if(e.which == 13) {
 
+      console.log("USER: SAVE VALUE")
       event.preventDefault()
       
       acceptBtnClicked();
@@ -181,6 +182,7 @@ export default function addAccountingEventListener(a) {
 
     $("#saveButton").click(function() {
       
+      console.log("USER: SAVE ROW")
       let values={};
       var empty = false;
 
@@ -229,7 +231,7 @@ export default function addAccountingEventListener(a) {
         //then clean up: empty the input row        
         $('.inp').each(function() {
           //only calculated fields doesn't have inner input fields
-          //therefore treted differently using innerHTML property
+          //therefore treated differently using innerHTML property
           if ($(this)[0].tagName=="TD"){
 
             $(this)[0].innerHTML="";
@@ -245,6 +247,14 @@ export default function addAccountingEventListener(a) {
 
               $(this).val('')
             }
+
+            else if ($(this).attr("type")=="date") {
+
+              var date = new Date();
+
+              $(this).val(date.toISOString().split("T")[0]);
+
+            }
           }
           
             
@@ -259,7 +269,7 @@ export default function addAccountingEventListener(a) {
 
     //--------------------- input loses focus ---------------------------------
     $(".inp").on("change", function(t) {
-        
+        console.log("USER: ENTER VALUE")
         let targ=t.originalEvent.target.offsetParent;
 
         let event=new CustomEvent("customEvent",{detail: {name:"valueCalculation", target: targ, trigger: "input field change"}})

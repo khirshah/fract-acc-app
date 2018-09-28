@@ -1,13 +1,19 @@
 const http = require('http');
 const qs = require('qs')
 
+var conf = require('./config.json');
+var connectionstring = conf.connectionstring;
+var PORT = null;
+var hostname = conf.hostname;
+
+//console.log("ENV_VAR: ",process.env.PORT)
 
 class MongoDb {
   //read data from mongo database
   getData() {
 
     return new Promise((resolve, reject) => {
-      http.get('http://localhost:3000/mongoRead',(resp) => {
+      http.get(connectionstring,(resp) => {
         let data = '';
 
         // A chunk of data has been recieved.
@@ -40,8 +46,8 @@ class MongoDb {
       const postData = qs.stringify(obj)
       //give the options required for the request
       var options={
-        hostname: 'localhost',
-        port: '3000',
+        hostname: hostname,
+        port: PORT,
         path: '/mongoWrite',
         method: 'POST',
         headers: {
@@ -86,8 +92,8 @@ class MongoDb {
 
     //give the options required for the request
     var options={
-    hostname: 'localhost',
-    port: '3000',
+    hostname: hostname,
+    port: PORT,
     path: '/mongoUpdate',
     method: 'PUT',
     headers: {
@@ -117,8 +123,8 @@ class MongoDb {
     })
     //give the options required for the request
     var options={
-    hostname: 'localhost',
-    port: '3000',
+    hostname: hostname,
+    port: PORT,
     path: '/mongoRemove',
     method: 'DELETE',
     headers: {

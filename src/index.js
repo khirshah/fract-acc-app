@@ -1,4 +1,5 @@
 //---------------------------- INIT ----------------------------------
+console.log("ENV_VAR: ", process.env.connectionstring);
 // required for bootstrap
 window.$ = window.jQuery = require('jquery') 
 // required for tooltip, popup...
