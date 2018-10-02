@@ -63,7 +63,7 @@ function createTableHeader() {
       //let it's scope be the column
       col.setAttribute("scope","col");
       //and it's class col-sm - bootstap flexible col width
-      col.classList.add('col-sm');
+      col.classList.add('col-'+variable.size);
       //write the name of the variable to the header        
       col.innerHTML = variable.name;
       //finally attach it to our thead row
@@ -73,7 +73,7 @@ function createTableHeader() {
   };
   //to make the table look nice we add the extra column for the
   //delete button, but no button here
-  headerRow.innerHTML += '<td class="col-sm"></td>';
+  headerRow.innerHTML += '<td class="col-1"></td>';
   tableHeader.appendChild(headerRow);
   table.appendChild(tableHeader);
 };
@@ -104,7 +104,7 @@ export function drawTable(content) {
 
         var col = document.createElement('td');
         col.setAttribute("id", content[i]._id+"-"+metaDArray[j]);
-        col.classList.add('col-sm');
+        col.classList.add('col-'+variable.size);
         col.setAttribute("editable",variable.editable);
 
         //then we copy the data from the database to the html
@@ -150,7 +150,7 @@ export function drawTable(content) {
 
 function createDelBtns(id){
 
-  return `<td id="`+id+ `"><button id=`+id+`0`+` class="btn delbtn">-</button></td>`;
+  return `<td id="`+id+ `" class = "col-1"><button id=`+id+`0`+` class="btn delbtn">-</button></td>`;
 
 }
 
@@ -193,8 +193,8 @@ export function  addInputRow() {
     if (variable.visible) {
         //create divs
       var col = document.createElement('td');
-      col.setAttribute("class",'col-sm');
-      col.setAttribute("id",'newRow-'+metaDArray[j]);
+      col.classList.add('col-'+ variable.size);
+      col.setAttribute("id",'newRow-'+ metaDArray[j]);
       col.setAttribute("editable",variable.editable);
       col.setAttribute("dataType",variable.dataType);
 
@@ -241,7 +241,7 @@ export function  addInputRow() {
   };
 
   // put the save button at the end of this row
-  row.innerHTML+='<td id="newRow-button" class="col-sm"><button id="saveButton" class="btn">+</button></td>';
+  row.innerHTML+='<td id="newRow-button" class="col-1"><button id="saveButton" class="btn">+</button></td>';
 
   //upon completion append row to table
   document.getElementById("tbody").appendChild(row);

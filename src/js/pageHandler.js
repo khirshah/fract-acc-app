@@ -1,15 +1,15 @@
 
 export function createTabs() {
-
+  //create pageHeader
   let pH=document.createElement("div");
   pH.setAttribute("id","pageHeader");
   pH.classList.add("container-fluid");
-
+  //create row for tabs
   var r=document.createElement("div");
   r.classList.add("row");
 
   var tabs=["main", "accounting"];
-
+  //create tabs
   for (var i in tabs) {
 
     var m = document.createElement("div");
@@ -20,11 +20,31 @@ export function createTabs() {
 
     r.appendChild(m);
   }
+  
+  //create row for subtabs
+  var subTabsRow=document.createElement("div");
+  subTabsRow.classList.add("row");
+  subTabsRow.classList.add("justify-content-end");
+  //create subtabs
+  var accSubtabs = ["GBP", "USD"];
+  for (var i in accSubtabs) {
 
+    var m = document.createElement("div");
+    m.classList.add("col-3");
+    m.classList.add("tab");
+    m.setAttribute("id",accSubtabs[i]+"tab");
+    m.innerHTML=accSubtabs[i];
+
+    subTabsRow.appendChild(m);
+  }
+
+  //append tabs then subtabs to page header
   pH.appendChild(r);
+  pH.appendChild(subTabsRow);
 
   document.body.appendChild(pH);
 
+  //create main container of page
   let cont=document.createElement("div");
   cont.setAttribute("id","container");
   cont.classList.add("container-fluid");
@@ -45,9 +65,15 @@ export function tabEvents(a) {
 
       var target= t.target || a.srcElement;
       
-      if (target.id=="accounting") {
+      if (target.id == "USDtab") {
 
-        var event=new CustomEvent("pageEvent",{detail: {name:"runAccounting"}})
+        var event=new CustomEvent("pageEvent",{detail: {name:"runAccountingUSD"}})
+        document.dispatchEvent(event);
+      }
+
+      if (target.id == "GBPtab") {
+
+        var event=new CustomEvent("pageEvent",{detail: {name:"runAccountingGBP"}})
         document.dispatchEvent(event);
       }
       

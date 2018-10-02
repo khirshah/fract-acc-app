@@ -3,6 +3,7 @@
     "ID": {
       "name": "Transaction Id",
       "visible": false,
+      "size": 0,
       "editable": false,
       "dataType": "INTEGER",
       "inputType": "ASSIGNED",
@@ -12,6 +13,7 @@
     "USD": {
       "name": "USD",
       "visible": true,
+      "size": 1,
       "editable": true,
       "dataType": "FLOAT",
       "inputType": "USER_INPUT",
@@ -22,6 +24,7 @@
     "GBP_PROJ": {
       "name": "GBP projection",
       "visible": true,
+      "size": 1,
       "editable": false,
       "dataType": "FLOAT",
       "inputType": "CALCULATED",
@@ -36,6 +39,7 @@
     "GBP": {
       "name": "GBP",
       "visible": true,
+      "size": 1,
       "editable": true,
       "dataType": "FLOAT",
       "inputType": "USER_INPUT",
@@ -45,6 +49,7 @@
     "TRANS_TYPE": {
       "name": "Transaction type",
       "visible": true,
+      "size": 1,
       "editable": false,
       "dataType": "CHARACTER",
       "inputType": "DROPDOWN",
@@ -60,6 +65,7 @@
     "TRANS_DATE": {
       "name":"Date",
       "visible": true,
+      "size": 2,
       "editable": true,
       "dataType": "DATE",
       "inputType": "DATEINPUT",
@@ -69,6 +75,7 @@
     "TRANS_REF": {
       "name": "Transaction reference",
       "visible": true,
+      "size": 1,
       "editable": false,
       "dataType": "CHARACTER",
       "inputType": "USER_INPUT",
@@ -78,6 +85,7 @@
     "TRANS_DESC": {
       "name": "Description",
       "visible": true,
+      "size": 2,
       "editable": true,
       "dataType": "CHARACTER",
       "inputType": "USER_INPUT",
@@ -86,6 +94,7 @@
     "XCH_USD_GBP": {
       "name": "USD/GBP rate",
       "visible": true,
+      "size": 1,
       "editable": false,
       "dataType": "FLOAT",
       "inputType": "ASSIGNED",
@@ -96,6 +105,7 @@
     "XCH_GBP_USD": {
       "name": "GBP/USD rate",
       "visible": true,
+      "size": 1,
       "editable": false,
       "dataType": "FLOAT",
       "inputType":"CALCULATED",

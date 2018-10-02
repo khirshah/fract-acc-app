@@ -1,5 +1,4 @@
 //---------------------------- INIT ----------------------------------
-console.log("ENV_VAR: ", process.env.connectionstring);
 // required for bootstrap
 window.$ = window.jQuery = require('jquery') 
 // required for tooltip, popup...
@@ -23,5 +22,5 @@ $(document).ready(tabEvents());
 addPageEventHandler();
 
 //run the accounting page, so this shows up first
-var event=new CustomEvent("pageEvent",{detail: {name:"runAccounting"}})
+var event=new CustomEvent("pageEvent",{detail: {name:"runAccountingGBP"}})
 document.dispatchEvent(event);

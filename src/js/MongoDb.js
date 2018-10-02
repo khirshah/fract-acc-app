@@ -1,10 +1,5 @@
 const http = require('http');
-const qs = require('qs')
-
-var conf = require('./config.json');
-var connectionstring = conf.connectionstring;
-var PORT = null;
-var hostname = conf.hostname;
+const qs = require('qs');
 
 //console.log("ENV_VAR: ",process.env.PORT)
 
@@ -13,7 +8,7 @@ class MongoDb {
   getData() {
 
     return new Promise((resolve, reject) => {
-      http.get(connectionstring,(resp) => {
+      http.get(process.env.connectionstring,(resp) => {
         let data = '';
 
         // A chunk of data has been recieved.
@@ -46,8 +41,7 @@ class MongoDb {
       const postData = qs.stringify(obj)
       //give the options required for the request
       var options={
-        hostname: hostname,
-        port: PORT,
+        hostname: process.env.hostname,
         path: '/mongoWrite',
         method: 'POST',
         headers: {
@@ -92,8 +86,7 @@ class MongoDb {
 
     //give the options required for the request
     var options={
-    hostname: hostname,
-    port: PORT,
+    hostname: process.env.hostname,
     path: '/mongoUpdate',
     method: 'PUT',
     headers: {
@@ -123,8 +116,7 @@ class MongoDb {
     })
     //give the options required for the request
     var options={
-    hostname: hostname,
-    port: PORT,
+    hostname: process.env.hostname,
     path: '/mongoRemove',
     method: 'DELETE',
     headers: {
