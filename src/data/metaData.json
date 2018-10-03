@@ -1,5 +1,10 @@
 {
   "columns": {
+    "CURRENCY": {
+      "visible": false,
+      "dataType": "CHARACTER"
+    },
+
     "ID": {
       "name": "Transaction Id",
       "visible": false,

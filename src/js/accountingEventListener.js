@@ -183,7 +183,17 @@ export default function addAccountingEventListener(a) {
     $("#saveButton").click(function() {
       
       console.log("USER: SAVE ROW")
-      let values={};
+      let values = {};
+
+      //first save the currency
+      if ($("#GBPtab").attr("active", true)) {
+        values.CURRENCY = "GBP" 
+      }
+
+      else if ($("#USDtab").attr("active", true)) {
+        values.CURRENCY = "USD"
+      }
+      
       var empty = false;
 
       //Check input fields and collect their data

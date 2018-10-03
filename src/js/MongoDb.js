@@ -1,7 +1,12 @@
 const http = require('http');
 const qs = require('qs');
 
-//console.log("ENV_VAR: ",process.env.PORT)
+var mode = "local"
+
+const options = mode=="local" ? {port:process.env.PORT, hostname: process.env.localhost} : {hostname: process.env.hostname, path: '/mongoWrite',};
+
+const connString = mode=="local" ? process.env.connectionstring : process.env.connStLoc;
+
 
 class MongoDb {
   //read data from mongo database
@@ -39,22 +44,22 @@ class MongoDb {
       let dataLine;
       //create the datarow to insert
       const postData = qs.stringify(obj)
+      
       //give the options required for the request
-      var options={
-        hostname: process.env.hostname,
-        path: '/mongoWrite',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Content-Length': Buffer.byteLength(postData)
-        }
-      }
+      options.method = 'POST'
+      options.path = '/mongoWrite'
+      options.headers= {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Length': Buffer.byteLength(postData)
+      };
 
+      console.log("postData: ",postData, options);
       //create the request with the options above
       const req = http.request(options,(res) => {
         
         res.on('data', (chunk) => {
           dataLine = chunk;
+          //console.log(JSON.parse(chunk));
         });
         res.on('end', () => {
           resolve(JSON.parse(dataLine).id);
@@ -85,15 +90,13 @@ class MongoDb {
     })
 
     //give the options required for the request
-    var options={
-    hostname: process.env.hostname,
-    path: '/mongoUpdate',
-    method: 'PUT',
-    headers: {
+    options.method = 'PUT'
+    options.path = '/mongoUpdate'
+        options.headers= {
       'Content-Type': 'application/x-www-form-urlencoded',
       'Content-Length': Buffer.byteLength(putData)
-      }
-    }
+      };
+
     //create the request with the options above
     const req = http.request(options,(res) => {
       console.log(res);
@@ -115,15 +118,14 @@ class MongoDb {
         "_id":id
     })
     //give the options required for the request
-    var options={
-    hostname: process.env.hostname,
-    path: '/mongoRemove',
-    method: 'DELETE',
-    headers: {
+
+    options.method = 'DELETE'
+    options.path = '/mongoRemove'
+    options.headers= {
       'Content-Type': 'application/x-www-form-urlencoded',
       'Content-Length': Buffer.byteLength(removeD)
-      }
-    }
+      };
+
     //create the request with the options above
     const req = http.request(options,(res) => {
       console.log(res);

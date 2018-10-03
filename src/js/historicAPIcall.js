@@ -2,7 +2,7 @@
 // set endpoint and your access key
 const endpoint = 'historical'
 const currencies='GBP'
-const access_key = '1dfb51ad6a7a8713cd6754158d6b1ce9';
+const access_key = process.env.currencyAccessKey;
 var USDGBP=0.71;
 
 
