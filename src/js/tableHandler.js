@@ -6,7 +6,7 @@ import jsonLogic from "json-logic-js";
 import modalContent from '../html/modal.js';
 import addAccountingEventListener from './accountingEventListener.js';
 
-var metaDArray = Object.keys(metaData.columns)
+var metaDArray = Object.keys(metaData.columns);
 
 var refreshInterval = 60;
 
@@ -219,12 +219,31 @@ export function  addInputRow() {
           dt.classList.add("inp");
           dt.classList.add("date");
           dt.setAttribute("id","dateinput");
+
           //we create a new date
           var date= new Date();
 
-          dt.value=date.toISOString().split("T")[0];
-
+          dt.value = date.toISOString().split("T")[0];
+          dt.max = date.toISOString().split("T")[0];
           col.appendChild(dt);
+          break;
+
+        case "ASSIGNED" :
+          if (variable.name == "Currency") {
+            
+            if (document.getElementById('GBPtab').getAttribute('active')=='true') {
+                
+                col.innerHTML+="£";
+            }
+
+            else if (document.getElementById('USDtab').getAttribute('active')=='true') {
+                
+                col.innerHTML+="$";
+            }
+
+          }
+
+          col.classList.add("inp");
           break;
 
         default:
@@ -364,9 +383,10 @@ export function insertTableRow(content) {
         col.setAttribute("timestamp",date);
         content[metaDArray[j]] = date.toLocaleDateString();
       }
+
+      col.classList.add('col-'+variable.size);
       
       col.setAttribute("id", content._id+"-"+metaDArray[j]);
-      col.classList.add('col-sm');
       col.setAttribute("editable",variable.editable);
       
       //we copy the data from the database to the html
@@ -424,7 +444,7 @@ export function valueCalculation(target) {
 
   switch (target.id.split("-")[1]) {
 
-    case "USD":
+    case "AMOUNT":
 
       calcGBPProj(target);
 
@@ -455,19 +475,20 @@ function calcGBPProj(target) {
 
   let c = metaData.columns.GBP_PROJ.calculation
   let rowID = target.id.split("-")[0]
+  
   //get the USD field of the given row
-  let USD = typeof document.getElementById(rowID+"-"+c[1]).firstChild.value == "undefined" ? document.getElementById(rowID+"-"+c[1]).innerHTML : document.getElementById(rowID+"-"+c[1]).firstChild.value;
+  let AMOUNT = typeof document.getElementById(rowID+"-"+c[1]).firstChild.value == "undefined" ? document.getElementById(rowID+"-"+c[1]).innerHTML : document.getElementById(rowID+"-"+c[1]).firstChild.value;
   //get the XCH_USD_GBP field of the given row
   let xchDP = typeof document.getElementById(rowID+"-"+c[2]).firstChild.value == "undefined" ? document.getElementById(rowID+"-"+c[2]).innerHTML : document.getElementById(rowID+"-"+c[2]).firstChild.value;
   
-  if (USD!="" && xchDP!="") {
+  if (AMOUNT!="" && xchDP!="") {
 
     let op = c[0];
     let rule = {};
     rule[op] = [{"var":"a"},{"var":"b"}];
 
     let values = {};
-    values["a"] = parseFloat(USD);
+    values["a"] = parseFloat(AMOUNT);
     values["b"] = parseFloat(xchDP);
 
     var gbpProjVal = jsonLogic.apply(rule, values);

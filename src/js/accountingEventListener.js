@@ -185,20 +185,20 @@ export default function addAccountingEventListener(a) {
       console.log("USER: SAVE ROW")
       let values = {};
 
-      //first save the currency
+      /*//first save the currency
       if ($("#GBPtab").attr("active", true)) {
-        values.CURRENCY = "GBP" 
+        values.CURRENCY = "£" 
       }
 
       else if ($("#USDtab").attr("active", true)) {
-        values.CURRENCY = "USD"
-      }
+        values.CURRENCY = "$"
+      }*/
       
       var empty = false;
 
       //Check input fields and collect their data
       $('.inp').each(function() {
-
+        console.log($(this))
         if ($(this)[0].value == '') {
 
           $(this).attr("empty",true)
@@ -232,7 +232,7 @@ export default function addAccountingEventListener(a) {
 
       } 
 
-      //if everíthing is filled, we call the saveRow function
+      //if everything is filled, we call the saveRow function
       else {
         
         let event1=new CustomEvent("customEvent",{detail: {name:"saveRow", values: values, trigger: "saveButton"}})

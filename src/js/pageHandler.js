@@ -67,14 +67,16 @@ export function tabEvents(a) {
       
       if (target.id == "USDtab") {
 
-        var event=new CustomEvent("pageEvent",{detail: {name:"runAccountingUSD"}})
-        document.dispatchEvent(event);
+        var event1=new CustomEvent("pageEvent",{detail: {name:"runAccountingUSD"}})
+        document.dispatchEvent(event1);
+
       }
 
       if (target.id == "GBPtab") {
 
-        var event=new CustomEvent("pageEvent",{detail: {name:"runAccountingGBP"}})
-        document.dispatchEvent(event);
+        var event1=new CustomEvent("pageEvent",{detail: {name:"runAccountingGBP"}})
+        document.dispatchEvent(event1);
+
       }
       
       else if (target.id=="main") {

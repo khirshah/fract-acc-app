@@ -25,7 +25,6 @@ class MongoDb {
 
         // The whole response has been received. Print out the result.
         resp.on('end', () => {
-          console.log(JSON.parse(data))
           resolve(JSON.parse(data));
         });
 
