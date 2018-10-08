@@ -33,7 +33,6 @@ document.addEventListener("customEvent", async function(event) {
       //create JSON from the array recieved from the event listener
       //containing user defined values
       let obj = event.detail.values;
-      console.log("VALUES: ", obj)
       //feed JSON with the insertContent function of the DataBase class
       var dbFill = await Mongo.insertData(obj);
       //dbFill variable ensures the program waits before the insertion is done

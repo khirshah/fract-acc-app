@@ -52,7 +52,6 @@ function acceptBtnClicked() {
   else if ($("#myModal").attr("funct")=="deleteRow"){
 
     let ID=$("#myModal").attr("rowid");
-    console.log($("#myModal"))
     
     $("#myModal").removeAttr("funct");
     
@@ -184,21 +183,12 @@ export default function addAccountingEventListener(a) {
       
       console.log("USER: SAVE ROW")
       let values = {};
-
-      /*//first save the currency
-      if ($("#GBPtab").attr("active", true)) {
-        values.CURRENCY = "£" 
-      }
-
-      else if ($("#USDtab").attr("active", true)) {
-        values.CURRENCY = "$"
-      }*/
       
       var empty = false;
 
       //Check input fields and collect their data
       $('.inp').each(function() {
-        console.log($(this))
+        
         if ($(this)[0].value == '') {
 
           $(this).attr("empty",true)

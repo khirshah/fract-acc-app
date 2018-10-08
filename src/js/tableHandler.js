@@ -90,54 +90,57 @@ export function drawTable(content) {
   //iterate through the content rows
   for (var i in content) {
 
+    if (document.getElementById("accounting").getAttribute("Currency") == content[i].CURRENCY) {
       //and create rows of the html table accordingly
       var r = document.createElement('tr');
       r.classList.add('row');
       r.setAttribute("id", content[i]._id);
 
-    for (var j in metaDArray) {
-      //save the current variable for further use
-      let variable=metaData.columns[metaDArray[j]];
+      for (var j in metaDArray) {
+        //save the current variable for further use
+        let variable=metaData.columns[metaDArray[j]];
 
-      //same with the columns if they are visible
-      if (variable.visible) {
+        //same with the columns if they are visible
+        if (variable.visible) {
 
-        var col = document.createElement('td');
-        col.setAttribute("id", content[i]._id+"-"+metaDArray[j]);
-        col.classList.add('col-'+variable.size);
-        col.setAttribute("editable",variable.editable);
+          var col = document.createElement('td');
+          col.setAttribute("id", content[i]._id+"-"+metaDArray[j]);
+          col.classList.add('col-'+variable.size);
+          col.setAttribute("editable",variable.editable);
 
-        //then we copy the data from the database to the html
-        if (metaDArray[j]=="TRANS_DATE") {
-          //we convert the format to browser locale value
-          let date=new Date(content[i][metaDArray[j]]);
-          //and save the actual timestamp as an attribute of this field
-          col.setAttribute("timestamp",date);
-          col.innerHTML = date.toLocaleDateString();
-        }
+          //then we copy the data from the database to the html
+          if (metaDArray[j]=="TRANS_DATE") {
+            //we convert the format to browser locale value
+            let date=new Date(content[i][metaDArray[j]]);
+            //and save the actual timestamp as an attribute of this field
+            col.setAttribute("timestamp",date);
+            col.innerHTML = date.toLocaleDateString();
+          }
 
-        else if (metaDArray[j]=="GBP_PROJ" || metaDArray[j]=="GBP_USD" || metaDArray[j]=="USD_GBP") {
-          //in case of floats set the number of digits to 5    
-          col.innerHTML = parseFloat(content[i][metaDArray[j]]).toFixed(5);
-        }
+          else if (metaDArray[j]=="GBP_PROJ" || metaDArray[j]=="GBP_USD" || metaDArray[j]=="USD_GBP") {
+            //in case of floats set the number of digits to 5    
+            col.innerHTML = parseFloat(content[i][metaDArray[j]]).toFixed(5);
+          }
 
-        else {
-          col.innerHTML = content[i][metaDArray[j]];
-        }
-        //at the end we insert the current cell to the row
-        r.appendChild(col);
+          else {
+            col.innerHTML = content[i][metaDArray[j]];
+          }
+          //at the end we insert the current cell to the row
+          r.appendChild(col);
+
+        };
 
       };
 
+      let cellid = content[i]._id+"-"+"delbtn";
+      let btn = createDelBtns(cellid); 
+      r.innerHTML += btn;
+
+      //when a row is filled, we insert that row to the table
+      tableBody.appendChild(r);
+      delBtnEvLis(cellid);
+
     };
-
-    let cellid = content[i]._id+"-"+"delbtn";
-    let btn = createDelBtns(cellid); 
-    r.innerHTML += btn;
-
-    //when a row is filled, we insert that row to the table
-    tableBody.appendChild(r);
-    delBtnEvLis(cellid);
 
   };
 
@@ -145,6 +148,8 @@ export function drawTable(content) {
 
   let event=new CustomEvent("customEvent",{detail: {name:"addInputRow", trigger: "drawTable"}})
   document.dispatchEvent(event);
+
+
 
 };
 
@@ -185,6 +190,7 @@ export function  addInputRow() {
 
   var row = document.createElement("tr")
   row.setAttribute("class","row")
+  row.id="newRow"
 
   for (var j in metaDArray) {
 
@@ -229,20 +235,12 @@ export function  addInputRow() {
           break;
 
         case "ASSIGNED" :
+          
           if (variable.name == "Currency") {
-            
-            if (document.getElementById('GBPtab').getAttribute('active')=='true') {
-                
-                col.innerHTML+="£";
-            }
-
-            else if (document.getElementById('USDtab').getAttribute('active')=='true') {
-                
-                col.innerHTML+="$";
-            }
-
+          
+          col.innerHTML+=document.getElementById('accounting').getAttribute('Currency');
+          
           }
-
           col.classList.add("inp");
           break;
 
@@ -367,6 +365,7 @@ export function insertTableRow(content) {
 
   var r = document.createElement('tr');
   r.classList.add('row');
+  r.id = content._id
 
   for (var j in metaDArray){
     let variable = metaData.columns[metaDArray[j]];
