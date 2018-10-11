@@ -14,6 +14,7 @@ document.addEventListener("pageEvent", function(event) {
       $("#GBPtab").attr("active","false")
       $("#accounting").attr("active","true")
       $("#accounting").attr("Currency","$")
+      $("#accounting").attr("CurrencyName","USD")
       $("#USDtab").attr("active","true")
 
 
@@ -26,6 +27,7 @@ document.addEventListener("pageEvent", function(event) {
       $("#USDtab").attr("active","false")
       $("#accounting").attr("active","true")
       $("#accounting").attr("Currency","£")
+      $("#accounting").attr("CurrencyName","GBP")
       $("#GBPtab").attr("active","true")
 
       runAccounting();

@@ -1,12 +1,12 @@
 //----------------------------------------- INIT ------------------------------
 
-import metaData from '../data/metaData.json';
+import metaD from '../data/metaData.json';
 import dropDown from '../html/dropdown.js';
 import jsonLogic from "json-logic-js";
 import modalContent from '../html/modal.js';
 import addAccountingEventListener from './accountingEventListener.js';
 
-var metaDArray = Object.keys(metaData.columns);
+var metaDArray = Object.keys(metaD.columns.USD);
 
 var refreshInterval = 60;
 
@@ -39,7 +39,8 @@ export function insertModal() {
 };
 
 function createTableHeader() {
-
+  let curr = document.getElementById('accounting').getAttribute('CurrencyName')
+  var metaData = metaD.columns[curr]
   //create the table header
   var tableHeader = document.createElement('thead');
   //set it's class to be thead
@@ -54,7 +55,7 @@ function createTableHeader() {
   //so objects are taken in a certain order
   for (var j in metaDArray) {
     //save the current variable for further use
-    let variable = metaData.columns[metaDArray[j]];
+    let variable = metaData[metaDArray[j]];
     //if our current variable appears in the html table 
     //according to the metadata
     if (variable.visible) {
@@ -79,6 +80,9 @@ function createTableHeader() {
 };
 
 export function drawTable(content) {
+
+  let curr = document.getElementById('accounting').getAttribute('CurrencyName')
+  var metaData = metaD.columns[curr]
   //first create table header with the function above
   createTableHeader();
   //then the body
@@ -98,7 +102,7 @@ export function drawTable(content) {
 
       for (var j in metaDArray) {
         //save the current variable for further use
-        let variable=metaData.columns[metaDArray[j]];
+        let variable=metaData[metaDArray[j]];
 
         //same with the columns if they are visible
         if (variable.visible) {
@@ -149,8 +153,6 @@ export function drawTable(content) {
   let event=new CustomEvent("customEvent",{detail: {name:"addInputRow", trigger: "drawTable"}})
   document.dispatchEvent(event);
 
-
-
 };
 
 function createDelBtns(id){
@@ -187,14 +189,16 @@ function delBtnEvLis(id) {
 
 
 export function  addInputRow() {
-
+  let curr = document.getElementById('accounting').getAttribute('CurrencyName')
+  var metaData = metaD.columns[curr]
+  
   var row = document.createElement("tr")
   row.setAttribute("class","row")
   row.id="newRow"
 
   for (var j in metaDArray) {
 
-    var variable = metaData.columns[metaDArray[j]];
+    var variable = metaData[metaDArray[j]];
 
     if (variable.visible) {
         //create divs
@@ -272,7 +276,10 @@ export function  addInputRow() {
 
 //---------------------- place event listeners ---------------------------
 export function addEventLis() {
-
+  
+  let curr = document.getElementById('accounting').getAttribute('CurrencyName')
+  var metaData = metaD.columns[curr]
+  
   $(document).ready(addAccountingEventListener(jQuery));
       
   let event = new CustomEvent("customEvent",{detail: {name:"checkLocalStorage", trigger: "addEventLis"}})
@@ -285,6 +292,10 @@ export function addEventLis() {
 
 //-------------------- get exchange data ---------------------------------
 export function checkLocalStorage() {
+  
+  let curr = document.getElementById('accounting').getAttribute('CurrencyName')
+  var metaData = metaD.columns[curr]  
+
   //see what date we have in the date field
   //if today's
   let dateFieldValue = document.getElementById("dateinput").value;
@@ -332,7 +343,10 @@ export function checkLocalStorage() {
 //------------------- display exchange data ------------------------------
 export function displayXchData(target, trigger) {
 
-  let variable = metaData.columns[target.id.split("-")[1]]
+  let curr = document.getElementById('accounting').getAttribute('CurrencyName')
+  var metaData = metaD.columns[curr]
+
+  let variable = metaData[target.id.split("-")[1]]
   var ID = target.id.split("-")[0]
 
   if (trigger == "historicAPIcall") {
@@ -363,12 +377,15 @@ export function displayXchData(target, trigger) {
 
 export function insertTableRow(content) {
 
+  let curr = document.getElementById('accounting').getAttribute('CurrencyName')
+  var metaData = metaD.columns[curr]
+
   var r = document.createElement('tr');
   r.classList.add('row');
   r.id = content._id
 
   for (var j in metaDArray){
-    let variable = metaData.columns[metaDArray[j]];
+    let variable = metaData[metaDArray[j]];
 
     if (variable.visible) {
 
@@ -408,7 +425,10 @@ export function insertTableRow(content) {
 
 export function tableRecordUpdate(target,text) {
 
-  let variable = metaData.columns[target.id.split("-")[1]];
+  let curr = document.getElementById('accounting').getAttribute('CurrencyName')
+  var metaData = metaD.columns[curr]
+
+  let variable = metaData[target.id.split("-")[1]];
   
   if (target.hasAttribute("data-toggle")) {
   
@@ -438,6 +458,9 @@ export function tableRecordUpdate(target,text) {
  //----------- calculate input field value -------------------------------------
 
 export function valueCalculation(target) {
+
+  let curr = document.getElementById('accounting').getAttribute('CurrencyName')
+  var metaData = metaD.columns[curr]
 
   let rowID = target.id.split("-")[0];
 
@@ -472,7 +495,10 @@ export function valueCalculation(target) {
 
 function calcGBPProj(target) {
 
-  let c = metaData.columns.GBP_PROJ.calculation
+  let curr = document.getElementById('accounting').getAttribute('CurrencyName')
+  var metaData = metaD.columns[curr]
+
+  let c = metaData.GBP_PROJ.calculation
   let rowID = target.id.split("-")[0]
   
   //get the USD field of the given row

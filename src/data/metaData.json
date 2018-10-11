@@ -1,6 +1,6 @@
 {
   "columns": {
-    "1":{
+    "USD":{
       "ID": {
         "name": "Transaction Id",
         "visible": false,
@@ -133,7 +133,7 @@
       }
     },
 
-    "2":{
+    "GBP":{
       "ID": {
         "name": "Transaction Id",
         "visible": false,
