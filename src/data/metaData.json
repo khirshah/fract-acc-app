@@ -1,134 +1,268 @@
 {
   "columns": {
-
+    "1":{
       "ID": {
-      "name": "Transaction Id",
-      "visible": false,
-      "size": 0,
-      "editable": false,
-      "dataType": "INTEGER",
-      "inputType": "ASSIGNED",
-      "calcBase" : false
-    },
+        "name": "Transaction Id",
+        "visible": false,
+        "size": 0,
+        "editable": false,
+        "dataType": "INTEGER",
+        "inputType": "ASSIGNED",
+        "calcBase" : false
+      },
 
       "TRANS_DATE": {
-      "name":"Date",
-      "visible": true,
-      "size": 2,
-      "editable": true,
-      "dataType": "DATE",
-      "inputType": "DATEINPUT",
-      "altInput":"ASSIGNED",
-      "calcBase" : false
-    },
+        "name":"Date",
+        "visible": true,
+        "size": 2,
+        "editable": true,
+        "dataType": "DATE",
+        "inputType": "DATEINPUT",
+        "altInput":"ASSIGNED",
+        "calcBase" : false
+      },
 
       "AMOUNT": {
-      "name": "Amount",
-      "visible": true,
-      "size": 1,
-      "editable": true,
-      "dataType": "FLOAT",
-      "inputType": "USER_INPUT",
-      "calcBase" : true,
-      "affectedFields": ["GBP_PROJ"]
-    },
+        "name": "Amount",
+        "visible": true,
+        "size": 1,
+        "editable": true,
+        "dataType": "FLOAT",
+        "inputType": "USER_INPUT",
+        "calcBase" : true,
+        "affectedFields": ["PROJ"]
+      },
 
-    "CURRENCY": {
-      "name": "Currency",
-      "visible": true,
-      "editable": false,
-      "size": 1,
-      "dataType": "CHARACTER",
-      "inputType": "ASSIGNED",
-      "calcBase" : false
-    },
+      "CURRENCY": {
+        "name": "Currency",
+        "visible": true,
+        "editable": false,
+        "size": 1,
+        "dataType": "CHARACTER",
+        "inputType": "ASSIGNED",
+        "calcBase" : false
+      },
 
-    "GBP_PROJ": {
-      "name": "GBP projection",
-      "visible": true,
-      "size": 1,
-      "editable": false,
-      "dataType": "FLOAT",
-      "inputType": "CALCULATED",
-      "calculation": [
-        "*",
-        "AMOUNT",
-        "XCH_USD_GBP"
-      ],
-      "calcBase" : false
-    },
-    
-    "TRANS_TYPE": {
-      "name": "Transaction type",
-      "visible": true,
-      "size": 1,
-      "editable": false,
-      "dataType": "CHARACTER",
-      "inputType": "DROPDOWN",
-      "values": [
-          "IC",
-          "XC",
-          "XF",
-          "PA"
+      "PROJ": {
+        "name": "USD projection",
+        "visible": true,
+        "size": 1,
+        "editable": false,
+        "dataType": "FLOAT",
+        "inputType": "CALCULATED",
+        "calculation": [
+          "*",
+          "AMOUNT",
+          "XCH_GBP_USD"
         ],
-      "calcBase" : false
+        "calcBase" : false
+      },
+      
+      "TRANS_TYPE": {
+        "name": "Transaction type",
+        "visible": true,
+        "size": 1,
+        "editable": false,
+        "dataType": "CHARACTER",
+        "inputType": "DROPDOWN",
+        "values": [
+            "IC",
+            "XC",
+            "XF",
+            "PA"
+          ],
+        "calcBase" : false
+      },
+
+      "TRANS_REF": {
+        "name": "Transaction reference",
+        "visible": true,
+        "size": 1,
+        "editable": false,
+        "dataType": "CHARACTER",
+        "inputType": "USER_INPUT",
+        "altInput":"CALCULATED",
+        "calcBase" : false
+      },
+
+      "TRANS_DESC": {
+        "name": "Description",
+        "visible": true,
+        "size": 1,
+        "editable": true,
+        "dataType": "CHARACTER",
+        "inputType": "USER_INPUT",
+        "calcBase" : false
+      },
+
+      "XCH_USD_GBP": {
+        "name": "USD/GBP rate",
+        "visible": true,
+        "size": 1,
+        "editable": false,
+        "dataType": "FLOAT",
+        "inputType": "ASSIGNED",
+        "calcBase" : true,
+        "affectedFields":["XCH_GBP_USD"]
+      },
+
+      "XCH_GBP_USD": {
+        "name": "GBP/USD rate",
+        "visible": true,
+        "size": 1,
+        "editable": false,
+        "dataType": "FLOAT",
+        "inputType":"CALCULATED",
+        "calculation": [
+          "/",
+          1,
+          "XCH_USD_GBP"
+        ],
+        "calcBase" : true,
+        "affectedFields":["PROJ"]
+      },
+
+      "INVOICE_XCH_RATE" : {
+        "name": "Invoice xch rate",
+        "visible": true,
+        "size": 1,
+        "editable": true,
+        "dataType": "FLOAT",
+        "inputType":"USER_INPUT",
+        "calcBase" : false
+      }
     },
 
-    "TRANS_REF": {
-      "name": "Transaction reference",
-      "visible": true,
-      "size": 1,
-      "editable": false,
-      "dataType": "CHARACTER",
-      "inputType": "USER_INPUT",
-      "altInput":"CALCULATED",
-      "calcBase" : false
-    },
+    "2":{
+      "ID": {
+        "name": "Transaction Id",
+        "visible": false,
+        "size": 0,
+        "editable": false,
+        "dataType": "INTEGER",
+        "inputType": "ASSIGNED",
+        "calcBase" : false
+      },
 
-    "TRANS_DESC": {
-      "name": "Description",
-      "visible": true,
-      "size": 1,
-      "editable": true,
-      "dataType": "CHARACTER",
-      "inputType": "USER_INPUT",
-      "calcBase" : false
-    },
+      "TRANS_DATE": {
+        "name":"Date",
+        "visible": true,
+        "size": 2,
+        "editable": true,
+        "dataType": "DATE",
+        "inputType": "DATEINPUT",
+        "altInput":"ASSIGNED",
+        "calcBase" : false
+      },
 
-    "XCH_USD_GBP": {
-      "name": "USD/GBP rate",
-      "visible": true,
-      "size": 1,
-      "editable": false,
-      "dataType": "FLOAT",
-      "inputType": "ASSIGNED",
-      "calcBase" : true,
-      "affectedFields":["GBP_PROJ","XCH_GBP_USD"]
-    },
+      "AMOUNT": {
+        "name": "Amount",
+        "visible": true,
+        "size": 1,
+        "editable": true,
+        "dataType": "FLOAT",
+        "inputType": "USER_INPUT",
+        "calcBase" : true,
+        "affectedFields": ["PROJ"]
+      },
 
-    "XCH_GBP_USD": {
-      "name": "GBP/USD rate",
-      "visible": true,
-      "size": 1,
-      "editable": false,
-      "dataType": "FLOAT",
-      "inputType":"CALCULATED",
-      "calculation": [
-        "/",
-        1,
-        "XCH_USD_GBP"
-      ],
-      "calcBase" : false
-    },
+      "CURRENCY": {
+        "name": "Currency",
+        "visible": true,
+        "editable": false,
+        "size": 1,
+        "dataType": "CHARACTER",
+        "inputType": "ASSIGNED",
+        "calcBase" : false
+      },
 
-    "INVOICE_XCH_RATE" : {
-      "name": "Invoice xch rate",
-      "visible": true,
-      "size": 1,
-      "editable": true,
-      "dataType": "FLOAT",
-      "inputType":"USER_INPUT",
-      "calcBase" : false
+      "PROJ": {
+        "name": "GBP projection",
+        "visible": true,
+        "size": 1,
+        "editable": false,
+        "dataType": "FLOAT",
+        "inputType": "CALCULATED",
+        "calculation": [
+          "*",
+          "AMOUNT",
+          "XCH_USD_GBP"
+        ],
+        "calcBase" : false
+      },
+      
+      "TRANS_TYPE": {
+        "name": "Transaction type",
+        "visible": true,
+        "size": 1,
+        "editable": false,
+        "dataType": "CHARACTER",
+        "inputType": "DROPDOWN",
+        "values": [
+            "IC",
+            "XC",
+            "XF",
+            "PA"
+          ],
+        "calcBase" : false
+      },
+
+      "TRANS_REF": {
+        "name": "Transaction reference",
+        "visible": true,
+        "size": 1,
+        "editable": false,
+        "dataType": "CHARACTER",
+        "inputType": "USER_INPUT",
+        "altInput":"CALCULATED",
+        "calcBase" : false
+      },
+
+      "TRANS_DESC": {
+        "name": "Description",
+        "visible": true,
+        "size": 1,
+        "editable": true,
+        "dataType": "CHARACTER",
+        "inputType": "USER_INPUT",
+        "calcBase" : false
+      },
+
+      "XCH_USD_GBP": {
+        "name": "USD/GBP rate",
+        "visible": true,
+        "size": 1,
+        "editable": false,
+        "dataType": "FLOAT",
+        "inputType": "ASSIGNED",
+        "calcBase" : true,
+        "affectedFields":["PROJ","XCH_GBP_USD"]
+      },
+
+      "XCH_GBP_USD": {
+        "name": "GBP/USD rate",
+        "visible": true,
+        "size": 1,
+        "editable": false,
+        "dataType": "FLOAT",
+        "inputType":"CALCULATED",
+        "calculation": [
+          "/",
+          1,
+          "XCH_USD_GBP"
+        ],
+        "calcBase" : false
+      },
+
+      "INVOICE_XCH_RATE" : {
+        "name": "Invoice xch rate",
+        "visible": true,
+        "size": 1,
+        "editable": true,
+        "dataType": "FLOAT",
+        "inputType":"USER_INPUT",
+        "calcBase" : false
+      }
     }
   }
 }
