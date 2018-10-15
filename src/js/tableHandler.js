@@ -83,6 +83,7 @@ export function drawTable(content) {
 
   let curr = document.getElementById('accounting').getAttribute('CurrencyName')
   var metaData = metaD.columns[curr]
+
   //first create table header with the function above
   createTableHeader();
   //then the body
@@ -121,7 +122,7 @@ export function drawTable(content) {
             col.innerHTML = date.toLocaleDateString();
           }
 
-          else if (metaDArray[j]=="GBP_PROJ" || metaDArray[j]=="GBP_USD" || metaDArray[j]=="USD_GBP") {
+          else if (metaDArray[j]=="PROJ" || metaDArray[j]=="GBP_USD" || metaDArray[j]=="USD_GBP") {
             //in case of floats set the number of digits to 5    
             col.innerHTML = parseFloat(content[i][metaDArray[j]]).toFixed(5);
           }
@@ -494,11 +495,11 @@ export function valueCalculation(target) {
 };
 
 function calcGBPProj(target) {
-
+  
   let curr = document.getElementById('accounting').getAttribute('CurrencyName')
   var metaData = metaD.columns[curr]
 
-  let c = metaData.GBP_PROJ.calculation
+  let c = metaData.PROJ.calculation
   let rowID = target.id.split("-")[0]
   
   //get the USD field of the given row
@@ -517,7 +518,7 @@ function calcGBPProj(target) {
     values["b"] = parseFloat(xchDP);
 
     var gbpProjVal = jsonLogic.apply(rule, values);
-    let gbpProj = document.getElementById(rowID+"-GBP_PROJ")
+    let gbpProj = document.getElementById(rowID+"-PROJ")
 
     //create event for table update
     let event1 = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target: gbpProj, text: gbpProjVal.toFixed(5), trigger: "calcGBPval"}})

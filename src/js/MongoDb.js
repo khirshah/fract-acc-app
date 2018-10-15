@@ -10,7 +10,7 @@ const connString = mode=="local" ? process.env.connectionstring : process.env.co
 
 class MongoDb {
   //read data from mongo database
-  getData() {
+  /*getData() {
 
     return new Promise((resolve, reject) => {
       http.get(process.env.connectionstring,(resp) => {
@@ -25,6 +25,7 @@ class MongoDb {
 
         // The whole response has been received. Print out the result.
         resp.on('end', () => {
+          console.log(data)
           resolve(JSON.parse(data));
         });
 
@@ -33,6 +34,47 @@ class MongoDb {
         reject(err.message)
       });
     });
+  }*/
+
+  getData() {
+
+    return new Promise((resolve, reject) => {
+
+      let data = '';
+
+      let currency = document.getElementById("accounting").getAttribute("Currency")
+      let stDate = new Date(document.getElementById("startDateField").value)
+      var params = qs.stringify({curr:currency, startDate : stDate })
+
+      options.method = 'POST'
+      options.path = '/mongoRead'
+      options.headers= {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Length': Buffer.byteLength(params)
+      };
+
+      const req = http.request(options,(res) => {
+        
+        res.on('data', (chunk) => {
+          data += chunk;
+
+        });
+        res.on('end', () => {
+          resolve(JSON.parse(data));
+
+        });
+      });
+      //error handling
+      req.on('error', (e) => {
+        console.error(`problem with request: ${e.message}`);
+        reject(err.message)
+      });
+      //write the data into the request
+      req.write(params);
+      //send the request to the server
+      req.end();
+
+    })
   }
 
   //update data in mongo

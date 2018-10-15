@@ -1,3 +1,15 @@
+function addMonthsUTC (date, count) {
+  if (date && count) {
+    var m, d = (date = new Date(+date)).getUTCDate()
+
+    date.setUTCMonth(date.getUTCMonth() + count, 1)
+    m = date.getUTCMonth()
+    date.setUTCDate(d)
+    if (date.getUTCMonth() !== m) date.setUTCDate(0)
+  }
+  return date
+}
+
 
 export function createTabs() {
   //create pageHeader
@@ -33,14 +45,59 @@ export function createTabs() {
     m.classList.add("col-3");
     m.classList.add("tab");
     m.setAttribute("id",accSubtabs[i]+"tab");
-    m.innerHTML=accSubtabs[i];
+    m.innerHTML = accSubtabs[i];
 
     subTabsRow.appendChild(m);
   }
 
-  //append tabs then subtabs to page header
+  //create row for date filter
+  var dateRow = document.createElement("div");
+  dateRow.classList.add("row");
+  dateRow.classList.add("justify-content-end");
+  dateRow.setAttribute("id","dateFilter");
+  
+  //we create a new date
+  var todayDate = new Date();
+  
+  var twoMonthAgo = addMonthsUTC(todayDate,-2); 
+
+  //create the columns for the dates
+  var startDate = document.createElement("div");
+  startDate.classList.add("col-3");
+  startDate.setAttribute("id","startDate");
+
+  var startDateField = document.createElement("input")
+  startDateField.setAttribute("type","date");
+  startDateField.classList.add("date");
+  startDateField.setAttribute("id","startDateField");
+
+  startDateField.max = todayDate.toISOString().split("T")[0];
+  startDateField.value = twoMonthAgo.toISOString().split("T")[0];
+
+  var endDate = document.createElement("div");
+  endDate.classList.add("col-3");
+  endDate.setAttribute("id","endDate");
+
+  var endDateField = document.createElement("input")
+  endDateField.setAttribute("type","date");
+  endDateField.classList.add("date");
+  endDateField.setAttribute("id","endDateField");
+
+
+  endDateField.value = todayDate.toISOString().split("T")[0];
+  endDateField.max = todayDate.toISOString().split("T")[0];
+  
+  //append date fields
+  startDate.appendChild(startDateField);
+  endDate.appendChild(endDateField);
+
+  dateRow.appendChild(startDate);
+  dateRow.appendChild(endDate)
+
+  //append tabs then subtabs then datefields to page header
   pH.appendChild(r);
   pH.appendChild(subTabsRow);
+  pH.appendChild(dateRow);
 
   document.body.appendChild(pH);
 

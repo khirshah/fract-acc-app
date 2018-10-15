@@ -232,7 +232,8 @@ export default function addAccountingEventListener(a) {
         $('.inp').each(function() {
           //only calculated fields doesn't have inner input fields
           //therefore treated differently using innerHTML property
-          if ($(this)[0].tagName=="TD"){
+          //except for the currency field
+          if ($(this)[0].tagName=="TD"  && $(this).attr("id")!="newRow-CURRENCY"){
 
             $(this)[0].innerHTML="";
           }
