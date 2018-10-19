@@ -1,15 +1,3 @@
-function addMonthsUTC (date, count) {
-  if (date && count) {
-    var m, d = (date = new Date(+date)).getUTCDate()
-
-    date.setUTCMonth(date.getUTCMonth() + count, 1)
-    m = date.getUTCMonth()
-    date.setUTCDate(d)
-    if (date.getUTCMonth() !== m) date.setUTCDate(0)
-  }
-  return date
-}
-
 
 export function createTabs() {
   //create pageHeader
@@ -59,40 +47,32 @@ export function createTabs() {
   //we create a new date
   var todayDate = new Date();
   
-  var twoMonthAgo = addMonthsUTC(todayDate,-2); 
+  //var twoMonthAgo = addMonthsUTC(todayDate,-2); 
 
-  //create the columns for the dates
+  //create the column for the year
   var startDate = document.createElement("div");
-  startDate.classList.add("col-3");
+  startDate.classList.add("col-1");
   startDate.setAttribute("id","startDate");
 
-  var startDateField = document.createElement("input")
-  startDateField.setAttribute("type","date");
-  startDateField.classList.add("date");
+  var startDateField = document.createElement("select")
   startDateField.setAttribute("id","startDateField");
-
-  startDateField.max = todayDate.toISOString().split("T")[0];
-  startDateField.value = twoMonthAgo.toISOString().split("T")[0];
-
-  var endDate = document.createElement("div");
-  endDate.classList.add("col-3");
-  endDate.setAttribute("id","endDate");
-
-  var endDateField = document.createElement("input")
-  endDateField.setAttribute("type","date");
-  endDateField.classList.add("date");
-  endDateField.setAttribute("id","endDateField");
-
-
-  endDateField.value = todayDate.toISOString().split("T")[0];
-  endDateField.max = todayDate.toISOString().split("T")[0];
+  console.log(todayDate)
   
-  //append date fields
-  startDate.appendChild(startDateField);
-  endDate.appendChild(endDateField);
+  var dateList = [];
+  for (var i = 2015; i <= todayDate.getFullYear(); i++) {
+      dateList.push(i);
+  }
 
+  for (var i in dateList){
+    console.log(dateList[i])
+    startDateField.options[startDateField.options.length] = new Option(dateList[i]);
+  }
+  
+  startDateField.value = todayDate.getFullYear();
+
+  //append date field
+  startDate.appendChild(startDateField);
   dateRow.appendChild(startDate);
-  dateRow.appendChild(endDate)
 
   //append tabs then subtabs then datefields to page header
   pH.appendChild(r);
@@ -124,25 +104,32 @@ export function tabEvents(a) {
       
       if (target.id == "USDtab") {
 
-        var event1=new CustomEvent("pageEvent",{detail: {name:"runAccountingUSD"}})
+        var event1 = new CustomEvent("pageEvent",{detail: {name:"runAccountingUSD"}})
         document.dispatchEvent(event1);
 
       }
 
       if (target.id == "GBPtab") {
 
-        var event1=new CustomEvent("pageEvent",{detail: {name:"runAccountingGBP"}})
+        var event1 = new CustomEvent("pageEvent",{detail: {name:"runAccountingGBP"}})
         document.dispatchEvent(event1);
 
       }
       
-      else if (target.id=="main") {
+      else if (target.id == "main") {
         console.log("I'm running pageHandler")
 
-        var event=new CustomEvent("pageEvent",{detail: {name:"runMain"}})
+        var event = new CustomEvent("pageEvent",{detail: {name:"runMain"}})
         document.dispatchEvent(event);
       }
     })
 
+    $("#startDateField").on("change", function(t) {
+
+        document.getElementById("container").innerHTML="";
+
+        var event = new CustomEvent("pageEvent",{detail: {name:"showAnotherYear"}})
+        document.dispatchEvent(event);
+    })
   }
 }

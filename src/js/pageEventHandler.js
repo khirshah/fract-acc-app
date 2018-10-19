@@ -33,6 +33,11 @@ document.addEventListener("pageEvent", function(event) {
       runAccounting();
       break;
 
+    case "showAnotherYear":
+
+      runAccounting();
+      break;
+
     case "runMain":
       //set the main page as active
       $("#accounting").attr("active","false")

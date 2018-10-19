@@ -43,7 +43,7 @@ class MongoDb {
       let data = '';
 
       let currency = document.getElementById("accounting").getAttribute("Currency")
-      let stDate = new Date(document.getElementById("startDateField").value)
+      let stDate = document.getElementById("startDateField").value
       var params = qs.stringify({curr:currency, startDate : stDate })
 
       options.method = 'POST'

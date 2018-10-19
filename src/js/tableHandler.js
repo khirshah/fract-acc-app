@@ -15,7 +15,6 @@ var refreshInterval = 60;
 //------------------------------ zeropad -----------------------------
 function zPad(n) {return n < 10 ? "0"+n : n;}
 
-
 //---------------------- table initializer functions -----------------
 
 export function insertTable() {
