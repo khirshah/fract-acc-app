@@ -94,7 +94,6 @@ class MongoDb {
       'Content-Length': Buffer.byteLength(postData)
       };
 
-      console.log("postData: ",postData, options);
       //create the request with the options above
       const req = http.request(options,(res) => {
         

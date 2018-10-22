@@ -209,6 +209,7 @@ export function  addInputRow() {
           var inp = document.createElement('input');
           inp.setAttribute("placeholder",'edit');
           inp.classList.add('inp');
+          inp.classList.add('inpRowElement');
 
           col.appendChild(inp);
           break;
@@ -222,6 +223,7 @@ export function  addInputRow() {
           var dt = document.createElement('input');
           dt.setAttribute("type","date");
           dt.classList.add("inp");
+          dt.classList.add('inpRowElement');
           dt.classList.add("date");
           dt.setAttribute("id","dateinput");
 
@@ -230,6 +232,7 @@ export function  addInputRow() {
 
           dt.value = date.toISOString().split("T")[0];
           dt.max = date.toISOString().split("T")[0];
+          dt.min = '2015-01-01'
           col.appendChild(dt);
           break;
 
@@ -240,11 +243,11 @@ export function  addInputRow() {
           col.innerHTML+=document.getElementById('accounting').getAttribute('Currency');
           
           }
-          col.classList.add("inp");
+          col.classList.add('inpRowElement');
           break;
 
         default:
-          col.classList.add('inp')
+          col.classList.add('inpRowElement');
           break;
 
       }; 

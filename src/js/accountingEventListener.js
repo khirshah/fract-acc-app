@@ -136,7 +136,7 @@ export default function addAccountingEventListener(a) {
     //-------------------- save button on modal clicked -----------------------
 
     $("#AcceptB").click(function(t) {
-      console.log("USER: SAVE VALUE")
+      console.log("USER: SAVE VALUE OR DELETE ROW")
       acceptBtnClicked()
     });
 
@@ -147,7 +147,7 @@ export default function addAccountingEventListener(a) {
     $('.modal-content').keypress(function(e) {
       if(e.which == 13) {
 
-      console.log("USER: SAVE VALUE")
+      console.log("USER: SAVE VALUE OR DELETE ROW")
       event.preventDefault()
       
       acceptBtnClicked();
@@ -187,29 +187,35 @@ export default function addAccountingEventListener(a) {
       var empty = false;
 
       //Check input fields and collect their data
-      $('.inp').each(function() {
+      $('.inpRowElement').each(function() {
         
-        if ($(this)[0].value == '') {
 
-          $(this).attr("empty",true)
-          //if any one of them is empty, change the bool to true
-          empty = true;
-
-        } 
         //extract the data to values array
-        else {
+        
           if ($(this)[0].tagName=="TD"){
             let id=$(this)[0].id.split('-')[1]
             values[id]=$(this)[0].innerHTML;
           }
 
           else {
-          $(this).attr("empty",false)
-          let id=$(this)[0].offsetParent.id.split('-')[1]
-          values[id]=$(this)[0].value;
+            //at input fields, check if they are empty
+            if ($(this)[0].value == '') {
+
+              $(this).attr("empty",true)
+              //if any one of them is empty, change the bool to true
+              empty = true;
+
+            } 
+
+            else {
+
+              $(this).attr("empty",false)
+              let id=$(this)[0].offsetParent.id.split('-')[1]
+              values[id]=$(this)[0].value;
+            
+            }
           }
 
-        }
 
       });
 
@@ -222,47 +228,53 @@ export default function addAccountingEventListener(a) {
 
       } 
 
-      //if everything is filled, we call the saveRow function
+      if ($('#dateinput').val() > $('#dateinput').attr('max') || $('#dateinput').val() < $('#dateinput').attr('min')){
+
+        alert("date is outside the valid date range")
+      
+      }
+
+      //if everything is filled and dates are fine, we call the saveRow function
       else {
         
         let event1=new CustomEvent("customEvent",{detail: {name:"saveRow", values: values, trigger: "saveButton"}})
         document.dispatchEvent(event1);
 
         //then clean up: empty the input row        
-        $('.inp').each(function() {
+        $('.inpRowElement').each(function() {
           //only calculated fields doesn't have inner input fields
           //therefore treated differently using innerHTML property
           //except for the currency field
-          if ($(this)[0].tagName=="TD"  && $(this).attr("id")!="newRow-CURRENCY"){
+          if ($(this)[0].tagName=="TD"){
+            
+            if($(this).attr("id")!="newRow-CURRENCY"){
+              
+              $(this)[0].innerHTML="";
+            }
 
-            $(this)[0].innerHTML="";
           }
           else{
+            
+            $(this).val('')
 
+            //remove empty tag from input fields
             if ($(this).attr("empty")) {
               $(this).removeAttr("empty")              
             }
 
-            //also don't empty the date and dropdown fields
-            if ($(this).attr("type")!="date") {
+            //fill up date field with today's date again
 
-              $(this).val('')
-            }
+            var date = new Date();
 
-            else if ($(this).attr("type")=="date") {
+            $('#dateinput').val(date.toISOString().split("T")[0]);
 
-              var date = new Date();
-
-              $(this).val(date.toISOString().split("T")[0]);
-
-            }
           }
           
             
         })
 
-      let event2=new CustomEvent("customEvent",{detail: {name:"displayXchData", targ: document.getElementById("newRow-TRANS_DATE"), trigger: "saveButton"}})
-      document.dispatchEvent(event2);
+        let event2=new CustomEvent("customEvent",{detail: {name:"displayXchData", targ: document.getElementById("newRow-TRANS_DATE"), trigger: "saveButton"}})
+        document.dispatchEvent(event2);
 
       }   
 

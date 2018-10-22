@@ -56,7 +56,6 @@ export function createTabs() {
 
   var startDateField = document.createElement("select")
   startDateField.setAttribute("id","startDateField");
-  console.log(todayDate)
   
   var dateList = [];
   for (var i = 2015; i <= todayDate.getFullYear(); i++) {
@@ -64,7 +63,7 @@ export function createTabs() {
   }
 
   for (var i in dateList){
-    console.log(dateList[i])
+    
     startDateField.options[startDateField.options.length] = new Option(dateList[i]);
   }
   
