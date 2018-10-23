@@ -127,7 +127,7 @@ export function tabEvents(a) {
 
         document.getElementById("container").innerHTML="";
 
-        var event = new CustomEvent("pageEvent",{detail: {name:"showAnotherYear"}})
+        var event = new CustomEvent("pageEvent",{detail: {name:"reloadTable"}})
         document.dispatchEvent(event);
     })
   }

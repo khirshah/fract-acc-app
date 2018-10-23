@@ -17,7 +17,7 @@ export var Mongo = new MongoDb();
 export function addAccountingEventHandler () {
 
 document.addEventListener("customEvent", async function(event) {
-  //console.log("accounting: ",event.detail)
+  console.log("accounting: ",event.detail)
   switch (event.detail.name) {
 
     case "buildTable":
@@ -35,10 +35,10 @@ document.addEventListener("customEvent", async function(event) {
       let obj = event.detail.values;
       //feed JSON with the insertContent function of the DataBase class
       var dbFill = await Mongo.insertData(obj);
-      //dbFill variable ensures the program waits before the insertion is done
-      obj._id=dbFill
-
-      insertTableRow(obj)
+      //reload the HTML table
+      document.getElementById("container").innerHTML="";
+      var event = new CustomEvent("pageEvent",{detail: {name:"reloadTable"}})
+      document.dispatchEvent(event);
       
       break;
 
@@ -54,7 +54,7 @@ document.addEventListener("customEvent", async function(event) {
 
     case "deleteDbRow":
 
-      Mongo.removeData(event.detail.ID)
+      await Mongo.removeData(event.detail.ID)
 
       let row=document.getElementById(event.detail.ID)
       tbody.removeChild(row);

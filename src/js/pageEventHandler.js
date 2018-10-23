@@ -33,7 +33,7 @@ document.addEventListener("pageEvent", function(event) {
       runAccounting();
       break;
 
-    case "showAnotherYear":
+    case "reloadTable":
 
       runAccounting();
       break;

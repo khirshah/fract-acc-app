@@ -219,7 +219,6 @@ export default function addAccountingEventListener(a) {
 
       });
 
-
       //if bool is true, not all the fields are filled ->can't save
       if (empty) {
 
@@ -239,42 +238,6 @@ export default function addAccountingEventListener(a) {
         
         let event1=new CustomEvent("customEvent",{detail: {name:"saveRow", values: values, trigger: "saveButton"}})
         document.dispatchEvent(event1);
-
-        //then clean up: empty the input row        
-        $('.inpRowElement').each(function() {
-          //only calculated fields doesn't have inner input fields
-          //therefore treated differently using innerHTML property
-          //except for the currency field
-          if ($(this)[0].tagName=="TD"){
-            
-            if($(this).attr("id")!="newRow-CURRENCY"){
-              
-              $(this)[0].innerHTML="";
-            }
-
-          }
-          else{
-            
-            $(this).val('')
-
-            //remove empty tag from input fields
-            if ($(this).attr("empty")) {
-              $(this).removeAttr("empty")              
-            }
-
-            //fill up date field with today's date again
-
-            var date = new Date();
-
-            $('#dateinput').val(date.toISOString().split("T")[0]);
-
-          }
-          
-            
-        })
-
-        let event2=new CustomEvent("customEvent",{detail: {name:"displayXchData", targ: document.getElementById("newRow-TRANS_DATE"), trigger: "saveButton"}})
-        document.dispatchEvent(event2);
 
       }   
 

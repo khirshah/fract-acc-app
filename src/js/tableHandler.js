@@ -373,54 +373,6 @@ export function displayXchData(target, trigger) {
 };
 
 
-export function insertTableRow(content) {
-
-  let curr = document.getElementById('accounting').getAttribute('CurrencyName')
-  var metaData = metaD.columns[curr]
-
-  var r = document.createElement('tr');
-  r.classList.add('row');
-  r.id = content._id
-
-  for (var j in metaDArray){
-    let variable = metaData[metaDArray[j]];
-
-    if (variable.visible) {
-
-      
-      var col = document.createElement('td');
-
-      if (metaDArray[j]=="TRANS_DATE") {
-        //we convert the format to browser locale value
-        let date = new Date(content[metaDArray[j]]);
-        //and save the actual timestamp as an attribute of this field
-        col.setAttribute("timestamp",date);
-        content[metaDArray[j]] = date.toLocaleDateString();
-      }
-
-      col.classList.add('col-'+variable.size);
-      
-      col.setAttribute("id", content._id+"-"+metaDArray[j]);
-      col.setAttribute("editable",variable.editable);
-      
-      //we copy the data from the database to the html
-      col.innerHTML = content[metaDArray[j]];
-      //at the end we insert the current cell to the row
-      r.appendChild(col);
-    };
-  };
-  
-  let cellid = content._id+"-"+"delbtn";
-  let btn = createDelBtns(cellid); 
-  r.innerHTML += btn;
-  //insert new row before last row of table
-  let tbody = document.getElementsByClassName("tbody")[0];
-  tbody.insertBefore(r, tbody.lastChild);
-  delBtnEvLis(cellid);
-
-};
-
-
 export function tableRecordUpdate(target,text) {
 
   let curr = document.getElementById('accounting').getAttribute('CurrencyName')

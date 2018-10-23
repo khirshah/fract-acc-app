@@ -9,33 +9,7 @@ const connString = mode=="local" ? process.env.connectionstring : process.env.co
 
 
 class MongoDb {
-  //read data from mongo database
-  /*getData() {
-
-    return new Promise((resolve, reject) => {
-      http.get(process.env.connectionstring,(resp) => {
-        let data = '';
-
-        // A chunk of data has been recieved.
-
-        //console.log("resp: ",resp)
-        resp.on('data', (chunk) => {
-          data += chunk;
-        });
-
-        // The whole response has been received. Print out the result.
-        resp.on('end', () => {
-          console.log(data)
-          resolve(JSON.parse(data));
-        });
-
-      }).on("error", (err) => {
-        console.log("Error: " + err.message);
-        reject(err.message)
-      });
-    });
-  }*/
-
+  
   getData() {
 
     return new Promise((resolve, reject) => {
@@ -102,7 +76,7 @@ class MongoDb {
           //console.log(JSON.parse(chunk));
         });
         res.on('end', () => {
-          resolve(JSON.parse(dataLine).id);
+          resolve(true);
 
         });
       });
@@ -152,32 +126,35 @@ class MongoDb {
   }
 
   removeData(id) {
-    //id of the row to be deleted
-    const removeD = qs.stringify(
-      {
-        "_id":id
+
+    return new Promise((resolve, reject) => {
+      //id of the row to be deleted
+      const removeD = qs.stringify(
+        {
+          "_id":id
+      })
+      //give the options required for the request
+
+      options.method = 'DELETE'
+      options.path = '/mongoRemove'
+      options.headers= {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': Buffer.byteLength(removeD)
+        };
+
+      //create the request with the options above
+      const req = http.request(options,(res) => {
+        resolve(true)
+      });
+      //error handling
+      req.on('error', (e) => {
+        console.error(`problem with request: ${e.message}`);
+      });
+      //write the data into the request
+      req.write(removeD);
+      //send the request to the server
+      req.end();
     })
-    //give the options required for the request
-
-    options.method = 'DELETE'
-    options.path = '/mongoRemove'
-    options.headers= {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Content-Length': Buffer.byteLength(removeD)
-      };
-
-    //create the request with the options above
-    const req = http.request(options,(res) => {
-      console.log(res);
-    });
-    //error handling
-    req.on('error', (e) => {
-      console.error(`problem with request: ${e.message}`);
-    });
-    //write the data into the request
-    req.write(removeD);
-    //send the request to the server
-    req.end();
   }
 
 }
