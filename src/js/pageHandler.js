@@ -13,10 +13,17 @@ export function createTabs() {
   for (var i in tabs) {
 
     var m = document.createElement("div");
-    m.classList.add("col-6");
     m.classList.add("tab");
     m.setAttribute("id",tabs[i]);
     m.innerHTML=tabs[i];
+
+    if (tabs[i]=="accounting"){
+      m.classList.add("col-5");
+    }
+
+    else {
+      m.classList.add("col-6");
+    }
 
     r.appendChild(m);
   }
@@ -38,24 +45,12 @@ export function createTabs() {
     subTabsRow.appendChild(m);
   }
 
-  //create row for date filter
-  var dateRow = document.createElement("div");
-  dateRow.classList.add("row");
-  dateRow.classList.add("justify-content-end");
-  dateRow.setAttribute("id","dateFilter");
-  
-  //we create a new date
+  //create date filter
   var todayDate = new Date();
-  
-  //var twoMonthAgo = addMonthsUTC(todayDate,-2); 
-
-  //create the column for the year
-  var startDate = document.createElement("div");
-  startDate.classList.add("col-1");
-  startDate.setAttribute("id","startDate");
 
   var startDateField = document.createElement("select")
   startDateField.setAttribute("id","startDateField");
+  startDateField.classList.add("col-1");
   
   var dateList = [];
   for (var i = 2015; i <= todayDate.getFullYear(); i++) {
@@ -68,15 +63,12 @@ export function createTabs() {
   }
   
   startDateField.value = todayDate.getFullYear();
+  r.appendChild(startDateField);
 
-  //append date field
-  startDate.appendChild(startDateField);
-  dateRow.appendChild(startDate);
 
   //append tabs then subtabs then datefields to page header
   pH.appendChild(r);
   pH.appendChild(subTabsRow);
-  pH.appendChild(dateRow);
 
   document.body.appendChild(pH);
 

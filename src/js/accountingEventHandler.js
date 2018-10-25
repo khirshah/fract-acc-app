@@ -17,7 +17,7 @@ export var Mongo = new MongoDb();
 export function addAccountingEventHandler () {
 
 document.addEventListener("customEvent", async function(event) {
-  console.log("accounting: ",event.detail)
+  //console.log("accounting: ",event.detail)
   switch (event.detail.name) {
 
     case "buildTable":
