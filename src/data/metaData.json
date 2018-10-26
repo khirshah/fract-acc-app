@@ -11,14 +11,34 @@
         "calcBase" : false
       },
 
+      "DATE_ID": {
+        "name": "Date Id",
+        "visible": false,
+        "size": 0,
+        "editable": false,
+        "dataType": "INTEGER",
+        "inputType": "ASSIGNED",
+        "calcBase" : false
+      },
+
       "TRANS_DATE": {
         "name":"Date",
         "visible": true,
-        "size": 2,
+        "size": 1,
         "editable": true,
         "dataType": "DATE",
         "inputType": "DATEINPUT",
         "altInput":"ASSIGNED",
+        "calcBase" : false
+      },
+
+      "CUMUL_AMOUNT": {
+        "name": "Cumul am",
+        "visible": true,
+        "size": 1,
+        "editable": false,
+        "dataType": "FLOAT",
+        "inputType": "ASSIGNED",
         "calcBase" : false
       },
 
@@ -144,14 +164,34 @@
         "calcBase" : false
       },
 
+      "DATE_ID": {
+        "name": "Date Id",
+        "visible": false,
+        "size": 0,
+        "editable": false,
+        "dataType": "INTEGER",
+        "inputType": "ASSIGNED",
+        "calcBase" : false
+      },
+
       "TRANS_DATE": {
         "name":"Date",
         "visible": true,
-        "size": 2,
+        "size": 1,
         "editable": true,
         "dataType": "DATE",
         "inputType": "DATEINPUT",
         "altInput":"ASSIGNED",
+        "calcBase" : false
+      },
+
+      "CUMUL_AMOUNT": {
+        "name": "Cumul am",
+        "visible": true,
+        "size": 1,
+        "editable": false,
+        "dataType": "FLOAT",
+        "inputType": "ASSIGNED",
         "calcBase" : false
       },
 
