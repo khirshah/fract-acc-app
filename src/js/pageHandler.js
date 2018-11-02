@@ -119,7 +119,7 @@ export function tabEvents(a) {
 
         document.getElementById("container").innerHTML="";
 
-        var event = new CustomEvent("pageEvent",{detail: {name:"reloadTable"}})
+        var event = new CustomEvent("pageEvent",{detail: {name:"reloadTable",trigger:"dateFilterChange"}})
         document.dispatchEvent(event);
     })
   }

@@ -94,35 +94,39 @@ class MongoDb {
 
 
   updateData(id, key, value) {
-    //data to be updated
-    const putData = qs.stringify(
-      {
-        "_id":id,
-        "dat": {
-         [key]:value
-        }
+
+    return new Promise((resolve, reject) => {
+      //data to be updated
+      const putData = qs.stringify(
+        {
+          "_id":id,
+          "dat": {
+           [key]:value
+          }
+      })
+
+      //give the options required for the request
+      options.method = 'PUT'
+      options.path = '/mongoUpdate'
+          options.headers= {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': Buffer.byteLength(putData)
+        };
+
+      //create the request with the options above
+      const req = http.request(options,(res) => {
+        console.log(res);
+        resolve(true)
+      });
+      //error handling
+      req.on('error', (e) => {
+        console.error(`problem with request: ${e.message}`);
+      });
+      //write the data into the request
+      req.write(putData);
+      //send the request to the server
+      req.end();
     })
-
-    //give the options required for the request
-    options.method = 'PUT'
-    options.path = '/mongoUpdate'
-        options.headers= {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Content-Length': Buffer.byteLength(putData)
-      };
-
-    //create the request with the options above
-    const req = http.request(options,(res) => {
-      console.log(res);
-    });
-    //error handling
-    req.on('error', (e) => {
-      console.error(`problem with request: ${e.message}`);
-    });
-    //write the data into the request
-    req.write(putData);
-    //send the request to the server
-    req.end();
   }
 
   removeData(id) {

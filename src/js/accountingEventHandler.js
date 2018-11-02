@@ -17,7 +17,7 @@ export var Mongo = new MongoDb();
 export function addAccountingEventHandler () {
 
 document.addEventListener("customEvent", async function(event) {
-  //console.log("accounting: ",event.detail)
+  console.log("accounting: ",event.detail)
   switch (event.detail.name) {
 
     case "buildTable":
@@ -37,7 +37,7 @@ document.addEventListener("customEvent", async function(event) {
       var dbFill = await Mongo.insertData(obj);
       //reload the HTML table
       document.getElementById("container").innerHTML="";
-      var event = new CustomEvent("pageEvent",{detail: {name:"reloadTable"}})
+      var event = new CustomEvent("pageEvent",{detail: {name:"reloadTable",trigger:"saveRow"}})
       document.dispatchEvent(event);
       
       break;
@@ -45,19 +45,31 @@ document.addEventListener("customEvent", async function(event) {
     case "recordUpdate":
 
       tableRecordUpdate(event.detail.target,event.detail.text);
-      if (event.detail.target.id.split("-")[0]!="newRow"){
+      
+      if (event.detail.target.id.split("-")[0] != "newRow") {
+
         let ID = event.detail.target.id.split("-")[0]
         let key = event.detail.target.id.split("-")[1]
-        Mongo.updateData(ID, key, event.detail.text);
+        await Mongo.updateData(ID, key, event.detail.text);
+
+        if (event.detail.trigger == "AcceptB") {
+          
+          document.getElementById("container").innerHTML="";
+          var event = new CustomEvent("pageEvent",{detail: {name:"reloadTable",trigger:"recordUpdate"}})
+          document.dispatchEvent(event);
+        }
+      
       }
+
       break;
 
     case "deleteDbRow":
 
       await Mongo.removeData(event.detail.ID)
-
-      let row=document.getElementById(event.detail.ID)
-      tbody.removeChild(row);
+      
+      document.getElementById("container").innerHTML="";
+      var event = new CustomEvent("pageEvent",{detail: {name:"reloadTable",trigger:"deleteRow"}})
+      document.dispatchEvent(event);
       break;
 
     case "historicApiCall":

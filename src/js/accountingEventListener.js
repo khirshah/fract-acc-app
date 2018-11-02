@@ -1,14 +1,17 @@
 import dropDown from '../html/dropdown.js'
-import CH from '../data/metaData.json';
+import metaD from '../data/metaData.json';
 
 //-------------------------- JQuery ------------------------------------------------
 function acceptBtnClicked() {
 
   if ($("#myModal").attr("funct")=="saveValue") {
+    
+    let curr = document.getElementById('accounting').getAttribute('CurrencyName')
+    var metaData = metaD.columns[curr]
 
     let targ=$("[data-target='#myModal']")[0];      
     var text = $("#input").val();
-    let variable=CH.columns[targ.id.split("-")[1]]
+    let variable=metaData[targ.id.split("-")[1]]
     var targText=""
 
     if (variable.name=="Date") {
