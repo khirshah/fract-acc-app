@@ -112,9 +112,9 @@ export function drawTable(content) {
         col.setAttribute("editable",variable.editable);
 
         //then we copy the data from the database to the html
-        if (metaDArray[j]=="TRANS_DATE") {
+        if (metaDArray[j] == "TRANS_DATE") {
           //we convert the format to browser locale value
-          let date=new Date(content[i][metaDArray[j]]);
+          let date = new Date(content[i][metaDArray[j]]);
           //and save the actual timestamp as an attribute of this field
           col.setAttribute("timestamp",date);
           col.innerHTML = date.toLocaleDateString();
@@ -215,8 +215,19 @@ export function  addInputRow() {
           break;
 
         case "DROPDOWN":
-          var dd=dropDown();
-          col.innerHTML+=dd;
+          let curr = document.getElementById("accounting").getAttribute("currencyname")
+          let currs = Object.keys(metaD.columns)
+          var dd = dropDown();
+          col.innerHTML += dd;
+          dd = col.firstChild;
+          for (var i in currs) {
+            if (currs[i] != curr) {
+              
+              dd.options[dd.options.length] = new Option("XC to "+currs[i]);
+            }
+          }
+
+
           break;
 
         case "DATEINPUT":
@@ -237,7 +248,7 @@ export function  addInputRow() {
           break;
 
         case "ASSIGNED" :
-          
+          console.log(variable)
           if (variable.name == "Currency") {
           
           col.innerHTML+=document.getElementById('accounting').getAttribute('Currency');

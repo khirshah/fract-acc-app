@@ -9,12 +9,12 @@ function acceptBtnClicked() {
     let curr = document.getElementById('accounting').getAttribute('CurrencyName')
     var metaData = metaD.columns[curr]
 
-    let targ=$("[data-target='#myModal']")[0];      
+    let targ = $("[data-target='#myModal']")[0];      
     var text = $("#input").val();
-    let variable=metaData[targ.id.split("-")[1]]
-    var targText=""
+    let variable = metaData[targ.id.split("-")[1]]
+    var targText = ""
 
-    if (variable.name=="Date") {
+    if (variable.name == "Date") {
       
         let date=targ.innerHTML.split("/")[2]+"-"+targ.innerHTML.split("/")[1]+"-"+targ.innerHTML.split("/")[0]
         targText=date
@@ -31,7 +31,7 @@ function acceptBtnClicked() {
       document.dispatchEvent(event1);
 
 
-      if (variable.name=="Date") {
+      if (variable.name == "Date") {
 
         let event4=new CustomEvent("customEvent",{detail: {name:"historicApiCall", targ: targ, date: text, trigger: "AcceptB"}})
         document.dispatchEvent(event4);
@@ -64,6 +64,68 @@ function acceptBtnClicked() {
 
   }
 }
+
+function saveButtonClicked() {
+
+  let values = {};
+  
+  var empty = false;
+
+  //Check input fields and collect their data
+  $('.inpRowElement').each(function() {
+    
+
+    //extract the data to values array
+    if ($(this)[0].tagName == "TD"){
+
+      let id=$(this)[0].id.split('-')[1]
+      values[id]=$(this)[0].innerHTML;
+    }
+
+    else {
+      console.log($(this)[0].value)
+      //at input fields, check if they are empty
+      if ($(this)[0].value == '') {
+
+        $(this).attr("empty",true)
+        //if any one of them is empty, change the bool to true
+        empty = true;
+
+      } 
+
+      else {
+
+        $(this).attr("empty",false)
+        let id=$(this)[0].offsetParent.id.split('-')[1]
+        values[id]=$(this)[0].value;
+      
+      }
+    }
+  });
+
+  //if bool is true, not all the fields are filled ->can't save
+  if (empty) {
+
+
+    alert("at least one field is empty")
+
+  } 
+
+  if ($('#dateinput').val() > $('#dateinput').attr('max') || $('#dateinput').val() < $('#dateinput').attr('min')){
+
+    alert("date is outside the valid date range")
+  
+  }
+
+  //if everything is filled and dates are fine, we call the saveRow function
+  else {
+    
+    let event1=new CustomEvent("customEvent",{detail: {name:"saveRow", values: values, trigger: "saveButton"}})
+    document.dispatchEvent(event1);
+
+  }   
+}
+
 
 export default function addAccountingEventListener(a) {
 
@@ -185,64 +247,9 @@ export default function addAccountingEventListener(a) {
     $("#saveButton").click(function() {
       
       console.log("USER: SAVE ROW")
-      let values = {};
-      
-      var empty = false;
 
-      //Check input fields and collect their data
-      $('.inpRowElement').each(function() {
-        
+      saveButtonClicked();
 
-        //extract the data to values array
-        
-          if ($(this)[0].tagName=="TD"){
-            let id=$(this)[0].id.split('-')[1]
-            values[id]=$(this)[0].innerHTML;
-          }
-
-          else {
-            //at input fields, check if they are empty
-            if ($(this)[0].value == '') {
-
-              $(this).attr("empty",true)
-              //if any one of them is empty, change the bool to true
-              empty = true;
-
-            } 
-
-            else {
-
-              $(this).attr("empty",false)
-              let id=$(this)[0].offsetParent.id.split('-')[1]
-              values[id]=$(this)[0].value;
-            
-            }
-          }
-
-
-      });
-
-      //if bool is true, not all the fields are filled ->can't save
-      if (empty) {
-
-
-        alert("at least one field is empty")
-
-      } 
-
-      if ($('#dateinput').val() > $('#dateinput').attr('max') || $('#dateinput').val() < $('#dateinput').attr('min')){
-
-        alert("date is outside the valid date range")
-      
-      }
-
-      //if everything is filled and dates are fine, we call the saveRow function
-      else {
-        
-        let event1=new CustomEvent("customEvent",{detail: {name:"saveRow", values: values, trigger: "saveButton"}})
-        document.dispatchEvent(event1);
-
-      }   
 
     });
 
