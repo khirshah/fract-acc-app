@@ -117,7 +117,7 @@ export function drawTable(content) {
           let date = new Date(content[i][metaDArray[j]]);
           //and save the actual timestamp as an attribute of this field
           col.setAttribute("timestamp",date);
-          col.innerHTML = date.toLocaleDateString();
+          col.innerHTML = date.toISOString().split("T")[0];
         }
 
         else if (metaDArray[j]=="PROJ" || metaDArray[j]=="GBP_USD" || metaDArray[j]=="USD_GBP") {
@@ -397,19 +397,13 @@ export function tableRecordUpdate(target,text) {
     target.removeAttribute("data-target");
   };
 
+  target.innerText = text;
 
-  if (target.id.split("-")[1]!="TRANS_DATE"){
+  if (target.id.split("-")[1]=="TRANS_DATE"){
 
-    target.innerText = text;
-
-  }
-
-  else {
-    //we format the date to user locale value
     let date = new Date(text);
-    //and save the actual timestamp as an attribute this field
+    //save the timestamp as an attribute of the date field
     target.setAttribute("timestamp",date);
-    target.innerText = date.toLocaleDateString();
 
   }
 

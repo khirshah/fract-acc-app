@@ -115,7 +115,7 @@ class MongoDb {
 
       //create the request with the options above
       const req = http.request(options,(res) => {
-        console.log(res);
+
         resolve(true)
       });
       //error handling

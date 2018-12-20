@@ -14,15 +14,7 @@ function acceptBtnClicked() {
     let variable = metaData[targ.id.split("-")[1]]
     var targText = ""
 
-    if (variable.name == "Date") {
-      
-        let date=targ.innerHTML.split("/")[2]+"-"+targ.innerHTML.split("/")[1]+"-"+targ.innerHTML.split("/")[0]
-        targText=date
-    }
-
-    else {
-      targText=targ.innerHTML
-    }
+    targText=targ.innerHTML
 
     if(targText!=text) {
       
