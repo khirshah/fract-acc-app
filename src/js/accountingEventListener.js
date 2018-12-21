@@ -103,7 +103,7 @@ function saveButtonClicked() {
 
   } 
 
-  if ($('#dateinput').val() > $('#dateinput').attr('max') || $('#dateinput').val() < $('#dateinput').attr('min')){
+  else if ($('#dateinput').val() > $('#dateinput').attr('max') || $('#dateinput').val() < $('#dateinput').attr('min')){
 
     alert("date is outside the valid date range")
   

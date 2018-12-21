@@ -120,9 +120,14 @@ export function drawTable(content) {
           col.innerHTML = date.toISOString().split("T")[0];
         }
 
-        else if (metaDArray[j]=="PROJ" || metaDArray[j]=="GBP_USD" || metaDArray[j]=="USD_GBP") {
-          //in case of floats set the number of digits to 5    
-          col.innerHTML = parseFloat(content[i][metaDArray[j]]).toFixed(5);
+        else if (metaDArray[j]=="PROJ") {
+          //in case of projection set the number of digits to 2    
+          col.innerHTML = parseFloat(content[i][metaDArray[j]]).toFixed(2);
+        }
+
+        else if (metaDArray[j]=="GBP_USD" || metaDArray[j]=="USD_GBP") {
+          //in case of xch rates set the number of digits to 10    
+          col.innerHTML = parseFloat(content[i][metaDArray[j]]).toFixed(10);
         }
 
         else {
@@ -369,10 +374,10 @@ export function displayXchData(target, trigger) {
   }
 
 
-  let event1 = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target: document.getElementById(ID+"-XCH_USD_GBP"), text: parseFloat(USDGBP).toFixed(5), trigger: "displayXchData"}});
+  let event1 = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target: document.getElementById(ID+"-XCH_USD_GBP"), text: parseFloat(USDGBP).toFixed(10), trigger: "displayXchData"}});
   document.dispatchEvent(event1);
 
-  let event2 = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target:   document.getElementById(ID+"-XCH_GBP_USD"), text: (1/USDGBP).toFixed(5), trigger: "displayXchData"}});
+  let event2 = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target:   document.getElementById(ID+"-XCH_GBP_USD"), text: (1/USDGBP).toFixed(10), trigger: "displayXchData"}});
   document.dispatchEvent(event2);
 
   if (variable.calcBase) {
@@ -435,7 +440,7 @@ export function valueCalculation(target) {
         let text = 1/target.firstChild.value || 1/target.innerHTML;
         let targ = document.getElementById(rowID+"-XCH_GBP_USD")
 
-        let event1 = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target: targ, text: text.toFixed(5), trigger: "valueCalculation"}})
+        let event1 = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target: targ, text: text.toFixed(10), trigger: "valueCalculation"}})
         document.dispatchEvent(event1);
 
       }
@@ -475,7 +480,7 @@ function calcGBPProj(target) {
     let gbpProj = document.getElementById(rowID+"-PROJ")
 
     //create event for table update
-    let event1 = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target: gbpProj, text: gbpProjVal.toFixed(5), trigger: "calcGBPval"}})
+    let event1 = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target: gbpProj, text: gbpProjVal.toFixed(2), trigger: "calcGBPval"}})
     document.dispatchEvent(event1);
 
   }
