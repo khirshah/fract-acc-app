@@ -343,7 +343,7 @@ export function checkLocalStorage() {
 
   else {
 
-    let event=new CustomEvent("customEvent",{detail: {name:"historicApiCall", targ: document.getElementById("newRow-TRANS_DATE"), date: nowdate, trigger: "checkLocalStorage"}})
+    let event=new CustomEvent("customEvent",{detail: {name:"historicApiCall", targ: document.getElementById("newRow-TRANS_DATE"), date: dateFieldValue, trigger: "checkLocalStorage"}})
     document.dispatchEvent(event);     
   
   };

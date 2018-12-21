@@ -52,14 +52,14 @@ export function createTabs() {
   startDateField.setAttribute("id","startDateField");
   startDateField.classList.add("col-1");
   
-  var dateList = [];
+  /*var dateList = [];
   for (var i = 2015; i <= todayDate.getFullYear(); i++) {
       dateList.push(i);
-  }
+  }*/
 
-  for (var i in dateList){
+  for (var i = 2015; i <= todayDate.getFullYear(); i++){
     
-    startDateField.options[startDateField.options.length] = new Option(dateList[i]);
+    startDateField.options[startDateField.options.length] = new Option(i);
   }
   
   startDateField.value = todayDate.getFullYear();

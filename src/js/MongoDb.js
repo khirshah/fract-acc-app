@@ -3,9 +3,9 @@ const qs = require('qs');
 
 var mode = "local"
 
-const options = mode=="local" ? {port:process.env.PORT, hostname: process.env.localhost} : {hostname: process.env.hostname, path: '/mongoWrite',};
+const options = mode == "local" ? {port:process.env.PORT, hostname: process.env.localhost} : {hostname: process.env.hostname, path: '/mongoWrite',};
 
-const connString = mode=="local" ? process.env.connectionstring : process.env.connStLoc;
+const connString = mode == "local" ? process.env.connectionstring : process.env.connStLoc;
 
 
 class MongoDb {
