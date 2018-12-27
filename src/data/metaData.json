@@ -64,7 +64,7 @@
       },
 
       "PROJ": {
-        "name": "USD projection",
+        "name": "GBP projection",
         "visible": true,
         "size": 1,
         "editable": false,
@@ -73,7 +73,7 @@
         "calculation": [
           "*",
           "AMOUNT",
-          "XCH_GBP_USD"
+          "XCH_USD_GBP"
         ],
         "calcBase" : false
       },
@@ -217,7 +217,7 @@
       },
 
       "PROJ": {
-        "name": "GBP projection",
+        "name": "USD projection",
         "visible": true,
         "size": 1,
         "editable": false,
@@ -226,7 +226,7 @@
         "calculation": [
           "*",
           "AMOUNT",
-          "XCH_USD_GBP"
+          "XCH_GBP_USD"
         ],
         "calcBase" : false
       },
