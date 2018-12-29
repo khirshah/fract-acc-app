@@ -211,6 +211,7 @@ export function  addInputRow() {
       switch (variable.inputType) {
         
         case "USER_INPUT":
+          //console.log(variable.name)
           var inp = document.createElement('input');
           inp.setAttribute("placeholder",'edit');
           inp.classList.add('inp');
@@ -253,16 +254,17 @@ export function  addInputRow() {
           break;
 
         case "ASSIGNED" :
-          console.log(variable)
+          
           if (variable.name == "Currency") {
           
-          col.innerHTML+=document.getElementById('accounting').getAttribute('Currency');
+            col.innerHTML+=document.getElementById('accounting').getAttribute('Currency');
           
           }
           col.classList.add('inpRowElement');
           break;
 
         default:
+
           col.classList.add('inpRowElement');
           break;
 
@@ -334,7 +336,7 @@ export function checkLocalStorage() {
     //if less, display the data currently in the local storage
     else {
       //but only if the values already in the table don't match the values already displayed
-      let tableValue = document.getElementById("newRow-XCH_USD_GBP").innerHTML;
+      let tableValue = document.getElementById("newRow-XCH_USD_GBP").firstChild.value;
       let storageValue = localStorage.getItem("USDGBP");
       
       if (tableValue!=storageValue) {
@@ -357,28 +359,26 @@ export function checkLocalStorage() {
 //------------------- display exchange data ------------------------------
 export function displayXchData(target, trigger) {
 
-  let curr = document.getElementById('accounting').getAttribute('CurrencyName')
-  var metaData = metaD.columns[curr]
+  console.log("dispXCHtarg",target)
 
-  let variable = metaData[target.id.split("-")[1]]
-  var ID = target.id.split("-")[0]
+  let curr = document.getElementById('accounting').getAttribute('CurrencyName');
+  var metaData = metaD.columns[curr];
+
+  let variable = metaData[target.id.split("-")[1]];
+  var ID = target.id.split("-")[0];
 
   if (trigger == "historicAPIcall") {
-      var USDGBP = window.localStorage.getItem("hist_USDGBP")
+      var USDGBP = window.localStorage.getItem("hist_USDGBP");
 
   }
 
   else {
 
-      var USDGBP = window.localStorage.getItem("USDGBP")
+      var USDGBP = window.localStorage.getItem("USDGBP");
   }
 
-
-  let event1 = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target: document.getElementById(ID+"-XCH_USD_GBP"), text: parseFloat(USDGBP).toFixed(10), trigger: "displayXchData"}});
-  document.dispatchEvent(event1);
-
-  let event2 = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target:   document.getElementById(ID+"-XCH_GBP_USD"), text: (1/USDGBP).toFixed(10), trigger: "displayXchData"}});
-  document.dispatchEvent(event2);
+  document.getElementById(ID+"-XCH_USD_GBP").firstChild.value = parseFloat(USDGBP).toFixed(10);
+  document.getElementById(ID+"-XCH_GBP_USD").firstChild.value = (1/USDGBP).toFixed(10);
 
   if (variable.calcBase) {
 
@@ -391,18 +391,13 @@ export function displayXchData(target, trigger) {
 
 export function tableRecordUpdate(target,text) {
 
-  let curr = document.getElementById('accounting').getAttribute('CurrencyName')
-  var metaData = metaD.columns[curr]
-
-  let variable = metaData[target.id.split("-")[1]];
-  
   if (target.hasAttribute("data-toggle")) {
   
     target.removeAttribute("data-toggle");
     target.removeAttribute("data-target");
   };
 
-  target.innerText = text;
+  target.classList.contains("inp") ? target.value = text : target.innerHTML = text;
 
   if (target.id.split("-")[1]=="TRANS_DATE"){
 
@@ -423,25 +418,30 @@ export function valueCalculation(target) {
   var metaData = metaD.columns[curr]
 
   let rowID = target.id.split("-")[0];
-
+  let variable = target.id.split("-")[1]
+  
+  
   switch (target.id.split("-")[1]) {
 
     case "AMOUNT":
 
-      calcGBPProj(target);
+      calcProj(target);
 
       break;
 
-    case "XCH_USD_GBP":
+    case "XCH_USD_GBP": case "XCH_GBP_USD":
 
-      if (target.firstChild.value!="") {
-        calcGBPProj(target);
+      if (target.firstElementChild) {
 
         let text = 1/target.firstChild.value || 1/target.innerHTML;
-        let targ = document.getElementById(rowID+"-XCH_GBP_USD")
 
-        let event1 = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target: targ, text: text.toFixed(10), trigger: "valueCalculation"}})
+        let targ = document.getElementById(rowID+"-"+metaData[variable].calculation[2]).firstElementChild || document.getElementById(rowID+"-"+metaData[variable].calculation[2])
+        
+        console.log("valueCalcTARG",targ)
+        let event1 = new CustomEvent("customEvent", {detail: {name: "recordUpdate",target: targ, text: text, trigger: "valueCalculation"}})
         document.dispatchEvent(event1);
+
+        calcProj(target);
 
       }
 
@@ -453,7 +453,7 @@ export function valueCalculation(target) {
 
 };
 
-function calcGBPProj(target) {
+function calcProj(target) {
   
   let curr = document.getElementById('accounting').getAttribute('CurrencyName')
   var metaData = metaD.columns[curr]
@@ -461,13 +461,13 @@ function calcGBPProj(target) {
   let c = metaData.PROJ.calculation
   let rowID = target.id.split("-")[0]
   
-  //get the USD field of the given row
-  let AMOUNT = typeof document.getElementById(rowID+"-"+c[1]).firstChild.value == "undefined" ? document.getElementById(rowID+"-"+c[1]).innerHTML : document.getElementById(rowID+"-"+c[1]).firstChild.value;
+  //get the Amount field of the given row
+  let AMOUNT = document.getElementById(rowID+"-"+c[1]).firstElementChild.value || document.getElementById(rowID+"-"+c[1]).innerHTML;
   //get the XCH_USD_GBP field of the given row
-  let xchDP = typeof document.getElementById(rowID+"-"+c[2]).firstChild.value == "undefined" ? document.getElementById(rowID+"-"+c[2]).innerHTML : document.getElementById(rowID+"-"+c[2]).firstChild.value;
+  let xchDP = document.getElementById(rowID+"-"+c[2]).firstElementChild.value || document.getElementById(rowID+"-"+c[2]).innerHTML;
   
   if (AMOUNT!="" && xchDP!="") {
-
+    console.log(AMOUNT,xchDP)
     let op = c[0];
     let rule = {};
     rule[op] = [{"var":"a"},{"var":"b"}];

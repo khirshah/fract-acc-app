@@ -247,15 +247,18 @@ export default function addAccountingEventListener(a) {
 
     //--------------------- input loses focus ---------------------------------
     $(".inp").on("change", function(t) {
+
         console.log("USER: ENTER VALUE")
         let targ=t.originalEvent.target.offsetParent;
 
         let event=new CustomEvent("customEvent",{detail: {name:"valueCalculation", target: targ, trigger: "input field change"}})
         document.dispatchEvent(event);
 
-        let event2=new CustomEvent("customEvent",{detail: {name:"checkLocalStorage", target: targ, trigger: "input field change"}})
-        document.dispatchEvent(event2);
+        if ($(this).attr("type") == "date" && targ.id.split("-")[0] == "newRow") {
 
+          let event2=new CustomEvent("customEvent",{detail: {name:"checkLocalStorage", target: targ, trigger: "input field change"}})
+          document.dispatchEvent(event2);
+        }
       });
     
   

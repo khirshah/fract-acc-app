@@ -49,8 +49,7 @@
         "editable": true,
         "dataType": "FLOAT",
         "inputType": "USER_INPUT",
-        "calcBase" : true,
-        "affectedFields": ["PROJ"]
+        "calcBase" : true
       },
 
       "CURRENCY": {
@@ -119,27 +118,30 @@
         "name": "USD/GBP rate",
         "visible": true,
         "size": 1,
-        "editable": false,
+        "editable": true,
         "dataType": "FLOAT",
-        "inputType": "ASSIGNED",
+        "inputType": "USER_INPUT",
         "calcBase" : true,
-        "affectedFields":["XCH_GBP_USD"]
+        "calculation": [
+          "/",
+          1,
+          "XCH_GBP_USD"
+        ]
       },
 
       "XCH_GBP_USD": {
         "name": "GBP/USD rate",
         "visible": true,
         "size": 1,
-        "editable": false,
+        "editable": true,
         "dataType": "FLOAT",
-        "inputType":"CALCULATED",
+        "inputType":"USER_INPUT",
         "calculation": [
           "/",
           1,
           "XCH_USD_GBP"
         ],
-        "calcBase" : true,
-        "affectedFields":["PROJ"]
+        "calcBase" : true
       },
 
       "INVOICE_XCH_RATE" : {
@@ -202,8 +204,7 @@
         "editable": true,
         "dataType": "FLOAT",
         "inputType": "USER_INPUT",
-        "calcBase" : true,
-        "affectedFields": ["PROJ"]
+        "calcBase" : true
       },
 
       "CURRENCY": {
@@ -272,20 +273,24 @@
         "name": "USD/GBP rate",
         "visible": true,
         "size": 1,
-        "editable": false,
+        "editable": true,
         "dataType": "FLOAT",
-        "inputType": "ASSIGNED",
+        "inputType": "USER_INPUT",
         "calcBase" : true,
-        "affectedFields":["PROJ","XCH_GBP_USD"]
+        "calculation": [
+          "/",
+          1,
+          "XCH_GBP_USD"
+        ]
       },
 
       "XCH_GBP_USD": {
         "name": "GBP/USD rate",
         "visible": true,
         "size": 1,
-        "editable": false,
+        "editable": true,
         "dataType": "FLOAT",
-        "inputType":"CALCULATED",
+        "inputType":"USER_INPUT",
         "calculation": [
           "/",
           1,
