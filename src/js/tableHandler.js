@@ -431,7 +431,9 @@ export function valueCalculation(target) {
 
     case "XCH_USD_GBP": case "XCH_GBP_USD":
 
-      if (target.firstElementChild) {
+      let value = target.firstChild.value || target.innerText;
+      console.log(value)
+      if (value != "") {
 
         let text = 1/target.firstChild.value || 1/target.innerHTML;
 
@@ -462,9 +464,9 @@ function calcProj(target) {
   let rowID = target.id.split("-")[0]
   
   //get the Amount field of the given row
-  let AMOUNT = document.getElementById(rowID+"-"+c[1]).firstElementChild.value || document.getElementById(rowID+"-"+c[1]).innerHTML;
+  let AMOUNT = document.getElementById(rowID+"-"+c[1]).firstChild.value || document.getElementById(rowID+"-"+c[1]).innerText;
   //get the XCH_USD_GBP field of the given row
-  let xchDP = document.getElementById(rowID+"-"+c[2]).firstElementChild.value || document.getElementById(rowID+"-"+c[2]).innerHTML;
+  let xchDP = document.getElementById(rowID+"-"+c[2]).firstChild.value || document.getElementById(rowID+"-"+c[2]).innerText;
   
   if (AMOUNT!="" && xchDP!="") {
     console.log(AMOUNT,xchDP)
