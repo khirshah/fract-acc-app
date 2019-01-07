@@ -75,7 +75,7 @@ function saveButtonClicked() {
     }
 
     else {
-      console.log($(this)[0].value)
+
       //at input fields, check if they are empty
       if ($(this)[0].value == '') {
 

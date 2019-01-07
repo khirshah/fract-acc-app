@@ -432,7 +432,7 @@ export function valueCalculation(target) {
     case "XCH_USD_GBP": case "XCH_GBP_USD":
 
       let value = target.firstChild.value || target.innerText;
-      console.log(value)
+      
       if (value != "") {
 
         let text = 1/target.firstChild.value || 1/target.innerHTML;

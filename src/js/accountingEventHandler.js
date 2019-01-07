@@ -33,8 +33,29 @@ document.addEventListener("customEvent", async function(event) {
       //create JSON from the array recieved from the event listener
       //containing user defined values
       let obj = event.detail.values;
+      console.log("OBJ:",obj)
+
       //feed JSON with the insertContent function of the DataBase class
       var dbFill = await Mongo.insertData(obj);
+
+      if (obj.TRANS_TYPE == "XC to USD") {
+
+        obj.TRANS_TYPE = "XC from GBP";
+        obj.CURRENCY = "$";
+        obj.PROJ = obj.AMOUNT;
+        obj.AMOUNT = parseFloat(obj.AMOUNT) * -1;
+        obj.AMOUNT = (parseFloat(obj.AMOUNT) * parseFloat(obj.XCH_GBP_USD)).toFixed(2);
+        var dbFill = await Mongo.insertData(obj);
+
+      }
+      else if (obj.TRANS_TYPE == "XC to GBP"){
+        obj.TRANS_TYPE = "XC from USD";
+        obj.CURRENCY = "£";
+        obj.PROJ = obj.AMOUNT * -1;
+        obj.AMOUNT = parseFloat(obj.AMOUNT);
+        obj.AMOUNT = (parseFloat(obj.AMOUNT) * parseFloat(obj.XCH_USD_GBP)).toFixed(2);
+        var dbFill = await Mongo.insertData(obj);
+      }
       //reload the HTML table
       document.getElementById("container").innerHTML="";
       var event = new CustomEvent("pageEvent",{detail: {name:"reloadTable",trigger:"saveRow"}})
@@ -45,8 +66,8 @@ document.addEventListener("customEvent", async function(event) {
     case "recordUpdate":
 
       tableRecordUpdate(event.detail.target,event.detail.text);
-      
-      if (event.detail.target.id.split("-")[0] != "newRow") {
+
+      if (event.detail.target.classList.contains("inp") == false) {
 
         let ID = event.detail.target.id.split("-")[0]
         let key = event.detail.target.id.split("-")[1]
