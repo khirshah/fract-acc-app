@@ -67,7 +67,7 @@ document.addEventListener("customEvent", async function(event) {
 
       tableRecordUpdate(event.detail.target,event.detail.text);
 
-      if (event.detail.target.classList.contains("inp") == false) {
+      if (event.detail.target.classList.contains("inpRowElement") == false) {
 
         let ID = event.detail.target.id.split("-")[0]
         let key = event.detail.target.id.split("-")[1]

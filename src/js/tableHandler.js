@@ -469,7 +469,7 @@ function calcProj(target) {
   let xchDP = document.getElementById(rowID+"-"+c[2]).firstChild.value || document.getElementById(rowID+"-"+c[2]).innerText;
   
   if (AMOUNT!="" && xchDP!="") {
-    console.log(AMOUNT,xchDP)
+
     let op = c[0];
     let rule = {};
     rule[op] = [{"var":"a"},{"var":"b"}];
