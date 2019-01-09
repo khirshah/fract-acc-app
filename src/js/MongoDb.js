@@ -1,7 +1,7 @@
 const http = require('http');
 const qs = require('qs');
 
-var mode = "local"
+var mode = "heroku";
 
 const options = mode == "local" ? {port:process.env.PORT, hostname: process.env.localhost} : {hostname: process.env.hostname, path: '/mongoWrite',};
 
